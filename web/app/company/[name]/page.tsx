@@ -16,6 +16,7 @@ import {
   Users,
 } from "lucide-react";
 
+import { AiLoading } from "@/components/AiLoading";
 import { EmptyState, SectionHeader } from "@/components/ui";
 import { api, type CompanyProfile } from "@/lib/api";
 
@@ -73,17 +74,34 @@ export default function CompanyPage() {
   const [data, setData] = useState<CompanyProfile | null>(null);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(true);
+  const [deepLoading, setDeepLoading] = useState(false);
 
   useEffect(() => {
     if (!name) return;
     let alive = true;
     setLoading(true);
     setErr("");
+    setDeepLoading(false);
+    setData(null);
+
+    // 第一阶段：统计（信号/技能/岗位列表），毫秒级
     api
-      .company(name)
-      .then((r) => alive && setData(r))
+      .company(name, false)
+      .then((fast) => {
+        if (!alive) return;
+        setData(fast);
+        setLoading(false);
+        // 第二阶段：LLM 画像（约 20 秒）
+        setDeepLoading(true);
+        return api.company(name, true).then((full) => alive && setData(full));
+      })
       .catch((e) => alive && setErr(String(e)))
-      .finally(() => alive && setLoading(false));
+      .finally(() => {
+        if (!alive) return;
+        setLoading(false);
+        setDeepLoading(false);
+      });
+
     return () => {
       alive = false;
     };
@@ -153,47 +171,66 @@ export default function CompanyPage() {
       </header>
 
       {/* 四宫格 */}
-      <div className="grid gap-4 md:grid-cols-2">
-        {PANELS.map((panel) => {
-          const text = data[panel.key];
-          if (!text) return null;
-          const Icon = panel.icon;
-          return (
-            <section key={panel.key} className="card p-5">
-              <div className="flex items-center gap-2">
-                <span
-                  className={`flex h-6 w-6 items-center justify-center rounded-md border ${PANEL_TONE[panel.tone]}`}
-                >
-                  <Icon size={13} strokeWidth={1.9} />
-                </span>
-                <h2 className="text-[13px] font-medium text-fg">{panel.label}</h2>
-              </div>
-              <p className="mt-2.5 text-[13px] leading-[1.8] text-fg2">{text}</p>
-            </section>
-          );
-        })}
-      </div>
+      {deepLoading && !data.business ? (
+        <AiLoading
+          title={`正在分析 ${data.company} 的画像`}
+          stages={["读取 JD 文本", "统计行为信号", "推断业务与技术风格", "整理面试重点"]}
+        />
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {PANELS.map((panel) => {
+            const text = data[panel.key];
+            if (!text) return null;
+            const Icon = panel.icon;
+            return (
+              <section key={panel.key} className="card p-5">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`flex h-6 w-6 items-center justify-center rounded-md border ${PANEL_TONE[panel.tone]}`}
+                  >
+                    <Icon size={13} strokeWidth={1.9} />
+                  </span>
+                  <h2 className="text-[13px] font-medium text-fg">{panel.label}</h2>
+                </div>
+                <p className="mt-2.5 text-[13px] leading-[1.8] text-fg2">{text}</p>
+              </section>
+            );
+          })}
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
         <div className="space-y-5">
-          {data.interview_focus && data.interview_focus.length > 0 && (
+          {deepLoading && !data.interview_focus ? (
             <section id="interview" className="card scroll-mt-24 p-5">
-              <SectionHeader
-                title="面试大概会问"
-                hint={`${data.interview_focus.length} 个方向`}
-                icon={MessagesSquare}
-              />
-              <ol className="mt-3 space-y-3">
-                {data.interview_focus.map((item, i) => (
-                  <li key={i} className="flex gap-3">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-line bg-panel2 text-3xs tabular-nums text-fg3">
-                      {i + 1}
-                    </span>
-                    <p className="text-[13px] leading-[1.75] text-fg2">{item}</p>
-                  </li>
+              <SectionHeader title="面试大概会问" icon={MessagesSquare} />
+              <div className="mt-3 space-y-2.5">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="skel h-3 w-full" />
                 ))}
-              </ol>
+              </div>
             </section>
+          ) : (
+            data.interview_focus &&
+            data.interview_focus.length > 0 && (
+              <section id="interview" className="card scroll-mt-24 p-5">
+                <SectionHeader
+                  title="面试大概会问"
+                  hint={`${data.interview_focus.length} 个方向`}
+                  icon={MessagesSquare}
+                />
+                <ol className="mt-3 space-y-3">
+                  {data.interview_focus.map((item, i) => (
+                    <li key={i} className="flex gap-3">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-line bg-panel2 text-3xs tabular-nums text-fg3">
+                        {i + 1}
+                      </span>
+                      <p className="text-[13px] leading-[1.75] text-fg2">{item}</p>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )
           )}
 
           <section id="jobs" className="card scroll-mt-24 overflow-hidden">

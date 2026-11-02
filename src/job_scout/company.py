@@ -120,7 +120,8 @@ def _skill_counts(jobs: list[sqlite3.Row]) -> list[tuple[str, int]]:
     return cnt.most_common(12)
 
 
-def build_company_profile(company: str, llm) -> dict:
+def build_company_profile(company: str, llm, deep: bool = True) -> dict:
+    """deep=False 只算统计（毫秒级），deep=True 再加 LLM 分析（约 20 秒）。"""
     jobs = company_jobs(company)
     if not jobs:
         return {"error": "没有这家公司的在架岗位"}
@@ -147,7 +148,7 @@ def build_company_profile(company: str, llm) -> dict:
         ],
     }
 
-    if llm is None:
+    if not deep or llm is None:
         return result
 
     prompt = COMPANY_PROMPT.format(
@@ -212,8 +213,8 @@ PREP_PROMPT = """你在帮求职者做「技术准备计划」。
 """
 
 
-def prep_analysis(profile: Profile, llm, limit_jobs: int = 200) -> dict:
-    """聚合岗位要求 vs 我的技能，输出学习计划。"""
+def prep_analysis(profile: Profile, llm, limit_jobs: int = 200, deep: bool = True) -> dict:
+    """deep=False 只做技能差集（毫秒级），deep=True 再加 LLM 学习计划（约 20 秒）。"""
     conn = _conn()
     rows = conn.execute(
         "SELECT title, skills, description FROM postings "
@@ -258,7 +259,7 @@ def prep_analysis(profile: Profile, llm, limit_jobs: int = 200) -> dict:
         "missing": [{"skill": s, "jobs": c} for s, c in missing[:12]],
     }
 
-    if llm is None:
+    if not deep or llm is None:
         return result
 
     prompt = PREP_PROMPT.format(

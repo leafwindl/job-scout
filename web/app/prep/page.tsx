@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import PageHeader from "@/components/PageHeader";
+import { AiLoading } from "@/components/AiLoading";
 import { EmptyState, ProgressBar, SectionHeader, Stat } from "@/components/ui";
 import { api, type PrepResult } from "@/lib/api";
 
@@ -54,15 +55,27 @@ export default function PrepPage() {
   const [data, setData] = useState<PrepResult | null>(null);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(true);
+  const [deepLoading, setDeepLoading] = useState(false);
 
   const load = useCallback(() => {
     setLoading(true);
     setErr("");
+    setDeepLoading(false);
+    // 第一阶段：只算技能差集（毫秒级），先把页面填上
     api
-      .prep()
-      .then(setData)
+      .prep(false)
+      .then((fast) => {
+        setData(fast);
+        setLoading(false);
+        // 第二阶段：LLM 学习计划（约 20 秒）
+        setDeepLoading(true);
+        return api.prep(true).then((full) => setData(full));
+      })
       .catch((e) => setErr(String(e)))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        setDeepLoading(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -133,7 +146,9 @@ export default function PrepPage() {
               <div className="min-w-0">
                 <div className="eyebrow">概览结论</div>
                 <p className="mt-2 max-w-3xl text-[14px] leading-[1.8] text-fg">
-                  {data.overview || "根据当前在架岗位与你的简历，以下是优先级最高的准备方向。"}
+                  {deepLoading
+                    ? "正在根据你的技能和在架岗位生成结论…"
+                    : data.overview || "根据当前在架岗位与你的简历，以下是优先级最高的准备方向。"}
                 </p>
                 <div className="mt-2 flex flex-wrap items-center gap-1.5">
                   <span className="tag">范围：{data.scope}</span>
@@ -166,7 +181,12 @@ export default function PrepPage() {
                 />
               </div>
 
-              {data.learn && data.learn.length > 0 ? (
+              {deepLoading ? (
+                <AiLoading
+                  title="正在生成学习计划"
+                  stages={["读取岗位要求", "对比你的技能", "排出优先级", "写出怎么学"]}
+                />
+              ) : data.learn && data.learn.length > 0 ? (
                 data.learn.map((item, i) => {
                   const demand = data.demand.find((d) => d.skill === item.skill);
                   return (
@@ -263,7 +283,27 @@ export default function PrepPage() {
           </div>
 
           {/* 放大 / 跳过 */}
-          <div className="grid gap-4 md:grid-cols-2">
+          {deepLoading ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="card p-5">
+                <div className="skel h-4 w-1/3" />
+                <div className="mt-4 space-y-2.5">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="skel h-3 w-full" />
+                  ))}
+                </div>
+              </div>
+              <div className="card p-5">
+                <div className="skel h-4 w-1/3" />
+                <div className="mt-4 space-y-2.5">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="skel h-3 w-full" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
             {data.leverage && data.leverage.length > 0 && (
               <section className="card p-5">
                 <SectionHeader
@@ -303,7 +343,8 @@ export default function PrepPage() {
                 </ul>
               </section>
             )}
-          </div>
+            </div>
+          )}
         </>
       )}
     </div>

@@ -232,6 +232,7 @@ export const api = {
     get<{ items: { company: string; jobs: number; districts: string[] }[] }>(
       `/companies?min_jobs=${minJobs}`,
     ),
-  company: (name: string) => get<CompanyProfile>(`/company/${encodeURIComponent(name)}`),
-  prep: () => get<PrepResult>("/prep"),
+  company: (name: string, deep = false) =>
+    get<CompanyProfile>(`/company/${encodeURIComponent(name)}?deep=${deep}`),
+  prep: (deep = false) => get<PrepResult>(`/prep?deep=${deep}`),
 };

@@ -1,0 +1,46 @@
+# ---- Python ----
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+
+# ---- 环境变量（含 API Key，绝对不能提交）----
+.env
+.env.*
+!.env.example
+
+# ---- 数据与模型（体积大 + 含个人信息）----
+data/*.db
+data/backup/
+data/exports/
+data/raw/
+data/resume/
+data/profile.json
+data/dashboard.html
+data/auto_done.json
+data/*.png
+index/
+
+# ---- 前端 ----
+web/node_modules/
+web/.next/
+web/public/dashboard.html
+web/.env.local
+
+# ---- 采集相关 ----
+.playwright/
+*.log
+
+# ---- 本地环境配置（不属于项目）----
+.mcp.json
+
+# ---- 生成的统计数据 ----
+data/jd_categories.json
+
+# ---- 系统 ----
+.DS_Store
+Thumbs.db

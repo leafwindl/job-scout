@@ -1,0 +1,17 @@
+# 容器内运行时依赖（不含采集用的 playwright、不含向量模型 fastembed）
+# 采集和向量索引在宿主机做，容器只负责检索 + 生成 + API
+#
+# 注意：这里必须覆盖 API 实际 import 的所有第三方包。
+# 漏一个就是启动即崩（踩过两次：bs4、python-multipart）。
+fastapi>=0.115
+uvicorn[standard]>=0.32
+sse-starlette>=2.1
+openai>=1.50
+jieba>=0.42
+rank-bm25>=0.2
+numpy>=1.26
+pydantic>=2.9
+pydantic-settings>=2.5
+pyyaml>=6.0
+python-multipart>=0.0.9
+pypdf>=6.0

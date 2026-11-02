@@ -1,0 +1,26 @@
+# 版本控制与本地环境
+.git
+.gitignore
+.venv
+__pycache__
+*.pyc
+.ruff_cache
+.pytest_cache
+
+# 前端依赖与产物（web 镜像里自己装）
+web/node_modules
+web/.next
+web/public/dashboard.html
+
+# 数据与模型：用 volume 挂载，不打进镜像
+data
+index
+.playwright
+.userscripts
+learning
+
+# 文档与脚本
+docs
+scripts
+*.md
+!api/Dockerfile

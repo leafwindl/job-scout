@@ -1,0 +1,51 @@
+# job-scout 一键启动
+#
+#   docker compose up --build
+#
+# 前端 http://localhost:3000
+# 接口 http://localhost:8001/docs
+#
+# 数据与向量索引通过 bind mount 复用本地目录，不打进镜像。
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    image: job-scout-api:dev
+    container_name: job-scout-api
+    ports:
+      - "8001:8001"
+      - "8765:8765"
+    volumes:
+      - ./data:/app/data
+      - ./index:/app/index
+    environment:
+      # 有 Key 时自动切到 LLM 模式；没有则走抽取式
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.deepseek.com/v1}
+      MODEL_NAME: ${MODEL_NAME:-deepseek-chat}
+      # 采集接收服务绑 0.0.0.0，宿主的浏览器（油猴脚本）才能访问
+      COLLECT_HOST: 0.0.0.0
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8001/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  web:
+    build:
+      context: ./web
+      args:
+        NEXT_PUBLIC_API_BASE: http://localhost:8001
+    image: job-scout-web:dev
+    container_name: job-scout-web
+    ports:
+      - "3000:3000"
+    environment:
+      # 服务端组件在容器内访问 API，必须用 compose 服务名
+      API_BASE_INTERNAL: http://api:8001
+    depends_on:
+      api:
+        condition: service_healthy

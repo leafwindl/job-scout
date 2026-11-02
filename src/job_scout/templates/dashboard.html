@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent 岗位洞察看板</title>
+/*__ECHARTS__*/
+<style>
+  :root{
+    --bg:#0f1420; --card:#171d2b; --card2:#1d2536; --line:#29324a;
+    --text:#e6e9ef; --muted:#93a0b5; --accent:#4f8cff; --accent2:#39d0a8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.6 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  header{padding:28px 32px 8px}
+  h1{margin:0;font-size:24px;letter-spacing:.5px}
+  .sub{color:var(--muted);margin-top:6px;font-size:13px}
+  .wrap{padding:16px 32px 40px;max-width:1500px;margin:0 auto}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:18px 0 22px}
+  .kpi{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);
+       border-radius:12px;padding:16px 18px}
+  .kpi .label{color:var(--muted);font-size:12px}
+  .kpi .value{font-size:26px;font-weight:600;margin-top:4px}
+  .kpi .unit{font-size:13px;color:var(--muted);margin-left:2px}
+  .charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .card h2{margin:2px 0 6px;font-size:14px;font-weight:600;color:#cfd8e8}
+  .chart{width:100%;height:280px}
+  .chart.tall{height:420px}
+  .table-card{margin-top:16px}
+  .toolbar{display:flex;gap:12px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+  input#q{background:var(--card2);border:1px solid var(--line);color:var(--text);
+          padding:9px 12px;border-radius:8px;min-width:280px;outline:none}
+  input#q:focus{border-color:var(--accent)}
+  #count{color:var(--muted);font-size:12px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
+  .chip{background:var(--card2);border:1px solid var(--line);color:var(--muted);
+        padding:4px 10px;border-radius:999px;font-size:12px;cursor:pointer;user-select:none}
+  .chip:hover{border-color:var(--accent);color:var(--text)}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:500;font-size:12px;position:sticky;top:0;background:var(--card)}
+  tr:hover td{background:#1a2131}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .tag{display:inline-block;background:#20293c;border:1px solid #2c3750;color:#a9b7cf;
+       border-radius:6px;padding:1px 7px;margin:2px 4px 0 0;font-size:11px}
+  .money{color:var(--accent2);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .exp{color:var(--muted);white-space:nowrap}
+  .empty{color:var(--muted);padding:24px 0;text-align:center}
+  .pager{display:flex;gap:10px;align-items:center;justify-content:flex-end;
+         margin-top:12px;color:var(--muted);font-size:12px;flex-wrap:wrap}
+  .pager button{background:var(--card2);border:1px solid var(--line);color:var(--text);
+                padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px}
+  .pager button:hover:not(:disabled){border-color:var(--accent)}
+  .pager button:disabled{opacity:.4;cursor:default}
+  .pager select{background:var(--card2);border:1px solid var(--line);color:var(--text);
+                padding:4px 8px;border-radius:6px;font-size:12px}
+  footer{margin-top:22px;color:#5d6980;font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <h1>Agent 岗位洞察看板</h1>
+  <div class="sub">仅统计标题含「实习」的岗位 · 共 __TOTAL__ 条 · 生成于 __GENERATED__</div>
+</header>
+
+<div class="wrap">
+  <section class="kpis" id="kpis"></section>
+
+  <section class="charts">
+    <div class="card"><h2>薪资分布（月薪 K）</h2><div id="c_salary" class="chart"></div></div>
+    <div class="card"><h2>技能词频 Top 20</h2><div id="c_skills" class="chart tall"></div></div>
+    <div class="card"><h2>经验要求</h2><div id="c_exp" class="chart"></div></div>
+    <div class="card"><h2>区域分布</h2><div id="c_dist" class="chart"></div></div>
+    <div class="card"><h2>JD 正文技术词（提及岗位数）</h2><div id="c_jdkw" class="chart tall"></div></div>
+    <div class="card"><h2>岗位方向分布</h2><div id="c_cat" class="chart"></div></div>
+  </section>
+
+  <section class="card table-card">
+    <div class="toolbar">
+      <input id="q" placeholder="搜索岗位 / 公司 / 技能…">
+      <select id="cat-filter" style="background:var(--card2);border:1px solid var(--line);color:var(--text);padding:8px 10px;border-radius:8px;font-size:13px"></select>
+      <span id="count"></span>
+    </div>
+    <div class="chips" id="chips"></div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:26%">岗位</th>
+          <th style="width:18%">公司</th>
+          <th style="width:12%">薪资</th>
+          <th style="width:8%">经验</th>
+          <th style="width:12%">地点</th>
+          <th style="width:7%">JD</th>
+          <th>技能</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="empty" id="empty" style="display:none">没有匹配的岗位</div>
+
+    <div class="pager">
+      <span id="pg-info"></span>
+      <select id="pg-size">
+        <option value="20">每页 20</option>
+        <option value="50">每页 50</option>
+        <option value="100">每页 100</option>
+      </select>
+      <button id="pg-prev">‹ 上一页</button>
+      <button id="pg-next">下一页 ›</button>
+    </div>
+  </section>
+
+  <footer>job-scout · 本地采集 · 仅供个人求职参考</footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/;
+
+/* ---------- 通用 ---------- */
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const PALETTE = ["#4f8cff", "#39d0a8", "#f5a623", "#e05d7a", "#a17bff", "#31b6d8"];
+const charts = [];
+function mkChart(id, option) {
+  const el = document.getElementById(id);
+  if (!el || !window.echarts) return;
+  const c = echarts.init(el, null, { renderer: "canvas" });
+  c.setOption(option);
+  charts.push(c);
+}
+window.addEventListener("resize", () => charts.forEach((c) => c.resize()));
+
+const AXIS = { axisLabel: { color: "#93a0b5", fontSize: 11 }, axisLine: { lineStyle: { color: "#29324a" } } };
+const TIP = { backgroundColor: "#1d2536", borderColor: "#29324a", textStyle: { color: "#e6e9ef" } };
+
+/* ---------- KPI ---------- */
+function renderKpis() {
+  const jdPct = DATA.total ? Math.round((DATA.with_jd / DATA.total) * 100) : 0;
+  const items = [
+    { label: "实习岗位", value: DATA.total, unit: "条" },
+    { label: "有薪资", value: DATA.with_salary, unit: "条" },
+    { label: "薪资中位数", value: DATA.median_k ?? "—", unit: DATA.median_k ? "K" : "" },
+    { label: "有 JD 正文", value: DATA.with_jd, unit: `条（${jdPct}%）` },
+  ];
+  $("#kpis").innerHTML = items.map((i) => `
+    <div class="kpi">
+      <div class="label">${esc(i.label)}</div>
+      <div class="value">${esc(i.value)}<span class="unit">${esc(i.unit)}</span></div>
+    </div>`).join("");
+}
+
+/* ---------- 图表 ---------- */
+function renderCharts() {
+  const sb = DATA.salary_buckets || {};
+  mkChart("c_salary", {
+    grid: { left: 44, right: 16, top: 18, bottom: 30 },
+    tooltip: { ...TIP, trigger: "axis" },
+    xAxis: { type: "category", data: Object.keys(sb), ...AXIS },
+    yAxis: { type: "value", ...AXIS, splitLine: { lineStyle: { color: "#232a3a" } } },
+    series: [{
+      type: "bar", data: Object.values(sb), barWidth: "52%",
+      itemStyle: { color: "#4f8cff", borderRadius: [5, 5, 0, 0] },
+      label: { show: true, position: "top", color: "#93a0b5", fontSize: 11 },
+    }],
+  });
+
+  const skills = [...(DATA.skills || [])].reverse();
+  mkChart("c_skills", {
+    grid: { left: 96, right: 34, top: 10, bottom: 10 },
+    tooltip: { ...TIP, trigger: "axis", axisPointer: { type: "shadow" } },
+    xAxis: { type: "value", ...AXIS, splitLine: { lineStyle: { color: "#232a3a" } } },
+    yAxis: { type: "category", data: skills.map((s) => s[0]), ...AXIS },
+    series: [{
+      type: "bar", data: skills.map((s) => s[1]), barWidth: "62%",
+      itemStyle: { color: "#39d0a8", borderRadius: [0, 5, 5, 0] },
+      label: { show: true, position: "right", color: "#93a0b5", fontSize: 11 },
+    }],
+  });
+
+  const exp = DATA.experience || [];
+  mkChart("c_exp", {
+    tooltip: { ...TIP, trigger: "item" },
+    legend: { bottom: 0, textStyle: { color: "#93a0b5", fontSize: 11 } },
+    series: [{
+      type: "pie", radius: ["45%", "70%"], center: ["50%", "44%"],
+      itemStyle: { borderColor: "#171d2b", borderWidth: 2 },
+      label: { color: "#cfd8e8", fontSize: 11 },
+      data: exp.map(([n, v], i) => ({ name: n, value: v, itemStyle: { color: PALETTE[i % PALETTE.length] } })),
+    }],
+  });
+
+  const dist = [...(DATA.districts || [])].reverse();
+  mkChart("c_dist", {
+    grid: { left: 84, right: 30, top: 10, bottom: 20 },
+    tooltip: { ...TIP, trigger: "axis", axisPointer: { type: "shadow" } },
+    xAxis: { type: "value", ...AXIS, splitLine: { lineStyle: { color: "#232a3a" } } },
+    yAxis: { type: "category", data: dist.map((d) => d[0]), ...AXIS },
+    series: [{
+      type: "bar", data: dist.map((d) => d[1]), barWidth: "62%",
+      itemStyle: { color: "#a17bff", borderRadius: [0, 5, 5, 0] },
+      label: { show: true, position: "right", color: "#93a0b5", fontSize: 11 },
+    }],
+  });
+
+  // 方向分布
+  const cats = [...(DATA.categories || [])].reverse();
+  mkChart("c_cat", {
+    grid: { left: 104, right: 44, top: 10, bottom: 10 },
+    tooltip: { ...TIP, trigger: "axis", axisPointer: { type: "shadow" } },
+    xAxis: { type: "value", ...AXIS, splitLine: { lineStyle: { color: "#232a3a" } } },
+    yAxis: { type: "category", data: cats.map((c) => c[0]), ...AXIS },
+    series: [{
+      type: "bar", data: cats.map((c) => c[1]), barWidth: "60%",
+      itemStyle: { color: "#4f8cff", borderRadius: [0, 5, 5, 0] },
+      label: { show: true, position: "right", color: "#93a0b5", fontSize: 11 },
+    }],
+  });
+  // JD 正文技术词：统计「多少份 JD 提到」，比 HR 勾的标签真实
+  const kw = [...(DATA.jd_keywords || [])].reverse();
+  const jdTotal = DATA.jd_total || 0;
+  mkChart("c_jdkw", {
+    grid: { left: 118, right: 78, top: 10, bottom: 10 },
+    tooltip: { ...TIP, trigger: "axis", axisPointer: { type: "shadow" } },
+    xAxis: { type: "value", ...AXIS, splitLine: { lineStyle: { color: "#232a3a" } } },
+    yAxis: { type: "category", data: kw.map((k) => k[0]), ...AXIS },
+    series: [{
+      type: "bar", data: kw.map((k) => k[1]), barWidth: "62%",
+      itemStyle: { color: "#f5a623", borderRadius: [0, 5, 5, 0] },
+      label: {
+        show: true, position: "right", color: "#93a0b5", fontSize: 11,
+        formatter: (p) =>
+          jdTotal ? `${p.value} (${Math.round((p.value / jdTotal) * 100)}%)` : String(p.value),
+      },
+    }],
+  });
+}
+
+/* ---------- 表格 + 分页 ---------- */
+let activeSkill = null;
+let activeCat = "";
+let page = 1;
+let pageSize = 20;
+
+function filteredList() {
+  const q = ($("#q").value || "").trim().toLowerCase();
+  return (DATA.postings || []).filter((p) => {
+    if (activeSkill && !(p.skills || []).includes(activeSkill)) return false;
+    if (activeCat && p.category !== activeCat) return false;
+    if (!q) return true;
+    const hay = [p.title, p.company, p.city, p.district, p.experience,
+                 p.education, (p.skills || []).join(" ")].join(" ").toLowerCase();
+    return hay.includes(q);
+  });
+}
+
+function renderTable() {
+  const list = filteredList();
+  const pages = Math.max(1, Math.ceil(list.length / pageSize));
+  if (page > pages) page = pages;
+  if (page < 1) page = 1;
+
+  const start = (page - 1) * pageSize;
+  const slice = list.slice(start, start + pageSize);
+
+  $("#count").textContent = `匹配 ${list.length} / ${DATA.total} 条`;
+  $("#empty").style.display = list.length ? "none" : "block";
+
+  $("#rows").innerHTML = slice.map((p) => {
+    const title = p.url
+      ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>`
+      : esc(p.title);
+    const catTag = p.category
+      ? `<div><span class="tag" style="color:#8ab4ff;border-color:#2c3750">${esc(p.category)}</span></div>`
+      : "";
+    const tags = (p.skills || []).map((s) => `<span class="tag">${esc(s)}</span>`).join("");
+    const loc = [p.city, p.district].filter(Boolean).join("·");
+    return `<tr>
+      <td>${title}${catTag}</td>
+      <td>${esc(p.company)}</td>
+      <td class="money">${esc(p.salary) || "—"}</td>
+      <td class="exp">${esc(p.experience) || "—"}</td>
+      <td>${esc(loc) || "—"}</td>
+      <td>${p.has_jd ? '<span style="color:#39d0a8">✓</span>' : '<span class="exp">—</span>'}</td>
+      <td>${tags || '<span class="exp">—</span>'}</td>
+    </tr>`;
+  }).join("");
+
+  $("#pg-info").textContent = `第 ${page} / ${pages} 页 · 共 ${list.length} 条`;
+  $("#pg-prev").disabled = page <= 1;
+  $("#pg-next").disabled = page >= pages;
+}
+
+function renderChips() {
+  const top = (DATA.skills || []).slice(0, 14);
+  $("#chips").innerHTML = top.map(([name, n]) =>
+    `<span class="chip" data-skill="${esc(name)}">${esc(name)} · ${n}</span>`).join("");
+  $("#chips").querySelectorAll(".chip").forEach((el) => {
+    el.addEventListener("click", () => {
+      const s = el.dataset.skill;
+      activeSkill = activeSkill === s ? null : s;
+      $("#chips").querySelectorAll(".chip").forEach((x) =>
+        x.classList.toggle("on", x.dataset.skill === activeSkill));
+      page = 1;
+      renderTable();
+    });
+  });
+}
+
+function renderCatFilter() {
+  const sel = $("#cat-filter");
+  if (!sel) return;
+  const cats = (DATA.categories || []).map((c) => c[0]);
+  sel.innerHTML =
+    '<option value="">全部方向</option>' +
+    cats.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+}
+
+/* ---------- 启动 ---------- */
+renderKpis();
+renderCharts();
+renderChips();
+renderCatFilter();
+renderTable();
+
+$("#q").addEventListener("input", () => {
+  page = 1;
+  renderTable();
+});
+$("#cat-filter").addEventListener("change", (e) => {
+  activeCat = e.target.value;
+  page = 1;
+  renderTable();
+});
+$("#pg-prev").addEventListener("click", () => {
+  page -= 1;
+  renderTable();
+});
+$("#pg-next").addEventListener("click", () => {
+  page += 1;
+  renderTable();
+});
+$("#pg-size").addEventListener("change", (e) => {
+  pageSize = parseInt(e.target.value, 10) || 20;
+  page = 1;
+  renderTable();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+# 搜索配置 —— 改这里就行，不用动代码
+#
+# 重要：单个查询的总量由 BOSS 决定（接口里的 totalCount），我们设不了。
+# 想拿到更多岗位，只能增加「关键词 × 城市」的组合。
+#
+# 用法：在 BOSS 搜索框里依次搜下面的关键词，每搜一个点一次「开始自动滚动」。
+# 因为是 SPA 路由切换，页面不刷新，脚本里的累计数会一直涨。
+
+queries:
+  # ---- 实习向（优先）----
+  - keyword: "Agent 实习"
+    city: "广州"
+  - keyword: "大模型 实习"
+    city: "广州"
+  - keyword: "AI应用 实习"
+    city: "广州"
+  - keyword: "算法 实习"
+    city: "广州"
+
+  # ---- 社招向（补充样本，用于对比要求差异）----
+  - keyword: "Agent开发"
+    city: "广州"
+  - keyword: "AI Agent"
+    city: "广州"
+  - keyword: "大模型应用"
+    city: "广州"
+  - keyword: "智能体"
+    city: "广州"
+  - keyword: "RAG"
+    city: "广州"
+
+  # ---- 换城市再刷一遍（想上千就靠这个）----
+  - keyword: "Agent 实习"
+    city: "深圳"
+  - keyword: "大模型 实习"
+    city: "深圳"
+
+# 全局采集限制（不要把 page_delay_ms 调太小，容易被风控）
+limits:
+  page_delay_ms: 3000     # 每页之间等待，毫秒
+  detail_delay_ms: 2000   # 进详情页之间等待，毫秒
+  max_detail_fetch: 80    # 单次任务最多补多少条详情（0 = 不补）
+  headless: false         # 必须 false，要你看得见、能手动登录

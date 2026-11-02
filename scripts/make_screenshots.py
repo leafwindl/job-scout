@@ -1,4 +1,4 @@
-"""生成 README 用的截图（存到 docs/screenshots/）。"""
+"""生成 README 截图（假简历 + 新 UI）。"""
 
 from __future__ import annotations
 
@@ -11,13 +11,7 @@ from playwright.sync_api import sync_playwright
 OUT = Path("docs/screenshots")
 OUT.mkdir(parents=True, exist_ok=True)
 
-SHOTS = [
-    ("/", "home", 0),
-    ("/jobs", "jobs", 1500),
-    ("/profile", "profile", 2000),
-    ("/prep", "prep", 0),  # 慢慢等，LLM 分析
-    ("/ask", "ask", 800),
-]
+BASE = "http://localhost:3000"
 
 
 def main() -> None:
@@ -32,26 +26,44 @@ def main() -> None:
         if browser is None:
             sys.exit("没有浏览器")
 
-        page = browser.new_page(viewport={"width": 1360, "height": 900})
+        page = browser.new_page(viewport={"width": 1440, "height": 950})
 
-        for path, name, wait in SHOTS:
-            url = f"http://localhost:3000{path}"
-            page.goto(url, wait_until="networkidle", timeout=120000)
-            if wait:
-                page.wait_for_timeout(wait)
-            else:
-                page.wait_for_timeout(4000)
-            dest = OUT / f"{name}.png"
-            page.screenshot(path=str(dest), full_page=False)
+        def shot(path: str, name: str, wait: int = 3000) -> None:
+            page.goto(f"{BASE}{path}", wait_until="networkidle", timeout=150000)
+            page.wait_for_timeout(wait)
+            page.screenshot(path=str(OUT / f"{name}.png"), full_page=False)
             print(f"  {name}.png  <- {path}")
 
-        # 公司画像单截
+        shot("/", "home")
+        shot("/jobs", "jobs")
+        shot("/profile", "profile")
+        shot("/prep", "prep", 25000)  # LLM 分析要等
+        shot("/ask", "ask", 1200)
+        shot("/dashboard", "dashboard", 5000)
+        shot("/collect", "collect", 3000)
+
+        # 公司画像
         name = urllib.parse.quote("安点科技")
-        page.goto(f"http://localhost:3000/company/{name}", wait_until="networkidle", timeout=120000)
-        page.wait_for_selector("text=行为信号", timeout=120000)
-        page.wait_for_timeout(1500)
+        page.goto(f"{BASE}/company/{name}", wait_until="networkidle", timeout=150000)
+        page.wait_for_timeout(25000)
         page.screenshot(path=str(OUT / "company.png"), full_page=False)
         print("  company.png  <- /company/安点科技")
+
+        # 岗位详情 + 匹配（需要点按钮）
+        page.goto(f"{BASE}/jobs", wait_until="networkidle", timeout=90000)
+        page.wait_for_timeout(2000)
+        # 点第一个岗位
+        page.locator("main a[href^='/jobs/']").first.click()
+        page.wait_for_timeout(3000)
+        # 点「匹配度」tab（新 UI 是三 tab）
+        for label in ("匹配度", "分析匹配度"):
+            btn = page.get_by_role("button", name=label)
+            if btn.count() > 0:
+                btn.first.click()
+                break
+        page.wait_for_timeout(40000)
+        page.screenshot(path=str(OUT / "match.png"), full_page=False)
+        print("  match.png  <- 岗位详情 + 匹配度")
 
         browser.close()
 

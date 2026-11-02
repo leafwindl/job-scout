@@ -88,6 +88,26 @@
 
 采集在宿主机完成（油猴脚本 + 本地接收服务），API 进程内嵌 8765 端口接收脚本推送。
 
+## 界面
+
+设计参考了三个方向：
+
+| 参考 | 学到的 |
+|---|---|
+| [Linear 设计刷新](https://linear.app/now/behind-the-latest-design-refresh) | 导航「退后」，主内容优先：侧栏更暗、未激活项降饱和、用留白代替分隔线 |
+| [Vercel Dashboard 导航](https://vercel.com/changelog/dashboard-navigation-redesign-rollout) | 持久左侧栏 + 统一页头 + 移动端底部浮动栏 |
+| [招聘产品职位卡](https://jiedastudio.com/share/ui-design/career-go-application-context-u032) | 岗位身份（岗位/公司/地点/薪资）在任何场景都不能丢，阅读顺序固定 |
+
+落地：232px 分组侧栏、统一 `PageHeader`、`shadcn/ui` 式的 token 体系
+（`ink/panel/panel2/line/fg1-3` + 圆角 8/12/16）、`lucide-react` 图标（按需 tree-shake）。
+
+关键布局决策：
+
+- **详情页**：JD 阅读列 + 右侧 368px 粘性「投递助手」，匹配度和招呼语不用滚到底
+- **岗位列表**：左侧粘性筛选栏 + 高密度行（标题 14px / meta 12px / 薪资右对齐）
+- **概览**：简报卡 + 4 指标内嵌条 + 双栏（最近岗位 / 档案 + 路径 + 工具）
+- **移动端**：5 项固定底栏，详情页把投递助手提到 JD 前面
+
 ## 技术要点
 
 ### 检索：为什么用 RRF 而不是加权求和

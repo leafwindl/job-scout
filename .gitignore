@@ -23,6 +23,7 @@ data/profile.json
 data/dashboard.html
 data/auto_done.json
 data/*.png
+data/ui-check/
 index/
 
 # ---- 前端 ----

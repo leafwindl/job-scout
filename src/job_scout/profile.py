@@ -156,22 +156,34 @@ MATCH_PROMPT = """你在帮求职者判断「这个岗位值不值得投」。
 """
 
 
-def build_profile_text(p: Profile) -> str:
-    """把画像压成给 LLM 看的短文本（省 token）。"""
+def build_profile_text(p: Profile, compact: bool = False) -> str:
+    """把画像压成给 LLM 看的短文本（省 token）。
+
+    compact=True 用于问答：每个项目只留 1 条要点、截断到 80 字，
+    否则 1200 多字的摘要会把首 token 拖到 20 秒。
+    """
     parts = []
     if p.target:
         parts.append(f"求职意向：{p.target}")
     if p.skills:
-        parts.append("技能：" + "、".join(p.skills[:30]))
-    for proj in p.projects[:5]:
-        bullets = "；".join((proj.get("bullets") or [])[:3])
+        skills = p.skills[:12] if compact else p.skills[:30]
+        parts.append("技能：" + "、".join(skills))
+
+    max_proj = 3 if compact else 5
+    max_bullets = 1 if compact else 3
+    bullet_len = 80 if compact else 10_000
+    for proj in p.projects[:max_proj]:
+        bullets = "；".join(
+            b[:bullet_len] for b in (proj.get("bullets") or [])[:max_bullets]
+        )
         parts.append(
-            f"项目：{proj.get('name', '')}（{proj.get('period', '')}）"
+            f"项目：{proj.get('name', '')}"
             f"{'｜' + '、'.join(proj.get('tech') or []) if proj.get('tech') else ''}"
             f"{'｜' + bullets if bullets else ''}"
         )
-    for exp in p.experience[:3]:
-        bullets = "；".join((exp.get("bullets") or [])[:2])
+
+    for exp in p.experience[: (1 if compact else 3)]:
+        bullets = "；".join((exp.get("bullets") or [])[:max_bullets])
         parts.append(
             f"经历：{exp.get('company', '')} {exp.get('role', '')}"
             f"{'｜' + bullets if bullets else ''}"

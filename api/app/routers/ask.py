@@ -18,14 +18,18 @@ from job_scout.rag.generate import stream_ask
 router = APIRouter(prefix="/ask", tags=["ask"])
 
 
-def _profile_text(enabled: bool, max_chars: int = 2500) -> str:
-    """取简历摘要；没上传或没开启就返回空串。"""
+def _profile_text(enabled: bool, max_chars: int = 900) -> str:
+    """取简历摘要；没上传或没开启就返回空串。
+
+    用 compact 版本：问答不需要每条 bullet 的完整措辞，
+    精简后首 token 延迟从 19 秒降到个位数。
+    """
     if not enabled:
         return ""
     profile = load_profile()
     if profile is None or not profile.has_content:
         return ""
-    return build_profile_text(profile)[:max_chars]
+    return build_profile_text(profile, compact=True)[:max_chars]
 
 
 @router.post("", response_model=AskResponse)

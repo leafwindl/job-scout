@@ -9,6 +9,7 @@ import {
   MapPin,
 } from "lucide-react";
 
+import GrabJD from "@/components/GrabJD";
 import MatchPanel from "@/components/MatchPanel";
 import { SectionHeader } from "@/components/ui";
 import { api, type JobDetail } from "@/lib/api";
@@ -127,11 +128,15 @@ export default async function JobDetailPage({
                 </div>
                 <div className="mt-3 text-[13px] font-medium text-fg">还没有抓取到 JD 正文</div>
                 <p className="mx-auto mt-1 max-w-sm text-xs leading-[1.7] text-fg3">
-                  岗位本身已入库，但正文缺失。可以先用匹配度看技能要求，或者去「采集任务」补抓一次。
+                  岗位本身已入库，但正文缺失。可以打开原岗位页让脚本定点抓一次，
+                  或者去「采集任务」批量补。
                 </p>
-                <Link href="/collect" className="btn btn-ghost btn-sm mt-4">
-                  去采集任务
-                </Link>
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                  <GrabJD jobId={job.job_id} url={job.url} />
+                  <Link href="/collect" className="btn btn-ghost btn-sm">
+                    去采集任务
+                  </Link>
+                </div>
               </div>
             )}
           </div>

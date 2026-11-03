@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         job-scout 采集器
-// @version      0.10.2
+// @version      0.10.3
 // @namespace    job-scout.local
 // @description  旁听 BOSS 直聘职位接口，自动滚动翻页，循环补全 JD 正文，推送到本地 job-scout
 // @match        https://www.zhipin.com/*
@@ -703,6 +703,52 @@
     return (el.textContent || '').replace(/\s+/g, ' ').trim();
   }
 
+  /** 从详情页 URL 里取 job_id：/job_detail/<id>.html */
+  function jobIdFromUrl() {
+    const m = location.pathname.match(/\/job_detail\/([^/.]+)\.html/);
+    return m ? m[1] : '';
+  }
+
+  // ================= 单条定点抓取 =================
+  // 由网页端「抓取这条 JD」按钮打开：?jobscout=one
+  // 只抓当前这一页，抓完显示结果，不影响队列和自动模式
+  async function oneShotGrab() {
+    const jobId = jobIdFromUrl();
+    if (!jobId) {
+      state.lastMsg = '这不是岗位详情页，没法定点抓取';
+      render();
+      return;
+    }
+
+    state.lastMsg = '定点抓取：等待正文渲染…';
+    render();
+
+    let text = '';
+    for (let i = 0; i < 24; i++) {
+      text = readDetailDom();
+      if (text.length > 40) break;
+      await sleep(500);
+    }
+
+    if (text.length <= 40) {
+      state.lastMsg = '✗ 没找到 JD 正文（可能是人机校验页，刷新重试一次）';
+      render();
+      return;
+    }
+
+    const title = (document.querySelector('.job-banner .name, h1')?.textContent || '').trim();
+    const company = (document.querySelector('.company-info .name, .job-boss-info .name')?.textContent || '').trim();
+
+    await pushJD([
+      { job_id: jobId, description: text, title, company, url: location.href.split('?')[0] },
+    ]);
+
+    state.lastMsg = `✓ 已抓取 ${text.length} 字，已同步到本地，可以关掉这个页面`;
+    render();
+    // 标签页标题给个提示
+    document.title = `[已抓取] ${document.title}`;
+  }
+
   async function startNavMode(limit) {
     if (state.jdRunning) return;
     const pending = await fetchPending(limit);
@@ -1112,6 +1158,14 @@
         state.lastMsg = '本地服务未启动：先运行 job-scout serve';
         render();
       });
+
+    // 单条定点抓取优先：由网页端「抓取这条 JD」按钮打开
+    const params = new URLSearchParams(location.search);
+    if (params.get('jobscout') === 'one') {
+      oneShotGrab();
+      return;
+    }
+
     // 导航模式的队列优先：详情页抓完就走，列表页则继续下一条
     navModeStep();
     bootAutoRun();
@@ -1120,5 +1174,5 @@
   const observer = new MutationObserver(() => buildPanel());
   observer.observe(document.documentElement, { childList: true, subtree: true });
 
-  console.log('[job-scout] 采集器 v0.10.0 已注入（接口 + 导航双模式）');
+  console.log('[job-scout] 采集器 v0.10.3 已注入（接口 + 导航 + 定点抓取）');
 })();

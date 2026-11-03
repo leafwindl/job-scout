@@ -29,6 +29,14 @@ _NOISE = ("微信扫码分享", "扫码分享", "来自BOSS直聘", "BOSS直聘�
 
 PH = "\x00"  # 占位符
 
+# 杂质串的「跨水印」写法：「职BOSS直聘位描述」「微BOSS直聘信扫码分享」
+# 这类必须在保护 BOSS直聘 之前处理，否则会被占位符打断
+_NOISE_FLEX = (
+    re.compile(r"职\s*(?:BOSS直聘|Boss直聘|boss直聘|boss|kanzhun)?\s*位描述"),
+    re.compile(r"微\s*信\s*(?:BOSS直聘|Boss直聘|boss直聘|boss|kanzhun)?\s*扫\s*码\s*分\s*享"),
+    re.compile(r"来\s*自\s*(?:BOSS直聘|Boss直聘|boss直聘|boss|kanzhun)?\s*举\s*报"),
+)
+
 
 def clean_jd(text: str) -> str:
     """清洗一条 JD 正文，返回干净文本。"""
@@ -37,28 +45,32 @@ def clean_jd(text: str) -> str:
 
     out = text
 
-    # 1) 保护正常写法，避免「BOSS直聘」被当成水印删掉
+    # 1) 先处理跨水印的杂质串（必须在保护之前）
+    for pat in _NOISE_FLEX:
+        out = pat.sub(" ", out)
+
+    # 2) 保护正常写法，避免「BOSS直聘」被当成水印删掉
     for i, w in enumerate(_PROTECT):
         out = out.replace(w, f"{PH}{i}{PH}")
 
-    # 2) 去掉 <style> 标签和其中的 CSS 规则
+    # 3) 去掉 <style> 标签和其中的 CSS 规则
     out = _STYLE_TAG.sub(" ", out)
     out = _CSS_RULE.sub(" ", out)
     out = re.sub(r"\.[A-Za-z][\w-]*\s*\{[^{}]*\}", " ", out)
 
-    # 3) 删水印词（已保护的正常写法不受影响）
+    # 4) 删水印词（已保护的正常写法不受影响）
     for w in _WATERMARKS:
         out = out.replace(w, "")
 
-    # 4) 删固定杂质
+    # 5) 删固定杂质
     for w in _NOISE:
         out = out.replace(w, "")
 
-    # 5) 还原保护词
+    # 6) 还原保护词
     for i, w in enumerate(_PROTECT):
         out = out.replace(f"{PH}{i}{PH}", w)
 
-    # 6) 空白规整
+    # 7) 空白规整
     out = out.replace("\u200b", "").replace("\u00ad", "")
     out = re.sub(r"[ \t\u3000]+", " ", out)
     out = re.sub(r"\n{3,}", "\n\n", out)
@@ -76,6 +88,9 @@ def is_dirty(text: str) -> bool:
     if _CSS_RULE.search(text) or _STYLE_TAG.search(text):
         return True
     if "kanzhun" in text:
+        return True
+    # 「职BOSS直聘位描述」这种水印插进杂质串中间的
+    if any(p.search(text) for p in _NOISE_FLEX):
         return True
     # 直聘后面紧跟汉字/数字，且前面没有 BOSS，说明是水印
     return bool(re.search(r"(?<!BOSS)直聘(?=[\u4e00-\u9fff0-9])", text))

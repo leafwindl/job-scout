@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         job-scout 采集器
-// @version      0.10.3
+// @version      0.10.4
 // @namespace    job-scout.local
 // @description  旁听 BOSS 直聘职位接口，自动滚动翻页，循环补全 JD 正文，推送到本地 job-scout
 // @match        https://www.zhipin.com/*
@@ -700,7 +700,10 @@
       '.job-sec-text, .job-detail-section .text, .job-detail-section',
     );
     if (!el) return '';
-    return (el.textContent || '').replace(/\s+/g, ' ').trim();
+    // 用 innerText：只读可见文本，自动跳过 display:none 的 CSS 和水印 span。
+    // textContent 会把隐藏的 <style> 和 kanzhun/boss 水印一起读出来。
+    const raw = el.innerText || el.textContent || '';
+    return raw.replace(/\s+/g, ' ').trim();
   }
 
   /** 从详情页 URL 里取 job_id：/job_detail/<id>.html */
@@ -1174,5 +1177,5 @@
   const observer = new MutationObserver(() => buildPanel());
   observer.observe(document.documentElement, { childList: true, subtree: true });
 
-  console.log('[job-scout] 采集器 v0.10.3 已注入（接口 + 导航 + 定点抓取）');
+  console.log('[job-scout] 采集器 v0.10.4 已注入（接口 + 导航 + 定点抓取 + innerText）');
 })();

@@ -20,6 +20,7 @@ from job_scout.config import settings
 from job_scout.models import JobPosting, Source
 from job_scout.salary import parse_salary
 from job_scout.storage import Storage
+from job_scout.textclean import clean_jd
 
 HOST = "127.0.0.1"
 PORT = 8765
@@ -174,7 +175,8 @@ class Handler(BaseHTTPRequestHandler):
             written = 0
             for item in items:
                 jid = item.get("job_id")
-                desc = item.get("description") or ""
+                # 统一入口清洗：去 CSS、去 kanzhun/boss/直聘 水印、去固定杂质
+                desc = clean_jd(item.get("description") or "")
                 if not jid or not desc:
                     continue
                 store.upsert_jd_only(

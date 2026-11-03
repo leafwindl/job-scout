@@ -154,9 +154,30 @@ BM25 分数和余弦相似度量纲不同，直接加权需要反复调参。RRF
 
 - Python 3.12+（用 [uv](https://docs.astral.sh/uv/) 管理）
 - Node.js 22+ / pnpm
+- Docker Desktop（用一键启动的话）
 - 可选：DeepSeek 或任意 OpenAI 兼容 API Key（没有则降级为抽取式回答）
 
-### 本地运行
+### Windows 一键启动
+
+装好 Docker Desktop 后，**双击 `start.bat`**：
+
+```
+job-scout
+==========
+
+[..] Starting containers...
+[OK] Services are up.
+
+Web    http://localhost:3000
+API    http://127.0.0.1:8001/docs
+Crawl  http://localhost:3000/collect
+```
+
+浏览器会自动打开。停止双击 `stop.bat`。
+
+脚本会自己处理：Docker 没启动就拉起来、容器已跑就跳过等待、服务起来才开浏览器。
+
+### 手动运行（开发用）
 
 ```bash
 git clone <repo>

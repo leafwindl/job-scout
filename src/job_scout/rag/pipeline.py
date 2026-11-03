@@ -31,8 +31,21 @@ class RagPipeline:
     def search(self, query: str, k: int = 10):
         return self.retriever.search(query, k=k)
 
-    def ask(self, question: str, k: int = 5, max_chars: int = 4000) -> Answer:
-        return ask_impl(question, self.retriever, llm=self.llm, k=k, max_chars=max_chars)
+    def ask(
+        self,
+        question: str,
+        k: int = 5,
+        max_chars: int = 4000,
+        profile_text: str = "",
+    ) -> Answer:
+        return ask_impl(
+            question,
+            self.retriever,
+            llm=self.llm,
+            k=k,
+            max_chars=max_chars,
+            profile_text=profile_text,
+        )
 
 
 @lru_cache(maxsize=2)

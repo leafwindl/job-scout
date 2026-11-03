@@ -13,6 +13,7 @@ import {
   Send,
   Sparkles,
   StopCircle,
+  UserRound,
 } from "lucide-react";
 
 import PageHeader from "@/components/PageHeader";
@@ -50,8 +51,27 @@ export default function AskPage() {
   const [question, setQuestion] = useState("");
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [busy, setBusy] = useState(false);
+  const [useProfile, setUseProfile] = useState(false);
   const esRef = useRef<EventSource | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
+
+  // 记住上次的选择
+  useEffect(() => {
+    try {
+      setUseProfile(localStorage.getItem("jobscout.askProfile") === "1");
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  function toggleProfile(next: boolean) {
+    setUseProfile(next);
+    try {
+      localStorage.setItem("jobscout.askProfile", next ? "1" : "0");
+    } catch {
+      /* ignore */
+    }
+  }
 
   useEffect(() => {
     if (msgs.length > 0) {
@@ -91,7 +111,9 @@ export default function AskPage() {
     ]);
 
     const es = new EventSource(
-      `${API_BASE}/ask/stream?q=${encodeURIComponent(text)}&k=5`,
+      `${API_BASE}/ask/stream?q=${encodeURIComponent(text)}&k=5&use_profile=${
+        useProfile ? 1 : 0
+      }`,
     );
     esRef.current = es;
 
@@ -140,11 +162,21 @@ export default function AskPage() {
         title="智能问答"
         description="用自然语言问岗位数据。回答只依据检索到的 JD 片段，每条结论标注来源编号。"
         actions={
-          msgs.length > 0 ? (
-            <button className="btn btn-ghost" onClick={reset}>
-              <RotateCcw size={14} /> 新对话
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => toggleProfile(!useProfile)}
+              className={`btn btn-sm ${useProfile ? "btn-primary" : "btn-ghost"}`}
+              title="开启后回答会结合你上传的简历"
+            >
+              <UserRound size={13} /> {useProfile ? "已结合简历" : "结合简历"}
             </button>
-          ) : undefined
+            {msgs.length > 0 && (
+              <button className="btn btn-ghost btn-sm" onClick={reset}>
+                <RotateCcw size={14} /> 新对话
+              </button>
+            )}
+          </div>
         }
       />
 

@@ -31,6 +31,7 @@ class SearchResponse(BaseModel):
 class AskRequest(BaseModel):
     question: str = Field(min_length=1, max_length=500)
     k: int = Field(default=5, ge=1, le=10)
+    use_profile: bool = Field(default=False, description="是否结合简历回答")
 
 
 class Citation(BaseModel):

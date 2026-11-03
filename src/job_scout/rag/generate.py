@@ -94,13 +94,29 @@ def parse_citations(text: str, used: list[Doc]) -> list[dict]:
     return out
 
 
-def build_user_prompt(question: str, context: str) -> str:
-    return f"""岗位片段：
+def build_user_prompt(question: str, context: str, profile_text: str = "") -> str:
+    if not profile_text:
+        return f"""岗位片段：
 {context}
 
 问题：{question}
 
 请依据上面的片段回答，并标注来源编号。"""
+
+    return f"""【我的简历】
+{profile_text}
+
+【岗位片段】
+{context}
+
+问题：{question}
+
+请结合我的简历和上面的岗位片段回答：
+- 涉及具体岗位、公司、薪资、要求时，以岗位片段为准，并标注来源编号 [1][2]
+- 涉及「我适不适合 / 我差什么 / 我该怎么准备」时，要对照简历里的**具体项目或技能**说，
+  不要泛泛而谈「你可以加强 X」
+- 简历里没有的能力，明确说没有，不要脑补
+- 只依据这两部分信息，不要引入外部猜测"""
 
 
 def extractive_answer(question: str, used: list[Doc]) -> str:
@@ -124,8 +140,12 @@ def ask(
     llm=None,
     k: int = 5,
     max_chars: int = 4000,
+    profile_text: str = "",
 ) -> Answer:
-    """完整问答流程：检索 → 组装 → 生成 → 解析引用。"""
+    """完整问答流程：检索 → 组装 → 生成 → 解析引用。
+
+    profile_text 非空时，回答会结合简历（用于「我适不适合」这类问题）。
+    """
     results = retriever.search(question, k=k)
     docs = [d for d, _ in results]
 
@@ -143,7 +163,11 @@ def ask(
             docs_count=len(used),
         )
 
-    text = llm.complete(SYSTEM_PROMPT, build_user_prompt(question, context), temperature=0.0)
+    text = llm.complete(
+        SYSTEM_PROMPT,
+        build_user_prompt(question, context, profile_text=profile_text),
+        temperature=0.0,
+    )
     return Answer(
         text=text,
         citations=parse_citations(text, used),
@@ -171,11 +195,12 @@ def stream_ask(
     llm=None,
     k: int = 5,
     max_chars: int = 4000,
+    profile_text: str = "",
 ):
     """流式问答：依次 yield (event, payload)。
 
     event: meta / token / done
-    - meta 先发，带上候选岗位，前端可以先渲染引用卡片占位
+    - meta 先发，带上候选岗位与是否已加载简历，前端可以先渲染引用卡片占位
     - token 逐段发，前端增量渲染
     - done 带最终引用列表
     """
@@ -183,7 +208,7 @@ def stream_ask(
     docs = [d for d, _ in results]
 
     if not docs:
-        yield "meta", {"mode": "refused", "docs": 0, "candidates": []}
+        yield "meta", {"mode": "refused", "docs": 0, "candidates": [], "with_profile": False}
         yield "token", "没有找到相关岗位。可以换个关键词，或放宽筛选条件。"
         yield "done", {"citations": []}
         return
@@ -194,6 +219,7 @@ def stream_ask(
         "mode": "llm" if llm is not None else "extractive",
         "docs": len(used),
         "candidates": candidates,
+        "with_profile": bool(profile_text),
     }
 
     if llm is None:
@@ -203,7 +229,9 @@ def stream_ask(
         return
 
     buf: list[str] = []
-    for tok in llm.stream(SYSTEM_PROMPT, build_user_prompt(question, context)):
+    for tok in llm.stream(
+        SYSTEM_PROMPT, build_user_prompt(question, context, profile_text=profile_text)
+    ):
         buf.append(tok)
         yield "token", tok
     yield "done", {"citations": parse_citations("".join(buf), used)}

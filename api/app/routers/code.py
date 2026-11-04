@@ -14,6 +14,7 @@ from job_scout.codebase import (
     save_scan,
     scan_project,
 )
+from job_scout.codereact import prescan_project
 from job_scout.rag.llm import get_llm
 
 router = APIRouter(prefix="/code", tags=["code"])
@@ -52,10 +53,11 @@ class ScanResponse(BaseModel):
 
 @router.post("/scan", response_model=ScanResponse)
 def scan(req: ScanRequest) -> ScanResponse:
-    """扫描一个本地项目并保存摘要。
+    """扫描一个本地项目并保存技术画像。
 
-    有模型 Key 时会读核心文件代码、让 LLM 写项目介绍（约 20 秒）；
-    没有就退回规则版清单摘要。
+    有模型 Key 时跑 ReAct 预扫描（20 轮，模型自己读代码，约 50 秒），
+    产出「技术偏向 + 项目结构 + 核心实现 + 适合投什么岗位」；
+    没有 Key 就退回规则版清单摘要。
     """
     result = scan_project(req.path)
     if not result.ok:
@@ -63,7 +65,29 @@ def scan(req: ScanRequest) -> ScanResponse:
     if result.file_count == 0:
         raise HTTPException(400, "这个目录里没找到源码文件（支持 py/ts/tsx/js/vue/java/go 等）")
 
-    saved = save_scan(result, req.project_name, llm=get_llm())
+    llm = get_llm()
+    label = req.project_name.strip() or result.name
+    react_text = ""
+    react_meta: dict = {}
+
+    if llm is not None and result.tree:
+        react = prescan_project(result.path, label, result.tree, llm, max_turns=20)
+        react_text = react.text if not react.error else ""
+        react_meta = {
+            "turns": react.turns,
+            "tool_calls": react.tool_calls,
+            "files_read": react.files_read,
+            "elapsed": round(react.elapsed, 1),
+            "error": react.error,
+        }
+
+    saved = save_scan(
+        result,
+        req.project_name,
+        llm=llm,
+        react_summary=react_text,
+        react_meta=react_meta,
+    )
     return ScanResponse(
         project_name=saved["project_name"],
         slug=saved["slug"],

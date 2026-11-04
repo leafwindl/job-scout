@@ -697,11 +697,20 @@ def _path_key(p: str) -> str:
     return (p or "").rstrip("\\/").replace("\\", "/").lower()
 
 
-def save_scan(scan: ProjectScan, project_name: str = "", llm=None) -> dict:
+def save_scan(
+    scan: ProjectScan,
+    project_name: str = "",
+    llm=None,
+    react_summary: str = "",
+    react_meta: dict | None = None,
+) -> dict:
     """保存一次扫描结果。
 
     project_name 是简历里的项目名，用来建立关联（改写时按它找代码摘要）。
-    llm 非空时会读核心文件代码、生成项目介绍；为空则退回清单式摘要。
+
+    react_summary 非空时（ReAct 预扫描的产出），直接用它当 summary——
+    那是模型读了完整代码写出来的技术画像，比规则摘要强得多。
+    为空但给了 llm 时，退回「抽核心文件 + LLM 写介绍」。
 
     同一个目录只保留一条：之前可能用目录名存过（AI_Chat），
     后来用户用简历项目名又绑了一次（Echo AI 助手），旧记录会被清掉，
@@ -723,23 +732,30 @@ def save_scan(scan: ProjectScan, project_name: str = "", llm=None) -> dict:
     label = project_name.strip() or scan.name
     slug = _slug(label)
 
-    # 有 LLM 就抽核心文件让它读，生成真介绍而不是清单
     llm_summary: dict | None = None
     core_files: list[str] = []
-    if llm is not None:
+
+    if react_summary.strip():
+        # ReAct 预扫描的画像优先
+        summary = f"项目名：{label}\n{react_summary.strip()}"
+    elif llm is not None:
         core_files = pick_core_files(scan)
         core_code = build_core_code(scan)
         if core_code:
             llm_summary = summarize_with_llm(scan, core_code, llm, display_name=label)
+        summary = render_summary(scan, label, llm_summary)
+    else:
+        summary = render_summary(scan, label, None)
 
     payload = {
         **scan.to_dict(),
         "project_name": label,
         "slug": slug,
         # 摘要里用简历项目名，不暴露目录名
-        "summary": render_summary(scan, label, llm_summary),
+        "summary": summary,
         "core_files": core_files,
         "llm_summary": llm_summary,
+        "react_meta": react_meta or {},
         "scanned_at": __import__("time").time(),
     }
     (CODE_DIR / f"{slug}.json").write_text(
@@ -863,6 +879,54 @@ def _tokens(text: str) -> set[str]:
     return out
 
 
+def pick_most_relevant_project(jd: str, only_projects: list[str] | None = None) -> dict:
+    """按 JD 选出最相关的项目，返回它的完整存档（含 path 和 tree）。
+
+    用途：改简历时只对这个项目跑 ReAct（12 轮约 45 秒），
+    其余项目用静态摘要。三个项目全跑要两分多钟，没必要。
+    """
+    items = list_saved()
+    if not items:
+        return {}
+
+    allow = {n.strip() for n in only_projects} if only_projects else None
+    jd_tokens = _tokens(jd or "")
+
+    best: dict = {}
+    best_score = 0
+    for it in items:
+        name = it["project_name"]
+        if allow is not None and name.strip() not in allow:
+            continue
+
+        # 用摘要 + 依赖 + 项目名一起打分
+        parts = [name, " ".join(it.get("deps") or [])]
+        ctx = get_context(name, max_chars=4000)
+        if ctx:
+            parts.append(ctx)
+        score = len(_tokens(" ".join(parts)) & jd_tokens)
+        if score > best_score:
+            best_score = score
+            best = it
+
+    if not best:
+        return {}
+
+    # list_saved 只给元信息，tree 要回原文件读
+    slug = best.get("slug", "")
+    if slug:
+        p = CODE_DIR / f"{slug}.json"
+        if p.exists():
+            try:
+                full = json.loads(p.read_text(encoding="utf-8"))
+                best = {**best, **full}
+            except (OSError, json.JSONDecodeError):
+                pass
+
+    best["score"] = best_score
+    return best
+
+
 def relevant_code_context(
     jd: str,
     only_projects: list[str] | None = None,
@@ -884,7 +948,6 @@ def relevant_code_context(
 
     allow = {n.strip() for n in only_projects} if only_projects else None
     jd_tokens = _tokens(jd or "")
-
     seen_paths: set[str] = set()
     scored: list[tuple[int, str, list[str]]] = []
 

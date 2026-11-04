@@ -2,12 +2,20 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from job_scout.codebase import all_contexts, get_context, relevant_code_context
+from job_scout.codebase import (
+    CODE_DIR,
+    all_contexts,
+    list_saved,
+    pick_most_relevant_project,
+    relevant_code_context,
+)
+from job_scout.codereact import analyze_for_job
 from job_scout.config import settings
 from job_scout.profile import (
     build_rewrite_brief,
@@ -18,6 +26,7 @@ from job_scout.profile import (
     rewrite_resume,
 )
 from job_scout.rag.llm import get_llm
+from job_scout.textclean import extract_jd_core
 
 router = APIRouter(tags=["match"])
 
@@ -74,26 +83,68 @@ def match(job_id: str) -> dict:
 
 @router.post("/resume/rewrite/{job_id}")
 def rewrite(job_id: str, project: str = "") -> dict:
-    """针对岗位给出简历改写建议（只调整表达，不编造经历）。
+    """针对岗位给出简历改写建议。
 
-    `project` 指定简历里的项目名时，会带上该项目的代码摘要，
-    让建议能引用代码里确实有的技术点。
+    流程：
+    1. 按 JD 选出最相关的那个项目（词频打分，秒级）
+    2. 对这个项目跑 ReAct 读代码（12 轮，约 45 秒），直接产出改写建议
+    3. 其余项目用静态技术画像兜底
+
+    `project` 指定项目名时强制用它，跳过第 1 步。
     """
     profile = _require_profile()
     llm = _require_llm()
     row = _get_job(job_id)
 
-    # 指定项目就只取那个；没指定就用简历里有的项目代码
     resume_names = [(x.get("name") or "").strip() for x in profile.projects]
-    code_ctx = (
-        get_context(project) if project else all_contexts(only_projects=resume_names)
-    )
+    jd = row["description"] or ""
+    jd_core = extract_jd_core(jd, 900)
+
+    # 1) 选项目
+    if project:
+        best = next((it for it in list_saved() if it["project_name"] == project), None)
+        if best:
+            full = CODE_DIR / f"{best['slug']}.json"
+            if full.exists():
+                best = {**best, **json.loads(full.read_text(encoding="utf-8"))}
+    else:
+        best = pick_most_relevant_project(jd, resume_names)
+
+    # 2) 对该项目跑 ReAct，直接产出「与岗位相关的实现 + 简历该怎么改」
+    react_text = ""
+    react_meta: dict = {}
+    used_project = ""
+    if best and best.get("path") and best.get("tree") and llm is not None:
+        used_project = best["project_name"]
+        proj_desc = _project_desc(profile, used_project)
+        react = analyze_for_job(
+            best["path"],
+            used_project,
+            best.get("tree") or [],
+            jd_core,
+            proj_desc,
+            llm,
+            max_turns=12,
+        )
+        react_text = react.text if not react.error else ""
+        react_meta = {
+            "project": used_project,
+            "turns": react.turns,
+            "tool_calls": react.tool_calls,
+            "files_read": react.files_read,
+            "elapsed": round(react.elapsed, 1),
+            "error": react.error,
+        }
+
+    # 3) 其余项目用静态画像
+    rest_ctx = all_contexts(max_chars=1500, only_projects=resume_names)
+    code_ctx = (react_text + "\n\n" + rest_ctx).strip() if react_text else rest_ctx
 
     result = rewrite_resume(
         profile,
         row["title"] or "",
         row["company"] or "",
-        row["description"] or "",
+        jd,
         llm,
         code_context=code_ctx,
     )
@@ -102,8 +153,19 @@ def rewrite(job_id: str, project: str = "") -> dict:
         "title": row["title"],
         "company": row["company"],
         "used_code": bool(code_ctx),
+        "react": react_meta,
         **result,
     }
+
+
+def _project_desc(profile, name: str) -> str:
+    """取简历里某个项目的原文描述，给 ReAct 当对照。"""
+    for p in profile.projects:
+        pname = (p.get("name") or "").strip()
+        if pname == name or (pname and (pname in name or name in pname)):
+            bullets = "\n".join(f"- {b}" for b in (p.get("bullets") or []))
+            return f"{pname}\n{bullets}".strip()
+    return ""
 
 
 @router.post("/greet")

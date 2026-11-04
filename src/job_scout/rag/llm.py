@@ -59,6 +59,28 @@ class LLM:
         )
         return resp.choices[0].message.content or ""
 
+    def chat(
+        self,
+        messages: list[dict],
+        tools: list[dict] | None = None,
+        temperature: float = 0.0,
+        tool_choice: str = "auto",
+    ):
+        """带工具调用的多轮对话，返回原始 message 对象。
+
+        调用方自己管理 messages 历史（API 是无状态的，每轮都要全量重发）。
+        """
+        kwargs: dict = {
+            "model": self.config.model,
+            "messages": messages,
+            "temperature": temperature,
+        }
+        if tools:
+            kwargs["tools"] = tools
+            kwargs["tool_choice"] = tool_choice
+        resp = self._client.chat.completions.create(**kwargs)
+        return resp.choices[0].message
+
     def stream(self, system: str, user: str, temperature: float = 0.0) -> Iterator[str]:
         stream = self._client.chat.completions.create(
             model=self.config.model,

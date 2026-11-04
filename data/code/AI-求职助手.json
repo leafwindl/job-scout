@@ -1,13 +1,13 @@
 {
-  "path": "/host/f/Project_do/Agent/job-scout",
+  "path": "F:\\Project_do\\Agent\\job-scout",
   "name": "job-scout",
-  "file_count": 146,
-  "line_count": 16173,
+  "file_count": 169,
+  "line_count": 18806,
   "langs": {
     "PowerShell": 269,
-    "Python": 10043,
-    "JavaScript": 1272,
-    "TypeScript": 4589
+    "Python": 11625,
+    "JavaScript": 1485,
+    "TypeScript": 5427
   },
   "deps": [
     "langgraph",
@@ -37,6 +37,7 @@
     "api/app/main.py",
     "api/app/schemas.py",
     "api/app/__init__.py",
+    "api/app/routers/analyze.py",
     "api/app/routers/ask.py",
     "api/app/routers/code.py",
     "api/app/routers/collect.py",
@@ -50,6 +51,7 @@
     "scripts/api_smoke.py",
     "scripts/api_sse_test.py",
     "scripts/audit_cleanup.py",
+    "scripts/audit_code_dups.py",
     "scripts/audit_db.py",
     "scripts/audit_garbled.py",
     "scripts/audit_intern.py",
@@ -61,7 +63,10 @@
     "scripts/cdp_debug2.py",
     "scripts/check_ask_k.py",
     "scripts/check_ask_render.py",
+    "scripts/check_code_card.py",
+    "scripts/check_code_list.py",
     "scripts/check_collect_page.py",
+    "scripts/check_collect_settings.py",
     "scripts/check_fast_path.py",
     "scripts/check_grabjd.py",
     "scripts/check_intern_url.py",
@@ -75,20 +80,15 @@
     "scripts/classify_jd.py",
     "scripts/cleanup_test.py",
     "scripts/clean_jd_data.py",
+    "scripts/debug_match.py",
+    "scripts/dedupe_code.py",
     "scripts/diag_adaptive.py",
     "scripts/diff_resume_parse.py",
     "scripts/dom_scroll_probe.py",
     "scripts/do_search.py",
     "scripts/eval_faithfulness.py",
     "scripts/export_by_category.py",
-    "scripts/fresh_scroll_test.py",
-    "scripts/import_user_resumes.py",
-    "scripts/inspect_api_fields.py",
-    "scripts/inspect_capture.py",
-    "scripts/inspect_fail.py",
-    "scripts/inspect_pages.py",
-    "scripts/intern_report.py",
-    "scripts/jd_keyword_report.py"
+    "scripts/fresh_scroll_test.py"
   ],
   "symbols": {
     "start.ps1": [
@@ -113,6 +113,14 @@
       "JobItem",
       "JobListResponse"
     ],
+    "api/app/routers/analyze.py": [
+      "AnalyzeRequest",
+      "AskRequest",
+      "_require_profile",
+      "_require_llm",
+      "analyze",
+      "ask"
+    ],
     "api/app/routers/ask.py": [
       "_profile_text",
       "ask",
@@ -121,19 +129,23 @@
     ],
     "api/app/routers/code.py": [
       "ScanRequest",
+      "ScanManyRequest",
+      "ReviewRequest",
       "ScanResponse",
       "scan",
       "items",
-      "remove",
-      "context"
+      "context",
+      "browse"
     ],
     "api/app/routers/collect.py": [
       "StartRequest",
       "StartResponse",
       "StatusResponse",
+      "ConfigPatch",
       "start",
       "status",
-      "reset"
+      "reset",
+      "get_config"
     ],
     "api/app/routers/company.py": [
       "companies",
@@ -148,6 +160,7 @@
     ],
     "api/app/routers/match.py": [
       "GreetRequest",
+      "ReviseGreetRequest",
       "_get_job",
       "_require_profile",
       "_require_llm",
@@ -184,7 +197,17 @@
     "scripts/check_ask_render.py": [
       "main"
     ],
+    "scripts/check_code_card.py": [
+      "main"
+    ],
+    "scripts/check_code_list.py": [
+      "resume_projects",
+      "main"
+    ],
     "scripts/check_collect_page.py": [
+      "main"
+    ],
+    "scripts/check_collect_settings.py": [
       "main"
     ],
     "scripts/check_grabjd.py": [
@@ -242,9 +265,39 @@
     "scripts/smoke.py": [
       "main"
     ],
+    "scripts/test_analyze.py": [
+      "post"
+    ],
+    "scripts/test_bind_by_name.py": [
+      "post",
+      "get"
+    ],
+    "scripts/test_browse.py": [
+      "show"
+    ],
+    "scripts/test_code_multi.py": [
+      "get",
+      "post"
+    ],
     "scripts/test_code_rewrite.py": [
       "post",
       "get"
+    ],
+    "scripts/test_collect_config.py": [
+      "get",
+      "post"
+    ],
+    "scripts/test_drives.py": [
+      "get"
+    ],
+    "scripts/test_greet_with_code.py": [
+      "post"
+    ],
+    "scripts/test_jobmeta_extract.py": [
+      "main"
+    ],
+    "scripts/test_revise_greet.py": [
+      "post"
     ],
     "scripts/test_rewrite.py": [
       "get",
@@ -330,11 +383,11 @@
       "Handler",
       "mark_auto_done",
       "read_auto_done",
+      "read_collect_config",
+      "update_collect_config",
       "to_posting",
       "_cors",
-      "_json",
-      "do_OPTIONS",
-      "do_GET"
+      "_json"
     ],
     "src/job_scout/storage.py": [
       "Storage",
@@ -525,6 +578,18 @@
     "web/components/AiLoading.tsx": [
       "AiLoading"
     ],
+    "web/components/CodeProjects.tsx": [
+      "unlink",
+      "reviewOne"
+    ],
+    "web/components/CollectSettings.tsx": [
+      "toggle",
+      "changeTarget"
+    ],
+    "web/components/FolderPicker.tsx": [
+      "useCurrent",
+      "useEntry"
+    ],
     "web/components/GrabJD.tsx": [
       "start"
     ],
@@ -565,13 +630,19 @@
   },
   "routes": [
     "/health",
+    "/ask",
     "/stream",
     "/scan",
-    "/{slug}",
     "/context",
+    "/browse",
+    "/discover",
+    "/{slug}",
+    "/review",
+    "/scan-many",
     "/start",
     "/status",
     "/reset",
+    "/config",
     "/companies",
     "/company/{name}",
     "/prep",
@@ -579,6 +650,7 @@
     "/match/{job_id}",
     "/resume/rewrite/{job_id}",
     "/greet",
+    "/greet/revise",
     "/upload"
   ],
   "readme": "# job-scout\n\n> 把「找工作」变成可量化的决策 —— 采集真实招聘 JD，用 RAG 做检索问答，上传简历后给每个岗位算匹配度、生成打招呼消息、指出简历该怎么改。\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/home.png\" alt=\"概览\" width=\"860\">\n</p>\n\n## 这是什么\n\n找工作最难的不是投简历，是**不知道投哪个、不知道该补什么**。\n\n市面上的岗位列表只回答「有什么岗位」，回答不了：\n\n- 这个岗位值不值得投？我的差距在哪？\n- 这家公司在做什么、喜欢什么样的人？\n- 招呼语怎么写才不像群发？\n- 我该补什么、什么不值得补？\n\n这个项目用爬来的真实数据 + RAG + LLM，把这四个问题变成可执行的判断。\n\n## 功能\n\n### 采集与数据\n\n- 浏览器油猴脚本旁听 BOSS 直聘接口响应，**不注入请求、不绕过验证码**\n- 只收 `jobType=4`（实习）+ 标题含 AI/Agent 关键词，挡掉产品/设计/运营类噪音\n- JD 正文用「真实导航到详情页再读 DOM」的方式抓，避开接口风控\n- 每天增量更新，超过 7 天没再出现自动标记停招\n\n### 检索与问答\n\n- 一条 JD = 一个 chunk，标题/公司/技能作为检索信号\n- BM25 + 向量双路召回，RRF 融合\n- 回答带引用编号 `[1]`，可点回原岗位\n- 检索不到就明确说没有，不硬答\n\n### 求职助手\n\n| 能力 | 说明 |\n|---|---|\n| **我的画像** | 上传 PDF 简历 → 提取技能/项目/经历 |\n| **岗位匹配** | 0-100 分 + 匹配点 + 缺口清单 |\n| **打招呼** | 200 字内定制消息，必须扣 JD 的具体要求 |\n| **简历改写** | 原文 → 改写 → 为什么，只调表达不编经历 |\n| **公司画像** | 在做什么 / 技术风格 / 团队特征 / 面试考什么 |\n| **技术准备** | 该补什么、怎么学、什么不值得学 |\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/match.png\" alt=\"匹配与打招呼\" width=\"760\">\n</p>\n\n## 截图\n\n| | |\n|---|---|\n| ![岗位](docs/screenshots/jobs.png) | ![我的](docs/screenshots/profile.png) |\n| 岗位列表 | 简历画像 |\n| ![公司](docs/screenshots/company.png) | ![准备](docs/screenshots/prep.png) |\n| 公司画像 | 技术准备 |\n| ![问答",
@@ -586,6 +658,6 @@
   "error": "",
   "project_name": "AI 求职助手",
   "slug": "AI-求职助手",
-  "summary": "项目名：job-scout\n路径：/host/f/Project_do/Agent/job-scout\n规模：146 个源文件，约 16173 行（Python 10043 行、TypeScript 4589 行、JavaScript 1272 行、PowerShell 269 行）\n依赖/技术栈：langgraph、langchain-core、playwright、pydantic、pydantic-settings、typer、rich、python-dotenv、pyyaml、beautifulsoup4、rank-bm25、jieba、numpy、fastembed、openai、fastapi、uvicorn\n对外接口：/health、/stream、/scan、/{slug}、/context、/start、/status、/reset、/companies、/company/{name}、/prep、/{job_id}、/match/{job_id}、/resume/rewrite/{job_id}、/greet\n目录结构：\n  install-daily-task.ps1\n  run.ps1\n  start.ps1\n  api/__init__.py\n  api/app/deps.py\n  api/app/main.py\n  api/app/schemas.py\n  api/app/__init__.py\n  api/app/routers/ask.py\n  api/app/routers/code.py\n  api/app/routers/collect.py\n  api/app/routers/company.py\n  api/app/routers/jobs.py\n  api/app/routers/match.py\n  api/app/routers/profile.py\n  api/app/routers/search.py\n  api/app/routers/__init__.py\n  scripts/active_scroll_test.py\n  scripts/api_smoke.py\n  scripts/api_sse_test.py\n  scripts/audit_cleanup.py\n  scripts/audit_db.py\n  scripts/audit_garbled.py\n  scripts/audit_intern.py\n  scripts/audit_jd_waste.py\n  scripts/audit_relevance.py\n  scripts/autoscroll_test.py\n  scripts/cdp_check.py\n  scripts/cdp_debug.py\n  scripts/cdp_debug2.py\n  scripts/check_ask_k.py\n  scripts/check_ask_render.py\n  scripts/check_collect_page.py\n  scripts/check_fast_path.py\n  scripts/check_grabjd.py\n  scripts/check_intern_url.py\n  scripts/check_jd.py\n  scripts/check_jd_clean.py\n  scripts/check_p2p3_ui.py\n  scripts/check_profile_ui.py\n  scripts/check_retrieval_count.py\n  scripts/check_stale.py\n  scripts/check_two_phase.py\n  scripts/classify_jd.py\n  scripts/cleanup_test.py\n主要模块与符号：\n  start.ps1: Write, Test, Wait\n  api/app/deps.py: pipeline_dep\n  api/app/main.py: lifespan, health\n  api/app/schemas.py: SearchRequest, SearchHit, SearchResponse, AskRequest, Citation, AskResponse, JobItem, JobListResponse\n  api/app/routers/ask.py: _profile_text, ask, ask_stream, event_gen\n  api/app/routers/code.py: ScanRequest, ScanResponse, scan, items, remove, context\n  api/app/routers/collect.py: StartRequest, StartResponse, StatusResponse, start, status, reset\n  api/app/routers/company.py: companies, company, prep\n  api/app/routers/jobs.py: _conn, _row_to_item, list_jobs, get_job\n  api/app/routers/match.py: GreetRequest, _get_job, _require_profile, _require_llm, match, rewrite, greet\n  api/app/routers/profile.py: ProfilePatch, get_profile, upload_resume, patch_profile\n  api/app/routers/search.py: search\n  scripts/api_smoke.py: post, get\n  scripts/api_sse_test.py: test_sse, test_latency\n  scripts/audit_db.py: scalar\n  scripts/cdp_check.py: main\n  scripts/check_ask_k.py: ask\n  scripts/check_ask_render.py: main\n  scripts/check_collect_page.py: main\n  scripts/check_grabjd.py: find_nojd, main\n  scripts/check_intern_url.py: post\n  scripts/check_p2p3_ui.py: main\nREADME 摘录：\n# job-scout\n\n> 把「找工作」变成可量化的决策 —— 采集真实招聘 JD，用 RAG 做检索问答，上传简历后给每个岗位算匹配度、生成打招呼消息、指出简历该怎么改。\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/home.png\" alt=\"概览\" width=\"860\">\n</p>\n\n## 这是什么\n\n找工作最难的不是投简历，是**不知道投哪个、不知道该补什么**。\n\n市面上的岗位列表只回答「有什么岗位」，回答不了：\n\n- 这个岗位值不值得投？我的差距在哪？\n- 这家公司在做什么、喜欢什么样的人？\n- 招呼语怎么写才不像群发？\n- 我该补什么、什么不值得补？\n\n这个项目用爬来的真实数据 + RAG + LLM，把这四个问题变成可执行的判断。\n\n## 功能\n\n### 采集与数据\n\n- 浏览器油猴脚本旁听 BOSS 直聘接口响应，**不注入请求、不绕过验证码**\n- 只收 `jobType=4`（实习）+ 标题含 AI/Agent 关键词，挡掉产品/设计/运营类噪音\n- JD 正文用「真实导航到详情页再读 DOM」的方式抓，避开接口风控\n- 每天增量更新，超过 7 天没再出现自动标记停招\n\n### 检索与问答\n\n- 一条 JD = 一个 chunk，标题/公司/技能作为检索信号\n- BM25 + 向量双路召回，RRF 融合\n- 回答带引用编号 `[1]`，可点回原岗位\n- 检索不到就明确说没有，不硬答\n\n### 求职助手\n\n| 能力 | 说明 |\n|---|---|\n| **我的画像** | 上传 PDF 简历 → 提取技能/项目/经历 |\n| **岗位匹配** | 0-100 分 + 匹配点 + 缺口清单 |\n| **打招呼** | 200 字内定制消息，必须扣 JD 的具体要求 |\n| **简历改写** | 原文 → 改写 → 为什么，只调表达不编经历 |\n| **公司画像** | 在做什么 / 技术风格 / 团队特征 / 面试考什么 |\n| **技术准备** | 该补什么、怎么学、什么不值得学 |\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/match.png\" alt=\"匹配与打招呼\" width=\"760\">\n</p>\n\n## 截图\n\n| | |\n|---|---|\n| ![岗位](docs/screenshots/jobs.png) | ![我的](docs/screenshots/profile.png) |\n| 岗位列表 | 简历画像 |\n| ![公司](docs/screenshots/company.png) | ![准备](docs/screenshots/prep.png) |\n| 公司画像 | 技术准备 |\n| ![问答",
-  "scanned_at": 1793755765.682437
+  "summary": "项目名：AI 求职助手\n路径：F:\\Project_do\\Agent\\job-scout\n规模：169 个源文件，约 18806 行（Python 11625 行、TypeScript 5427 行、JavaScript 1485 行、PowerShell 269 行）\n依赖/技术栈：langgraph、langchain-core、playwright、pydantic、pydantic-settings、typer、rich、python-dotenv、pyyaml、beautifulsoup4、rank-bm25、jieba、numpy、fastembed、openai、fastapi、uvicorn\n对外接口：/health、/ask、/stream、/scan、/context、/browse、/discover、/{slug}、/review、/scan-many、/start、/status、/reset、/config、/companies\n目录结构：\n  install-daily-task.ps1\n  run.ps1\n  start.ps1\n  api/__init__.py\n  api/app/deps.py\n  api/app/main.py\n  api/app/schemas.py\n  api/app/__init__.py\n  api/app/routers/analyze.py\n  api/app/routers/ask.py\n  api/app/routers/code.py\n  api/app/routers/collect.py\n  api/app/routers/company.py\n  api/app/routers/jobs.py\n  api/app/routers/match.py\n  api/app/routers/profile.py\n  api/app/routers/search.py\n  api/app/routers/__init__.py\n  scripts/active_scroll_test.py\n  scripts/api_smoke.py\n  scripts/api_sse_test.py\n  scripts/audit_cleanup.py\n  scripts/audit_code_dups.py\n  scripts/audit_db.py\n  scripts/audit_garbled.py\n  scripts/audit_intern.py\n  scripts/audit_jd_waste.py\n  scripts/audit_relevance.py\n  scripts/autoscroll_test.py\n  scripts/cdp_check.py\n  scripts/cdp_debug.py\n  scripts/cdp_debug2.py\n  scripts/check_ask_k.py\n  scripts/check_ask_render.py\n  scripts/check_code_card.py\n  scripts/check_code_list.py\n  scripts/check_collect_page.py\n  scripts/check_collect_settings.py\n  scripts/check_fast_path.py\n  scripts/check_grabjd.py\n  scripts/check_intern_url.py\n  scripts/check_jd.py\n  scripts/check_jd_clean.py\n  scripts/check_p2p3_ui.py\n  scripts/check_profile_ui.py\n主要模块与符号：\n  start.ps1: Write, Test, Wait\n  api/app/deps.py: pipeline_dep\n  api/app/main.py: lifespan, health\n  api/app/schemas.py: SearchRequest, SearchHit, SearchResponse, AskRequest, Citation, AskResponse, JobItem, JobListResponse\n  api/app/routers/analyze.py: AnalyzeRequest, AskRequest, _require_profile, _require_llm, analyze, ask\n  api/app/routers/ask.py: _profile_text, ask, ask_stream, event_gen\n  api/app/routers/code.py: ScanRequest, ScanManyRequest, ReviewRequest, ScanResponse, scan, items, context, browse\n  api/app/routers/collect.py: StartRequest, StartResponse, StatusResponse, ConfigPatch, start, status, reset, get_config\n  api/app/routers/company.py: companies, company, prep\n  api/app/routers/jobs.py: _conn, _row_to_item, list_jobs, get_job\n  api/app/routers/match.py: GreetRequest, ReviseGreetRequest, _get_job, _require_profile, _require_llm, match, rewrite, greet\n  api/app/routers/profile.py: ProfilePatch, get_profile, upload_resume, patch_profile\n  api/app/routers/search.py: search\n  scripts/api_smoke.py: post, get\n  scripts/api_sse_test.py: test_sse, test_latency\n  scripts/audit_db.py: scalar\n  scripts/cdp_check.py: main\n  scripts/check_ask_k.py: ask\n  scripts/check_ask_render.py: main\n  scripts/check_code_card.py: main\n  scripts/check_code_list.py: resume_projects, main\n  scripts/check_collect_page.py: main\nREADME 摘录：\n# job-scout\n\n> 把「找工作」变成可量化的决策 —— 采集真实招聘 JD，用 RAG 做检索问答，上传简历后给每个岗位算匹配度、生成打招呼消息、指出简历该怎么改。\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/home.png\" alt=\"概览\" width=\"860\">\n</p>\n\n## 这是什么\n\n找工作最难的不是投简历，是**不知道投哪个、不知道该补什么**。\n\n市面上的岗位列表只回答「有什么岗位」，回答不了：\n\n- 这个岗位值不值得投？我的差距在哪？\n- 这家公司在做什么、喜欢什么样的人？\n- 招呼语怎么写才不像群发？\n- 我该补什么、什么不值得补？\n\n这个项目用爬来的真实数据 + RAG + LLM，把这四个问题变成可执行的判断。\n\n## 功能\n\n### 采集与数据\n\n- 浏览器油猴脚本旁听 BOSS 直聘接口响应，**不注入请求、不绕过验证码**\n- 只收 `jobType=4`（实习）+ 标题含 AI/Agent 关键词，挡掉产品/设计/运营类噪音\n- JD 正文用「真实导航到详情页再读 DOM」的方式抓，避开接口风控\n- 每天增量更新，超过 7 天没再出现自动标记停招\n\n### 检索与问答\n\n- 一条 JD = 一个 chunk，标题/公司/技能作为检索信号\n- BM25 + 向量双路召回，RRF 融合\n- 回答带引用编号 `[1]`，可点回原岗位\n- 检索不到就明确说没有，不硬答\n\n### 求职助手\n\n| 能力 | 说明 |\n|---|---|\n| **我的画像** | 上传 PDF 简历 → 提取技能/项目/经历 |\n| **岗位匹配** | 0-100 分 + 匹配点 + 缺口清单 |\n| **打招呼** | 200 字内定制消息，必须扣 JD 的具体要求 |\n| **简历改写** | 原文 → 改写 → 为什么，只调表达不编经历 |\n| **公司画像** | 在做什么 / 技术风格 / 团队特征 / 面试考什么 |\n| **技术准备** | 该补什么、怎么学、什么不值得学 |\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/match.png\" alt=\"匹配与打招呼\" width=\"760\">\n</p>\n\n## 截图\n\n| | |\n|---|---|\n| ![岗位](docs/screenshots/jobs.png) | ![我的](docs/screenshots/profile.png) |\n| 岗位列表 | 简历画像 |\n| ![公司](docs/screenshots/company.png) | ![准备](docs/screenshots/prep.png) |\n| 公司画像 | 技术准备 |\n| ![问答",
+  "scanned_at": 1793778823.4312224
 }

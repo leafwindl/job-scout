@@ -82,8 +82,11 @@ def rewrite(job_id: str, project: str = "") -> dict:
     llm = _require_llm()
     row = _get_job(job_id)
 
-    # 指定项目就只取那个；没指定就用全部已扫描的代码摘要
-    code_ctx = get_context(project) if project else all_contexts()
+    # 指定项目就只取那个；没指定就用简历里有的项目代码
+    resume_names = [(x.get("name") or "").strip() for x in profile.projects]
+    code_ctx = (
+        get_context(project) if project else all_contexts(only_projects=resume_names)
+    )
 
     result = rewrite_resume(
         profile,
@@ -115,6 +118,10 @@ def greet(req: GreetRequest) -> dict:
     if m["matched"]:
         extra = (extra + " 可强调：" + "；".join(m["matched"][:2])).strip()
 
+    # 简历里有的项目才带上代码实况，避免塞进简历没写的项目
+    resume_names = [(x.get("name") or "").strip() for x in profile.projects]
+    code_ctx = all_contexts(max_chars=2500, only_projects=resume_names)
+
     text = generate_greeting(
         profile,
         row["title"] or "",
@@ -123,7 +130,7 @@ def greet(req: GreetRequest) -> dict:
         llm,
         extra=extra,
         # 带上项目代码实况：简历没写透、但代码里确实有的技术点，说出来更有说服力
-        code_context=all_contexts(max_chars=2500),
+        code_context=code_ctx,
     )
     return {
         "job_id": req.job_id,
@@ -131,7 +138,7 @@ def greet(req: GreetRequest) -> dict:
         "company": row["company"],
         "greeting": text,
         "chars": len(text),
-        "used_code": bool(all_contexts(max_chars=1)),
+        "used_code": bool(code_ctx),
         "match": m,
     }
 

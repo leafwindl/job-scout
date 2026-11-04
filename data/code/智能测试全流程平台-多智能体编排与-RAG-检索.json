@@ -1,0 +1,1448 @@
+{
+  "path": "F:\\Project_do\\Finance_AI_Pro",
+  "name": "Finance_AI_Pro",
+  "file_count": 316,
+  "line_count": 35771,
+  "langs": {
+    "Shell": 363,
+    "Python": 26838,
+    "Vue": 6824,
+    "JavaScript": 1593,
+    "SQL": 153
+  },
+  "deps": [],
+  "tree": [
+    "start-all.sh",
+    "Finance_Agent/main.py",
+    "Finance_Agent/src/agents/__init__.py",
+    "Finance_Agent/src/agents/agent1/main.py",
+    "Finance_Agent/src/agents/agent1/prompts.py",
+    "Finance_Agent/src/agents/agent1/server.py",
+    "Finance_Agent/src/agents/agent1/state.py",
+    "Finance_Agent/src/agents/agent1/__init__.py",
+    "Finance_Agent/src/agents/agent1/graph/workflow.py",
+    "Finance_Agent/src/agents/agent1/graph/__init__.py",
+    "Finance_Agent/src/agents/agent1/nodes/kb_router.py",
+    "Finance_Agent/src/agents/agent1/nodes/keyword_extractor.py",
+    "Finance_Agent/src/agents/agent1/nodes/knowledge_retrieval.py",
+    "Finance_Agent/src/agents/agent1/nodes/llm_config.py",
+    "Finance_Agent/src/agents/agent1/nodes/report_generator.py",
+    "Finance_Agent/src/agents/agent1/nodes/requirement_parser.py",
+    "Finance_Agent/src/agents/agent1/nodes/risk_assessment.py",
+    "Finance_Agent/src/agents/agent1/nodes/six_points_eval.py",
+    "Finance_Agent/src/agents/agent1/nodes/__init__.py",
+    "Finance_Agent/src/agents/agent1/utils/file_reader.py",
+    "Finance_Agent/src/agents/agent1/utils/__init__.py",
+    "Finance_Agent/src/agents/agent2/cli.py",
+    "Finance_Agent/src/agents/agent2/loader.py",
+    "Finance_Agent/src/agents/agent2/main.py",
+    "Finance_Agent/src/agents/agent2/__init__.py",
+    "Finance_Agent/src/agents/agent2/core/graph.py",
+    "Finance_Agent/src/agents/agent2/core/state.py",
+    "Finance_Agent/src/agents/agent2/core/__init__.py",
+    "Finance_Agent/src/agents/agent2/file_translation/parser.py",
+    "Finance_Agent/src/agents/agent2/file_translation/__init__.py",
+    "Finance_Agent/src/agents/agent2/handlers/keyword_converter.py",
+    "Finance_Agent/src/agents/agent2/handlers/keyword_extractor.py",
+    "Finance_Agent/src/agents/agent2/handlers/llm_handler.py",
+    "Finance_Agent/src/agents/agent2/handlers/output_handler.py",
+    "Finance_Agent/src/agents/agent2/handlers/retriever.py",
+    "Finance_Agent/src/agents/agent2/handlers/__init__.py",
+    "Finance_Agent/src/agents/agent3/__init__.py",
+    "Finance_Agent/src/agents/agent3/graph/state.py",
+    "Finance_Agent/src/agents/agent3/graph/workflow.py",
+    "Finance_Agent/src/agents/agent3/graph/__init__.py",
+    "Finance_Agent/src/agents/agent3/knowledge/builder.py",
+    "Finance_Agent/src/agents/agent3/knowledge/store.py",
+    "Finance_Agent/src/agents/agent3/knowledge/__init__.py",
+    "Finance_Agent/src/agents/agent3/models/deepseek.py",
+    "Finance_Agent/src/agents/agent3/models/__init__.py",
+    "Finance_Agent/src/agents/agent3/nodes/keyword.py",
+    "Finance_Agent/src/agents/agent3/nodes/keyword_parse.py",
+    "Finance_Agent/src/agents/agent3/nodes/retrieval.py",
+    "Finance_Agent/src/agents/agent3/nodes/retrieval_merge.py",
+    "Finance_Agent/src/agents/agent3/nodes/review.py",
+    "Finance_Agent/src/agents/agent3/nodes/score.py",
+    "Finance_Agent/src/agents/agent3/nodes/__init__.py",
+    "Finance_Agent/src/agents/agent3/prompts/keyword_prompt.py",
+    "Finance_Agent/src/agents/agent3/prompts/review_prompt.py",
+    "Finance_Agent/src/agents/agent3/prompts/__init__.py",
+    "Finance_Agent/src/agents/agent4/modules/api/api_server.py",
+    "Finance_Agent/src/agents/agent4/modules/api/file_parser.py",
+    "Finance_Agent/src/agents/agent4/modules/api/__init__.py",
+    "Finance_Agent/src/agents/agent4/modules/llm/llm_client.py",
+    "Finance_Agent/src/agents/agent4/modules/llm/__init__.py"
+  ],
+  "symbols": {
+    "Finance_Agent/main.py": [
+      "build_parser",
+      "run_pipeline",
+      "run_single_agent"
+    ],
+    "Finance_Agent/src/agents/agent1/main.py": [
+      "print_banner",
+      "run_pipeline",
+      "print_report",
+      "main"
+    ],
+    "Finance_Agent/src/agents/agent1/server.py": [
+      "TextAttachment",
+      "ReviewRequest",
+      "RiskItem",
+      "RiskAnalysis",
+      "ReviewResponse",
+      "AsyncTaskResponse",
+      "TaskStatusResponse",
+      "lifespan"
+    ],
+    "Finance_Agent/src/agents/agent1/state.py": [
+      "RequirementState",
+      "calculate_completeness"
+    ],
+    "Finance_Agent/src/agents/agent1/graph/workflow.py": [
+      "build_graph"
+    ],
+    "Finance_Agent/src/agents/agent1/nodes/kb_router.py": [
+      "main",
+      "route_keywords_to_kb"
+    ],
+    "Finance_Agent/src/agents/agent1/nodes/keyword_extractor.py": [
+      "KeywordExtractionResult",
+      "extract_keywords"
+    ],
+    "Finance_Agent/src/agents/agent1/nodes/knowledge_retrieval.py": [
+      "_kb_base_url",
+      "_format_results",
+      "_search",
+      "knowledge_retrieval"
+    ],
+    "Finance_Agent/src/agents/agent1/nodes/report_generator.py": [
+      "report_generator"
+    ],
+    "Finance_Agent/src/agents/agent1/nodes/requirement_parser.py": [
+      "MissingInfoItem",
+      "RequirementAnalysisResult",
+      "requirement_parser"
+    ],
+    "Finance_Agent/src/agents/agent1/nodes/risk_assessment.py": [
+      "RiskItem",
+      "RiskAssessmentResult",
+      "risk_assessment"
+    ],
+    "Finance_Agent/src/agents/agent1/nodes/six_points_eval.py": [
+      "MissingItem",
+      "SixPointsResult",
+      "six_points_eval"
+    ],
+    "Finance_Agent/src/agents/agent1/utils/file_reader.py": [
+      "extract_text",
+      "_read_txt",
+      "_read_pdf",
+      "_read_docx",
+      "_read_xlsx"
+    ],
+    "Finance_Agent/src/agents/agent2/cli.py": [
+      "chat",
+      "_cli_once",
+      "_cli_loop",
+      "main"
+    ],
+    "Finance_Agent/src/agents/agent2/loader.py": [
+      "KnowledgeBaseLoader",
+      "bootstrap",
+      "__init__",
+      "_split_by_headers",
+      "_load_files",
+      "load"
+    ],
+    "Finance_Agent/src/agents/agent2/core/graph.py": [
+      "_route_after_convert"
+    ],
+    "Finance_Agent/src/agents/agent2/core/state.py": [
+      "InputState",
+      "AgentState"
+    ],
+    "Finance_Agent/src/agents/agent2/file_translation/parser.py": [
+      "FileParseError",
+      "parse_bytes",
+      "parse_file"
+    ],
+    "Finance_Agent/src/agents/agent2/handlers/keyword_converter.py": [
+      "convert_keywords"
+    ],
+    "Finance_Agent/src/agents/agent2/handlers/keyword_extractor.py": [
+      "KeywordExtractor",
+      "__init__",
+      "_extract_last_user_query",
+      "_parse_json",
+      "extract"
+    ],
+    "Finance_Agent/src/agents/agent2/handlers/llm_handler.py": [
+      "LLMHandler",
+      "__init__",
+      "load_model",
+      "_format_doc",
+      "_format_docs",
+      "_extract_last_user_query",
+      "rag_response",
+      "chat_response"
+    ],
+    "Finance_Agent/src/agents/agent2/handlers/output_handler.py": [
+      "OutputHandler",
+      "extract_response",
+      "print_result",
+      "_print_debug"
+    ],
+    "Finance_Agent/src/agents/agent2/handlers/retriever.py": [
+      "HybridRetriever",
+      "__init__",
+      "_make_embedding",
+      "get_store",
+      "_cache_path",
+      "_load_embeddings",
+      "_save_embeddings",
+      "_compute_embeddings"
+    ],
+    "Finance_Agent/src/agents/agent3/graph/state.py": [
+      "ReviewState"
+    ],
+    "Finance_Agent/src/agents/agent3/graph/workflow.py": [
+      "build_graph"
+    ],
+    "Finance_Agent/src/agents/agent3/graph/__init__.py": [
+      "build_graph"
+    ],
+    "Finance_Agent/src/agents/agent3/knowledge/store.py": [
+      "_get_client",
+      "_load_docs_from_dir",
+      "build_collections",
+      "_retrieve_from_collection",
+      "retrieve_history_defects",
+      "retrieve_standard_cases",
+      "retrieve_test_specs"
+    ],
+    "Finance_Agent/src/agents/agent3/models/deepseek.py": [
+      "create_deepseek"
+    ],
+    "Finance_Agent/src/agents/agent3/nodes/keyword.py": [
+      "_field",
+      "extract_keywords"
+    ],
+    "Finance_Agent/src/agents/agent3/nodes/keyword_parse.py": [
+      "parse_keywords"
+    ],
+    "Finance_Agent/src/agents/agent3/nodes/retrieval.py": [
+      "_search",
+      "retrieve_standard",
+      "retrieve_spec",
+      "retrieve_history"
+    ],
+    "Finance_Agent/src/agents/agent3/nodes/retrieval_merge.py": [
+      "merge_retrieval"
+    ],
+    "Finance_Agent/src/agents/agent3/nodes/review.py": [
+      "normalize_checklist",
+      "generate_review",
+      "_parse_json"
+    ],
+    "Finance_Agent/src/agents/agent3/nodes/score.py": [
+      "calculate_coverage"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/api/api_server.py": [
+      "TextAttachment",
+      "InternalChatRequest",
+      "initial_state",
+      "event_sse",
+      "execution_error",
+      "run_updates",
+      "health",
+      "unified_chat"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/api/file_parser.py": [
+      "extract_text_from_file"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/llm/llm_client.py": [
+      "get_llm"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/rag/nodes.py": [
+      "_search_one",
+      "knowledge_retrieve_node"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/rag/service.py": [
+      "search_knowledge_base"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/state/state_def.py": [
+      "KbTask",
+      "WorkflowState"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/workflow/graph.py": [
+      "route_after_json_parse",
+      "build_workflow_graph"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/workflow/nodes/extract_keyword_node.py": [
+      "extract_keyword_node"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/workflow/nodes/kb_route_node.py": [
+      "kb_route_node"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/workflow/nodes/llm_gen_json_node.py": [
+      "llm_gen_json_node"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/workflow/nodes/parse_node.py": [
+      "json_to_python_node"
+    ],
+    "Finance_Agent/src/agents/agent4/modules/workflow/nodes/reply_node.py": [
+      "gen_markdown_node",
+      "gen_error_node"
+    ],
+    "Finance_Agent/src/agents/agent5/core/checkpointer.py": [
+      "_dsn",
+      "build_checkpointer"
+    ],
+    "Finance_Agent/src/agents/agent5/core/graph.py": [
+      "intent_recognition",
+      "kb_retrieve",
+      "answer_generate",
+      "transfer_agent",
+      "route_after_intent",
+      "attach_checkpointer"
+    ],
+    "Finance_Agent/src/agents/agent5/core/handler.py": [
+      "AssistantHandler",
+      "load_model",
+      "recognize_intent",
+      "_is_pure_transfer_command",
+      "resolve_transfer",
+      "_history_messages",
+      "chat_answer",
+      "kb_answer"
+    ],
+    "Finance_Agent/src/agents/agent5/core/state.py": [
+      "AssistantInputState",
+      "AssistantState"
+    ],
+    "Finance_Agent/src/agents/requirement_analysis/graph.py": [
+      "_route_after_convert"
+    ],
+    "Finance_Agent/src/agents/requirement_analysis/state.py": [
+      "InputState",
+      "AgentState"
+    ],
+    "Finance_Agent/src/agents/requirement_analysis/nodes/converter.py": [
+      "convert_keywords"
+    ],
+    "Finance_Agent/src/agents/requirement_analysis/nodes/keyword.py": [
+      "extract_keywords"
+    ],
+    "Finance_Agent/src/agents/requirement_analysis/nodes/llm_handler.py": [
+      "rag_response",
+      "chat_response"
+    ],
+    "Finance_Agent/src/agents/requirement_analysis/nodes/retriever.py": [
+      "_remote_search",
+      "retrieve_all"
+    ],
+    "Finance_Agent/src/agents/requirement_review/graph.py": [
+      "route_after_classify",
+      "route_after_extraction",
+      "route_after_intent",
+      "build_graph"
+    ],
+    "Finance_Agent/src/agents/requirement_review/state.py": [
+      "RequirementState",
+      "merge_collected_info",
+      "get_missing_dimensions"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/boundary.py": [
+      "boundary_reply"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/classify.py": [
+      "classify_question"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/confirmation.py": [
+      "generate_confirmation",
+      "generate_reconfirmation"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/extract.py": [
+      "extract_info"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/intent.py": [
+      "recognize_intent"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/kb_router.py": [
+      "route_keywords_to_kb"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/keyword.py": [
+      "extract_keywords"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/modification.py": [
+      "extract_modifications"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/output_handler.py": [
+      "set_clarification_output",
+      "set_confirmation_output"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/retrieval.py": [
+      "_format_results",
+      "knowledge_retrieval",
+      "_search"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/spec_writer.py": [
+      "generate_spec"
+    ],
+    "Finance_Agent/src/agents/requirement_review/nodes/state_updater.py": [
+      "append_to_collected_info"
+    ],
+    "Finance_Agent/src/agents/test_case_review/graph.py": [
+      "build_graph"
+    ],
+    "Finance_Agent/src/agents/test_case_review/state.py": [
+      "ReviewState"
+    ],
+    "Finance_Agent/src/agents/test_case_review/nodes/keyword.py": [
+      "_field",
+      "extract_keywords"
+    ],
+    "Finance_Agent/src/agents/test_case_review/nodes/keyword_parse.py": [
+      "parse_keywords"
+    ],
+    "Finance_Agent/src/agents/test_case_review/nodes/merge.py": [
+      "merge_retrieval"
+    ],
+    "Finance_Agent/src/agents/test_case_review/nodes/review.py": [
+      "normalize_checklist",
+      "generate_review"
+    ],
+    "Finance_Agent/src/agents/test_case_review/nodes/score.py": [
+      "calculate_coverage"
+    ],
+    "Finance_Agent/src/agents/test_step_generator/graph.py": [
+      "route_after_parse",
+      "build_workflow_graph"
+    ],
+    "Finance_Agent/src/agents/test_step_generator/state.py": [
+      "KbTask",
+      "WorkflowState"
+    ],
+    "Finance_Agent/src/agents/test_step_generator/nodes/json_gen.py": [
+      "llm_gen_json_node"
+    ],
+    "Finance_Agent/src/agents/test_step_generator/nodes/json_parse.py": [
+      "json_to_python_node"
+    ],
+    "Finance_Agent/src/agents/test_step_generator/nodes/kb_route.py": [
+      "kb_route_node"
+    ],
+    "Finance_Agent/src/agents/test_step_generator/nodes/keyword.py": [
+      "extract_keyword_node"
+    ],
+    "Finance_Agent/src/agents/test_step_generator/nodes/reply.py": [
+      "gen_markdown_node",
+      "gen_error_node"
+    ],
+    "Finance_Agent/src/agents/test_step_generator/nodes/retrieval.py": [
+      "knowledge_retrieve_node"
+    ],
+    "Finance_Agent/src/api/server.py": [
+      "TextAttachment",
+      "InternalChatRequest",
+      "InternalApprovalRequest",
+      "_parse_range",
+      "lifespan",
+      "_event_sse",
+      "_execution_error",
+      "_query_with_attachments"
+    ],
+    "Finance_Agent/src/config/settings.py": [
+      "Settings",
+      "load_dotenv_on_startup"
+    ],
+    "Finance_Agent/src/knowledge/chroma_store.py": [
+      "_get_client",
+      "_load_docs_from_dir",
+      "build_collections",
+      "_retrieve_from_collection",
+      "retrieve_history_defects",
+      "retrieve_standard_cases",
+      "retrieve_test_specs"
+    ],
+    "Finance_Agent/src/knowledge/remote_kb.py": [
+      "search_knowledge_base"
+    ],
+    "Finance_Agent/src/models/factory.py": [
+      "get_llm"
+    ],
+    "Finance_Agent/src/pipeline/orchestrator.py": [
+      "PipelineResult",
+      "FullPipeline",
+      "run"
+    ],
+    "Finance_Agent/src/port_manager/agent_client.py": [
+      "PortAgentClient",
+      "__init__",
+      "port",
+      "is_connected",
+      "acquire",
+      "release",
+      "_heartbeat_loop"
+    ],
+    "Finance_Agent/src/port_manager/allocator.py": [
+      "PortAllocator",
+      "__init__",
+      "allocate_for",
+      "preferred_ranges"
+    ],
+    "Finance_Agent/src/port_manager/error_codes.py": [
+      "ErrorCode",
+      "code",
+      "message",
+      "__str__",
+      "error_response",
+      "success_response"
+    ],
+    "Finance_Agent/src/port_manager/manager.py": [
+      "PortManager",
+      "__init__",
+      "apply",
+      "release",
+      "heartbeat",
+      "query",
+      "query_agent",
+      "get_pool_info"
+    ],
+    "Finance_Agent/src/port_manager/models.py": [
+      "AgentType",
+      "UnifiedResponse",
+      "PortApplyRequest",
+      "PortAssignData",
+      "PortReleaseRequest",
+      "HeartbeatRequest",
+      "PortQueryRequest",
+      "PortInfo"
+    ],
+    "Finance_Agent/src/port_manager/registry.py": [
+      "AllocationRecord",
+      "PortRegistry",
+      "seconds_since_heartbeat",
+      "is_expired",
+      "to_dict",
+      "__init__",
+      "allocate",
+      "release"
+    ],
+    "Finance_Agent/src/port_manager/router.py": [
+      "init_router",
+      "_get_manager",
+      "_respond",
+      "_http_status",
+      "apply_port",
+      "release_port",
+      "send_heartbeat",
+      "query_ports"
+    ],
+    "Finance_Agent/tests/test_api_contract.py": [
+      "TestAgent1",
+      "TestAgent2",
+      "TestAgent3",
+      "TestAgent4",
+      "TestPipeline",
+      "TestPortAgentClientIntegration",
+      "_syspath",
+      "test_state_definition"
+    ],
+    "Finance_Agent/参考扩展/Finance_AI_FASTAPI/app/agent_gateway/registry.py": [
+      "AgentDefinition",
+      "build_registry"
+    ],
+    "Finance_Agent/参考扩展/Finance_AI_FASTAPI/app/schemas/chat.py": [
+      "ChatRequest",
+      "WorkflowRequest",
+      "ChatResponse",
+      "ApprovalRequest",
+      "ApprovalResponse",
+      "HealthResponse",
+      "empty_conversation_is_none",
+      "unique_file_ids"
+    ],
+    "Finance_Agent/参考扩展/Finance_AI_Vue/src/components/FlowVisualizer.vue": [
+      "stageState"
+    ],
+    "Finance_Agent/参考扩展/Finance_AI_Vue/src/components/GlobalAssistant.vue": [
+      "saveConvId",
+      "clearConvId",
+      "triggerFilePick",
+      "onFileChange",
+      "onDragStart",
+      "onDragMove",
+      "onDragEnd",
+      "toggle"
+    ],
+    "Finance_Agent/参考扩展/Finance_AI_Vue/src/composables/useFileUpload.js": [
+      "useFileUpload",
+      "formatSize",
+      "_extension",
+      "_validate",
+      "_doUpload",
+      "addFile",
+      "retryFile",
+      "cancelUpload"
+    ],
+    "Finance_AI_FASTAPI/mock_agent.py": [
+      "TextAttachment",
+      "ChatRequest",
+      "health",
+      "chat",
+      "generate"
+    ],
+    "Finance_AI_FASTAPI/app/main.py": [
+      "lifespan",
+      "log_http_request",
+      "health_check",
+      "readiness_check",
+      "handle_upstream_service_error",
+      "handle_client_error"
+    ],
+    "Finance_AI_FASTAPI/app/agent_gateway/client.py": [
+      "AgentClient",
+      "agent_headers",
+      "__init__",
+      "stream"
+    ],
+    "Finance_AI_FASTAPI/app/agent_gateway/registry.py": [
+      "AgentDefinition",
+      "build_registry"
+    ],
+    "Finance_AI_FASTAPI/app/agent_gateway/sse.py": [
+      "encode_sse",
+      "parse_sse",
+      "_parse_event"
+    ],
+    "Finance_AI_FASTAPI/app/api/auth.py": [
+      "RegisterRequest",
+      "LoginRequest",
+      "_session_digest",
+      "_create_session",
+      "get_current_user",
+      "register",
+      "login",
+      "logout"
+    ],
+    "Finance_AI_FASTAPI/app/api/chat.py": [
+      "list_agents",
+      "approve_message",
+      "send_chat_message",
+      "generate",
+      "review_test_case",
+      "generate_test_case_steps"
+    ],
+    "Finance_AI_FASTAPI/app/api/conversations.py": [
+      "list_conversations",
+      "get_messages",
+      "delete_conversation"
+    ],
+    "Finance_AI_FASTAPI/app/api/files.py": [
+      "FileUploadResponse",
+      "upload_file"
+    ],
+    "Finance_AI_FASTAPI/app/api/knowledge.py": [
+      "_upstream_unavailable",
+      "knowledge_graph",
+      "kb_list",
+      "kb_documents",
+      "document_subgraph",
+      "document_content"
+    ],
+    "Finance_AI_FASTAPI/app/core/config.py": [
+      "Settings",
+      "get_settings"
+    ],
+    "Finance_AI_FASTAPI/app/core/exceptions.py": [
+      "UpstreamServiceError",
+      "ClientError",
+      "__init__"
+    ],
+    "Finance_AI_FASTAPI/app/data_gateway/kb_pool.py": [
+      "get_kb_pool",
+      "close_kb_pool"
+    ],
+    "Finance_AI_FASTAPI/app/data_gateway/pool.py": [
+      "get_pool",
+      "close_pool"
+    ],
+    "Finance_AI_FASTAPI/app/data_gateway/test_data_gateway.py": [
+      "check",
+      "test_conversations",
+      "test_messages",
+      "test_files",
+      "test_edge_cases",
+      "cleanup",
+      "main"
+    ],
+    "Finance_AI_FASTAPI/app/data_gateway/repositories/conversations.py": [
+      "get_owned_conversation",
+      "create_conversation",
+      "list_owned_conversations",
+      "list_owned_messages",
+      "insert_user_message",
+      "insert_assistant_message",
+      "mark_request_failed",
+      "delete_owned_conversation"
+    ],
+    "Finance_AI_FASTAPI/app/data_gateway/repositories/files.py": [
+      "create_file_record",
+      "get_owned_ready_files"
+    ],
+    "Finance_AI_FASTAPI/app/data_gateway/repositories/kb_tasks.py": [
+      "create_task",
+      "get_task",
+      "mark_ingesting",
+      "mark_completed",
+      "mark_failed",
+      "mark_rolled_back"
+    ],
+    "Finance_AI_FASTAPI/app/data_gateway/repositories/knowledge_docs.py": [
+      "kb_name_for",
+      "_heading_key",
+      "list_kbs",
+      "list_documents_by_kb",
+      "get_document_content"
+    ],
+    "Finance_AI_FASTAPI/app/data_gateway/repositories/reviews.py": [
+      "create_pending_review",
+      "decide_review"
+    ],
+    "Finance_AI_FASTAPI/app/graph_gateway/neo4j.py": [
+      "get_driver",
+      "close_driver",
+      "fetch_graph",
+      "fetch_document_subgraph"
+    ],
+    "Finance_AI_FASTAPI/app/knowledge_gateway/extraction.py": [
+      "FileTextError",
+      "_decode_text",
+      "extract_text"
+    ],
+    "Finance_AI_FASTAPI/app/knowledge_gateway/kb_client.py": [
+      "KBClient",
+      "kb_headers",
+      "__init__",
+      "ingest_chunks",
+      "ingest_delete",
+      "_post"
+    ],
+    "Finance_AI_FASTAPI/app/knowledge_gateway/kb_ingest.py": [
+      "_heading_level",
+      "_split_by_heading",
+      "_split_long",
+      "_merge_short",
+      "chunk_document",
+      "split_document_by_level1",
+      "chunk_to_markdown",
+      "chunks_to_markdown"
+    ],
+    "Finance_AI_FASTAPI/app/knowledge_gateway/ocr.py": [
+      "_get_ocr",
+      "extract_text_from_image"
+    ],
+    "Finance_AI_FASTAPI/app/schemas/chat.py": [
+      "ChatRequest",
+      "WorkflowRequest",
+      "ChatResponse",
+      "ApprovalRequest",
+      "ApprovalResponse",
+      "HealthResponse",
+      "empty_conversation_is_none",
+      "unique_file_ids"
+    ],
+    "Finance_AI_FASTAPI/scripts/apply_migrations.py": [
+      "main"
+    ],
+    "Finance_AI_FASTAPI/scripts/classify_tunnel.py": [
+      "_pipe",
+      "_handle_conn",
+      "main"
+    ],
+    "Finance_AI_FASTAPI/scripts/kb_classify_remote.py": [
+      "_heading_level",
+      "split_document_by_level1",
+      "_split_long",
+      "chunk_to_markdown",
+      "extract_text_local",
+      "classify_batch_via_ssh",
+      "ingest_results",
+      "main"
+    ],
+    "Finance_AI_FASTAPI/scripts/txt_to_markdown.py": [
+      "main"
+    ],
+    "Finance_AI_FASTAPI/scripts/manual/auth_flow.py": [
+      "main"
+    ],
+    "Finance_AI_FASTAPI/scripts/manual/chat_stream.py": [
+      "main"
+    ],
+    "Finance_AI_FASTAPI/tests/test_auth_contract.py": [
+      "AsyncContext",
+      "FakeConnection",
+      "FakePool",
+      "__init__",
+      "__aenter__",
+      "__aexit__",
+      "transaction",
+      "fetchrow"
+    ],
+    "Finance_AI_FASTAPI/tests/test_chat_flow.py": [
+      "FakeAgentClient",
+      "FailingAgentClient",
+      "build_test_client",
+      "test_chat_normalizes_agent_stream_and_persists_messages",
+      "create_conversation",
+      "get_files",
+      "insert_user",
+      "insert_assistant"
+    ],
+    "Finance_AI_FASTAPI/tests/test_conversations_contract.py": [
+      "build_client",
+      "test_conversation_list_is_scoped_to_current_user",
+      "list_owned",
+      "test_messages_from_another_user_are_reported_as_not_found",
+      "no_owned_messages"
+    ],
+    "Finance_AI_FASTAPI/tests/test_files_contract.py": [
+      "CapturingPool",
+      "__init__",
+      "fetch",
+      "test_owned_files_require_ready_and_unexpired_records"
+    ],
+    "Finance_AI_FASTAPI/tests/test_gateway_contract.py": [
+      "test_all_agents_are_enabled",
+      "test_chat_request_normalizes_empty_conversation_and_deduplicates_files",
+      "test_chat_request_rejects_unknown_agent",
+      "test_openapi_declares_chat_as_sse"
+    ],
+    "Finance_AI_FASTAPI/tests/test_knowledge_graph_contract.py": [
+      "build_client",
+      "test_graph_returns_nodes_and_links",
+      "fake_driver",
+      "fake_fetch_graph",
+      "test_graph_neo4j_unavailable_returns_503",
+      "failing_driver",
+      "test_kb_list",
+      "fake_list"
+    ],
+    "Finance_AI_FASTAPI/tests/test_ocr_contract.py": [
+      "test_image_extensions_match_contract_5_1",
+      "test_ocr_failure_degrades_to_empty_text",
+      "test_gif_goes_through_ocr_degradation_path",
+      "test_text_file_extraction_returns_text_and_no_flag",
+      "test_empty_text_file_still_raises",
+      "test_unsupported_extension_raises",
+      "test_upload_image_max_bytes_default_5mb",
+      "test_ocr_provider_none_disables_ocr"
+    ],
+    "Finance_AI_FASTAPI/tests/test_sse_contract.py": [
+      "chunks",
+      "test_sse_parser_handles_chunked_utf8_and_crlf",
+      "collect",
+      "test_sse_parser_ignores_comments_and_invalid_json"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/main.py": [
+      "cmd_parse",
+      "cmd_classify",
+      "cmd_txt_pipeline",
+      "_txt_pg_config",
+      "cmd_ingest",
+      "cmd_search",
+      "cmd_serve",
+      "cmd_pipeline"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/parse_classify.py": [
+      "load_config",
+      "main",
+      "_cmd_parse_single",
+      "_cmd_parse_batch",
+      "_cmd_classify",
+      "_segments_to_blocks",
+      "_append_classification_note",
+      "_save_classified"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/upload.py": [
+      "_run_subprocess",
+      "run_cli_parse",
+      "run_cli_classify",
+      "upload_http",
+      "copy_to_input",
+      "print_summary",
+      "main"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/classifier/aggregator.py": [
+      "Aggregator",
+      "__init__",
+      "process_file",
+      "finalize",
+      "_build_chunk",
+      "_sort_key",
+      "_split_large_chunk",
+      "_copy_chunk"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/classifier/models.py": [
+      "H2Block",
+      "ClassifyResult",
+      "Chunk",
+      "KBIndex"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/classifier/prompts.py": [
+      "load_prompt",
+      "build_segment_prompt"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/classifier/segmenter.py": [
+      "SegmentResult",
+      "LLMSegmenter",
+      "__init__",
+      "ping",
+      "segment",
+      "classify_chunk",
+      "_segment_one_with_fallback",
+      "_split_text"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/parser/cleaner.py": [
+      "_compile_patterns",
+      "_remove_invisible_chars",
+      "_is_header_footer_line",
+      "_detect_repeated_title",
+      "clean_text"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/parser/loader.py": [
+      "RawDocument",
+      "detect_encoding",
+      "load_document"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/parser/parsers/base.py": [
+      "ParsedDocument",
+      "BaseParser",
+      "parse",
+      "_compute_hash",
+      "supports"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/parser/parsers/docx_parser.py": [
+      "DocxParser",
+      "parse"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/parser/parsers/pdf_parser.py": [
+      "PdfParser",
+      "parse"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/parser/parsers/txt_parser.py": [
+      "TxtParser",
+      "__init__",
+      "parse"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/parser/parsers/__init__.py": [
+      "get_parser",
+      "parse_file",
+      "supported_formats"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/scripts/build_neo4j_graph.py": [
+      "es_client",
+      "read_all_chunks",
+      "doc_type_label",
+      "extract_entities",
+      "add",
+      "build",
+      "merge_entity",
+      "main"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/scripts/check_topk.py": [
+      "search",
+      "find_rank",
+      "verdict",
+      "main"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/scripts/compare_scores.py": [
+      "cosine",
+      "main"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/scripts/list_knowledge.py": [
+      "main"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/scripts/rebuild_knowledge_base.py": [
+      "get_embedding_model",
+      "embed_texts",
+      "chunk_markdown",
+      "kb_code_for",
+      "pg_connection",
+      "es_client",
+      "reset_storage",
+      "ensure_index"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/scripts/topk_eval.py": [
+      "call_search",
+      "cosine_sim",
+      "load_embedding",
+      "print_topk_row",
+      "main"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/searcher/db_conn.py": [
+      "get_pg_conn",
+      "pg_health_check",
+      "close_pg_conn",
+      "get_es_client",
+      "es_health_check",
+      "close_es_client",
+      "get_neo4j_driver",
+      "neo4j_health_check"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/searcher/kb_search.py": [
+      "_load_jieba",
+      "_kb_of_name",
+      "_seed_match_score",
+      "_extract_core_keywords",
+      "expand_keywords_neo4j",
+      "_query_tokens",
+      "_is_noise_keyword",
+      "search_es_bm25"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/searcher/kb_search_server.py": [
+      "SearchRequest",
+      "SearchHit",
+      "SearchResponse",
+      "LegacySearchRequest",
+      "lifespan",
+      "agent_search",
+      "legacy_search",
+      "health"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/searcher/utils.py": [
+      "slice_markdown"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/services/classify_service.py": [
+      "ClassifyRequest",
+      "ClassifyBatchRequest",
+      "_get_classifier",
+      "from_cleaned_text",
+      "health",
+      "classify",
+      "classify_batch",
+      "_run_pipeline"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/services/ingest_service.py": [
+      "health",
+      "ingest_single",
+      "ingest_batch",
+      "_parse_direct",
+      "_classify_direct",
+      "_parse_via_http",
+      "_classify_via_http"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/services/parse_service.py": [
+      "health",
+      "parse_single",
+      "parse_batch",
+      "_cleaned_text_to_dict"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/shared/embedding.py": [
+      "_configured_model_name",
+      "get_embedding_model",
+      "embedding_dimension",
+      "text_to_vector",
+      "batch_text_to_vectors"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/shared/file_utils.py": [
+      "list_txt_files",
+      "ensure_output_dir",
+      "read_file_bytes",
+      "write_text_file",
+      "make_output_path"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/shared/hash_utils.py": [
+      "sha256_hash",
+      "compute_chunk_hashes"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/shared/logger.py": [
+      "setup_logger",
+      "get_logger"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/shared/models.py": [
+      "CleanedText",
+      "ChunkItem",
+      "ClassifyResponse",
+      "IngestResponse"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/tests/test_api_contract.py": [
+      "test_ingest_rejects_two_input_modes",
+      "test_content_mode_preserves_safe_source_file_name",
+      "fake_write"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/tests/test_parser.py": [
+      "_make_temp_txt",
+      "test_detect_encoding_utf8",
+      "test_detect_encoding_gbk",
+      "test_detect_encoding_fallback",
+      "test_load_document_utf8",
+      "test_load_document_empty",
+      "test_clean_blank_lines",
+      "test_clean_tabs"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/tests/test_parse_service.py": [
+      "test_parse_service_advertises_markdown_support",
+      "test_parse_service_accepts_markdown_upload"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/writer/hash_diff.py": [
+      "read_file",
+      "compute_sha256",
+      "extract_metadata",
+      "_pg_connect",
+      "resolve_schema",
+      "query_by_record_id",
+      "delete_by_record_id",
+      "delete_by_doc_hash"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/writer/kb_common.py": [
+      "read_file",
+      "compute_sha256",
+      "extract_meta",
+      "extract_meta_via_llm",
+      "get_file_info",
+      "build_metadata",
+      "strip_markdown",
+      "_split_by_h2_impl"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/writer/kb_ingest.py": [
+      "_get_embedding_model",
+      "embed_chunks",
+      "build_output",
+      "_pg_connect",
+      "write_to_postgres",
+      "resolve_schema_for_kb",
+      "_es_request",
+      "_ensure_es_index"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/writer/kb_ingest_batch.py": [
+      "_get_embedding_model",
+      "embed_chunks",
+      "build_output",
+      "_pg_connect",
+      "write_to_postgres",
+      "_es_request",
+      "_ensure_es_index",
+      "write_to_elasticsearch"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/writer/kb_ingest_server.py": [
+      "IngestRequest",
+      "GatewayChunk",
+      "IngestChunksRequest",
+      "IngestDeleteRequest",
+      "_get_embedding_model",
+      "embed_chunks",
+      "build_output",
+      "_pg_connect"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/writer/neo4j_extract.py": [
+      "es_scroll",
+      "call_llm",
+      "_do_update",
+      "main"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/writer/neo4j_index.py": [
+      "es_scroll",
+      "chunk_id",
+      "document_id",
+      "main"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/writer/neo4j_relink.py": [
+      "main"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/writer/neo4j_updater.py": [
+      "trigger_graph_update",
+      "_get_running_task_id",
+      "run_once",
+      "main"
+    ],
+    "Finance_Knowledge-main/Finance_ai_team_KnowledgeBase/writer/status_manager.py": [
+      "_pg_connect",
+      "get_flag",
+      "set_flag",
+      "poll_neo4j_task",
+      "check_and_update_graphrag_flag"
+    ],
+    "Finance_Vue-main/src/components/FileUploadInput.vue": [
+      "canSend",
+      "extLabel",
+      "extIcon",
+      "extColor",
+      "onDrop",
+      "onPaste",
+      "triggerFileInput",
+      "onFileChange"
+    ],
+    "Finance_Vue-main/src/components/FlowVisualizer.vue": [
+      "stageState"
+    ],
+    "Finance_Vue-main/src/components/GlobalAssistant.vue": [
+      "loadConvId",
+      "saveConvId",
+      "clearConvId",
+      "triggerFilePick",
+      "onFileChange",
+      "onDragStart",
+      "onDragMove",
+      "onDragEnd"
+    ],
+    "Finance_Vue-main/src/components/KbUploadDropzone.vue": [
+      "validate",
+      "resultSummary",
+      "handleFiles",
+      "onDrop",
+      "onFileChange",
+      "triggerPick"
+    ],
+    "Finance_Vue-main/src/components/chat/ChatComposer.vue": [
+      "canSend",
+      "handleSend",
+      "query"
+    ],
+    "Finance_Vue-main/src/components/chat/ChatMessages.vue": [
+      "formatFileSize",
+      "scrollToBottom"
+    ],
+    "Finance_Vue-main/src/components/knowledge/KnowledgeGraphCanvas.vue": [
+      "getCssVar",
+      "primaryColor",
+      "labelColor",
+      "labelOutline",
+      "escapeHtml",
+      "nodeId",
+      "findNode",
+      "nodeVisible"
+    ],
+    "Finance_Vue-main/src/components/review/ReviewProgress.vue": [
+      "stageState"
+    ],
+    "Finance_Vue-main/src/components/review/ReviewReportCard.vue": [
+      "requestReject"
+    ],
+    "Finance_Vue-main/src/components/sidebar/SidebarAgentItem.vue": [
+      "handleClick"
+    ],
+    "Finance_Vue-main/src/components/sidebar/SidebarAgentList.vue": [
+      "shortLabel",
+      "openRequirement"
+    ],
+    "Finance_Vue-main/src/components/sidebar/SidebarHistory.vue": [
+      "formatTime",
+      "agentName",
+      "goToChat",
+      "handleDelete"
+    ],
+    "Finance_Vue-main/src/components/sidebar/SidebarUser.vue": [
+      "handleLogout"
+    ],
+    "Finance_Vue-main/src/composables/useFileUpload.js": [
+      "useFileUpload",
+      "formatSize",
+      "_extension",
+      "_validate",
+      "_doUpload",
+      "addFile",
+      "retryFile",
+      "cancelUpload"
+    ],
+    "Finance_Vue-main/src/composables/useMarkdown.js": [
+      "renderMarkdown",
+      "escapeHtml"
+    ],
+    "Finance_Vue-main/src/composables/useTypewriter.js": [
+      "useTypewriter",
+      "tick",
+      "start",
+      "reset"
+    ],
+    "Finance_Vue-main/src/services/api.js": [
+      "uploadFile",
+      "sendChatMessage",
+      "fetchAgentCapabilities",
+      "sendApproval",
+      "healthCheck",
+      "apiBaseUrl",
+      "createClientMessageId",
+      "getErrorMessage"
+    ],
+    "Finance_Vue-main/src/services/api/auth.js": [
+      "login",
+      "register",
+      "getMe",
+      "logout",
+      "apiBase"
+    ],
+    "Finance_Vue-main/src/services/api/conversations.js": [
+      "listConversations",
+      "getConversationMessages",
+      "deleteConversation",
+      "apiBaseUrl",
+      "getErrorMessage"
+    ],
+    "Finance_Vue-main/src/services/api/knowledge.js": [
+      "requestJson",
+      "uploadToKnowledgeBase",
+      "getKnowledgeTask",
+      "uploadDocumentAndWait",
+      "fetchKnowledgeGraph",
+      "listKbDocuments",
+      "fetchDocumentContent",
+      "fetchDocumentSubgraph"
+    ],
+    "Finance_Vue-main/src/services/api/testcases.js": [
+      "postWorkflow",
+      "submitForReview",
+      "generateSteps",
+      "apiBaseUrl",
+      "clientId",
+      "parseAvailable"
+    ],
+    "Finance_Vue-main/src/stores/agents.js": [
+      "loadAgents",
+      "setUserScope",
+      "loadAgentCapabilities",
+      "syncRemoteConversations",
+      "syncAllRemoteConversations",
+      "loadRemoteMessages",
+      "enrichLastMessage",
+      "deleteRemoteConversation"
+    ],
+    "Finance_Vue-main/src/stores/theme.js": [
+      "toggleTheme",
+      "initTheme",
+      "updateHTMLClass"
+    ],
+    "Finance_Vue-main/src/stores/user.js": [
+      "init",
+      "login",
+      "register",
+      "logout"
+    ],
+    "Finance_Vue-main/src/utils/downloadReport.js": [
+      "downloadReport"
+    ],
+    "Finance_Vue-main/src/utils/userStorage.js": [
+      "uid",
+      "scopedKey",
+      "scopedPidKey",
+      "readScopedMap",
+      "writeScopedMap"
+    ],
+    "Finance_Vue-main/src/views/ChatView.vue": [
+      "initMessages",
+      "initializeConversation",
+      "handleDownload",
+      "handleApprove",
+      "handleReject",
+      "handleToTestFlow",
+      "handleViewSixDim",
+      "title"
+    ],
+    "Finance_Vue-main/src/views/DashboardView.vue": [
+      "openNewReqDialog",
+      "submitNewRequirement",
+      "analyzeConversation",
+      "cardStatus",
+      "onCardClick",
+      "goTc",
+      "openPreReview",
+      "matchContent"
+    ],
+    "Finance_Vue-main/src/views/KnowledgeGraphView.vue": [
+      "cloneGraph",
+      "initLayout",
+      "nodeId",
+      "validateGraph",
+      "stableRatio",
+      "initSubgraphLayout",
+      "loadGraph",
+      "rebuildGraph"
+    ],
+    "Finance_Vue-main/src/views/LoginView.vue": [
+      "handleLogin",
+      "handleRegister",
+      "switchMode"
+    ],
+    "Finance_Vue-main/src/views/RequirementTracking.vue": [
+      "statusTagType",
+      "analyzeConversation",
+      "openConv",
+      "deleteRow",
+      "confirmDelete"
+    ],
+    "Finance_Vue-main/src/views/SixDimReportView.vue": [
+      "handleDownload"
+    ],
+    "Finance_Vue-main/src/views/TestCaseEditor.vue": [
+      "clearForm",
+      "resetReviewFlow",
+      "setCardStatus",
+      "saveTcState",
+      "clearTcState",
+      "restoreTcState",
+      "maybeAutoContinueAgent4",
+      "findWorkflowConversation"
+    ]
+  },
+  "routes": [
+    "/health",
+    "/v1/agent/review",
+    "/review",
+    "/review/async",
+    "/review/status/{task_id}",
+    "/review/file",
+    "/v1/agent/chat",
+    "/api/generate_test_step/stream",
+    "/",
+    "/readiness",
+    "/v1/agent/approve",
+    "/apply",
+    "/release",
+    "/heartbeat",
+    "/query",
+    "/query/{agent_name}",
+    "/list",
+    "/pool",
+    "/api/v1/health",
+    "/api/v1/readiness",
+    "/register",
+    "/login",
+    "/me",
+    "/logout",
+    "/agents",
+    "/chat/approve",
+    "/chat",
+    "/test-cases/review",
+    "/test-cases/generate-steps",
+    "/{conversation_id}/messages",
+    "/{conversation_id}",
+    "/files/upload",
+    "/graph",
+    "/kbs",
+    "/kbs/{kb_code}/documents",
+    "/documents/{doc_id}/subgraph",
+    "/documents/{doc_id}/content",
+    "/knowledge/upload",
+    "/knowledge/tasks/{task_id}",
+    "/knowledge/tasks/{task_id}/rollback",
+    "/api/v1/search",
+    "/search",
+    "/classify",
+    "/classify/batch",
+    "/ingest",
+    "/ingest/batch",
+    "/parse",
+    "/parse/batch",
+    "/ingest/chunks",
+    "/ingest/delete"
+  ],
+  "readme": "# Finance AI 智能测试全流程平台\n\nFinance AI 是一个覆盖“需求预评审 → 六维测试分析 → 测试用例评审 → 测试步骤生成”的智能测试全流程平台。项目采用单仓库管理，浏览器只访问 Vue 和 Gateway，模型、知识库与数据库均通过服务端内部接口调用。\n\n## 1. 项目结构\n\n| 目录 | 职责 | 默认端口 |\n|---|---|---:|\n| `Finance_AI_Vue` | 页面、人工审批、SSE 进度展示 | 5173 |\n| `Finance_AI_FASTAPI` | 鉴权、会话持久化、统一 API、Agent 转发 | 8000 |\n| `Finance_Agent` | 四个 LangGraph 智能体 | 8101 |\n| `Finance_AI_KnowledgeBase` | 文档入库与知识检索 | 8002 |\n| `infra` | 本地 PostgreSQL/Elasticsearch 初始化 | — |\n| `scripts` | 安装、启动、停止和健康检查脚本 | — |\n\n```text\nBrowser -> Vue -> FastAPI Gateway -> Agent Platform -> KnowledgeBase\n                    |                      |\n                    v                      v\n                PostgreSQL              Ollama\n```\n\n## 2. 环境要求\n\n- Linux、macOS 或 WSL2；\n- Python 3.11～3.13；\n- Node.js 20+ 与 npm；\n- Docker Engine 与 Docker Compose；\n- Ollama，以及能够运行 `qwen3:32b-q8_0` 的模型服务器。\n\n模型很大，本仓库不包含 Ollama 模型权重。显存不足时可在 `.env` 中换成较小的兼容模型，但输出质量可能变化。\n\n## 3. 第一次安装\n\n```bash\ngit clone git@github.com:leafwindl/Finance_AI_Team.git\ncd Finance_AI_Team\n./scripts/bootstrap.sh\n```\n\n`bootstrap.sh` 会完成：\n\n1. 创建各 Python 模块的 `.venv` 并安装依赖；\n2. 使用 `npm ci` 安装前端依赖；\n3. 从每个 `.env.example` 创建缺失的 `.env`；\n4. 启动 PostgreSQL 和 Elasticsearch；\n5. 执行 Gateway SQL 迁移；\n",
+  "ok": true,
+  "error": "",
+  "project_name": "智能测试全流程平台 —— 多智能体编排与 RAG 检索",
+  "slug": "智能测试全流程平台-多智能体编排与-RAG-检索",
+  "summary": "项目名：智能测试全流程平台 —— 多智能体编排与 RAG 检索\n路径：F:\\Project_do\\Finance_AI_Pro\n规模：316 个源文件，约 35771 行（Python 26838 行、Vue 6824 行、JavaScript 1593 行、Shell 363 行）\n对外接口：/health、/v1/agent/review、/review、/review/async、/review/status/{task_id}、/review/file、/v1/agent/chat、/api/generate_test_step/stream、/、/readiness、/v1/agent/approve、/apply、/release、/heartbeat、/query\n目录结构：\n  start-all.sh\n  Finance_Agent/main.py\n  Finance_Agent/src/agents/__init__.py\n  Finance_Agent/src/agents/agent1/main.py\n  Finance_Agent/src/agents/agent1/prompts.py\n  Finance_Agent/src/agents/agent1/server.py\n  Finance_Agent/src/agents/agent1/state.py\n  Finance_Agent/src/agents/agent1/__init__.py\n  Finance_Agent/src/agents/agent1/graph/workflow.py\n  Finance_Agent/src/agents/agent1/graph/__init__.py\n  Finance_Agent/src/agents/agent1/nodes/kb_router.py\n  Finance_Agent/src/agents/agent1/nodes/keyword_extractor.py\n  Finance_Agent/src/agents/agent1/nodes/knowledge_retrieval.py\n  Finance_Agent/src/agents/agent1/nodes/llm_config.py\n  Finance_Agent/src/agents/agent1/nodes/report_generator.py\n  Finance_Agent/src/agents/agent1/nodes/requirement_parser.py\n  Finance_Agent/src/agents/agent1/nodes/risk_assessment.py\n  Finance_Agent/src/agents/agent1/nodes/six_points_eval.py\n  Finance_Agent/src/agents/agent1/nodes/__init__.py\n  Finance_Agent/src/agents/agent1/utils/file_reader.py\n  Finance_Agent/src/agents/agent1/utils/__init__.py\n  Finance_Agent/src/agents/agent2/cli.py\n  Finance_Agent/src/agents/agent2/loader.py\n  Finance_Agent/src/agents/agent2/main.py\n  Finance_Agent/src/agents/agent2/__init__.py\n  Finance_Agent/src/agents/agent2/core/graph.py\n  Finance_Agent/src/agents/agent2/core/state.py\n  Finance_Agent/src/agents/agent2/core/__init__.py\n  Finance_Agent/src/agents/agent2/file_translation/parser.py\n  Finance_Agent/src/agents/agent2/file_translation/__init__.py\n  Finance_Agent/src/agents/agent2/handlers/keyword_converter.py\n  Finance_Agent/src/agents/agent2/handlers/keyword_extractor.py\n  Finance_Agent/src/agents/agent2/handlers/llm_handler.py\n  Finance_Agent/src/agents/agent2/handlers/output_handler.py\n  Finance_Agent/src/agents/agent2/handlers/retriever.py\n  Finance_Agent/src/agents/agent2/handlers/__init__.py\n  Finance_Agent/src/agents/agent3/__init__.py\n  Finance_Agent/src/agents/agent3/graph/state.py\n  Finance_Agent/src/agents/agent3/graph/workflow.py\n  Finance_Agent/src/agents/agent3/graph/__init__.py\n  Finance_Agent/src/agents/agent3/knowledge/builder.py\n  Finance_Agent/src/agents/agent3/knowledge/store.py\n  Finance_Agent/src/agents/agent3/knowledge/__init__.py\n  Finance_Agent/src/agents/agent3/models/deepseek.py\n  Finance_Agent/src/agents/agent3/models/__init__.py\n主要模块与符号：\n  Finance_Agent/main.py: build_parser, run_pipeline, run_single_agent\n  Finance_Agent/src/agents/agent1/main.py: print_banner, run_pipeline, print_report, main\n  Finance_Agent/src/agents/agent1/server.py: TextAttachment, ReviewRequest, RiskItem, RiskAnalysis, ReviewResponse, AsyncTaskResponse, TaskStatusResponse, lifespan\n  Finance_Agent/src/agents/agent1/state.py: RequirementState, calculate_completeness\n  Finance_Agent/src/agents/agent1/graph/workflow.py: build_graph\n  Finance_Agent/src/agents/agent1/nodes/kb_router.py: main, route_keywords_to_kb\n  Finance_Agent/src/agents/agent1/nodes/keyword_extractor.py: KeywordExtractionResult, extract_keywords\n  Finance_Agent/src/agents/agent1/nodes/knowledge_retrieval.py: _kb_base_url, _format_results, _search, knowledge_retrieval\n  Finance_Agent/src/agents/agent1/nodes/report_generator.py: report_generator\n  Finance_Agent/src/agents/agent1/nodes/requirement_parser.py: MissingInfoItem, RequirementAnalysisResult, requirement_parser\n  Finance_Agent/src/agents/agent1/nodes/risk_assessment.py: RiskItem, RiskAssessmentResult, risk_assessment\n  Finance_Agent/src/agents/agent1/nodes/six_points_eval.py: MissingItem, SixPointsResult, six_points_eval\n  Finance_Agent/src/agents/agent1/utils/file_reader.py: extract_text, _read_txt, _read_pdf, _read_docx, _read_xlsx\n  Finance_Agent/src/agents/agent2/cli.py: chat, _cli_once, _cli_loop, main\n  Finance_Agent/src/agents/agent2/loader.py: KnowledgeBaseLoader, bootstrap, __init__, _split_by_headers, _load_files, load\n  Finance_Agent/src/agents/agent2/core/graph.py: _route_after_convert\n  Finance_Agent/src/agents/agent2/core/state.py: InputState, AgentState\n  Finance_Agent/src/agents/agent2/file_translation/parser.py: FileParseError, parse_bytes, parse_file\n  Finance_Agent/src/agents/agent2/handlers/keyword_converter.py: convert_keywords\n  Finance_Agent/src/agents/agent2/handlers/keyword_extractor.py: KeywordExtractor, __init__, _extract_last_user_query, _parse_json, extract\n  Finance_Agent/src/agents/agent2/handlers/llm_handler.py: LLMHandler, __init__, load_model, _format_doc, _format_docs, _extract_last_user_query, rag_response, chat_response\n  Finance_Agent/src/agents/agent2/handlers/output_handler.py: OutputHandler, extract_response, print_result, _print_debug\nREADME 摘录：\n# Finance AI 智能测试全流程平台\n\nFinance AI 是一个覆盖“需求预评审 → 六维测试分析 → 测试用例评审 → 测试步骤生成”的智能测试全流程平台。项目采用单仓库管理，浏览器只访问 Vue 和 Gateway，模型、知识库与数据库均通过服务端内部接口调用。\n\n## 1. 项目结构\n\n| 目录 | 职责 | 默认端口 |\n|---|---|---:|\n| `Finance_AI_Vue` | 页面、人工审批、SSE 进度展示 | 5173 |\n| `Finance_AI_FASTAPI` | 鉴权、会话持久化、统一 API、Agent 转发 | 8000 |\n| `Finance_Agent` | 四个 LangGraph 智能体 | 8101 |\n| `Finance_AI_KnowledgeBase` | 文档入库与知识检索 | 8002 |\n| `infra` | 本地 PostgreSQL/Elasticsearch 初始化 | — |\n| `scripts` | 安装、启动、停止和健康检查脚本 | — |\n\n```text\nBrowser -> Vue -> FastAPI Gateway -> Agent Platform -> KnowledgeBase\n                    |                      |\n                    v                      v\n                PostgreSQL              Ollama\n```\n\n## 2. 环境要求\n\n- Linux、macOS 或 WSL2；\n- Python 3.11～3.13；\n- Node.js 20+ 与 npm；\n- Docker Engine 与 Docker Compose；\n- Ollama，以及能够运行 `qwen3:32b-q8_0` 的模型服务器。\n\n模型很大，本仓库不包含 Ollama 模型权重。显存不足时可在 `.env` 中换成较小的兼容模型，但输出质量可能变化。\n\n## 3. 第一次安装\n\n```bash\ngit clone git@github.com:leafwindl/Finance_AI_Team.git\ncd Finance_AI_Team\n./scripts/bootstrap.sh\n```\n\n`bootstrap.sh` 会完成：",
+  "scanned_at": 1793778831.195285
+}

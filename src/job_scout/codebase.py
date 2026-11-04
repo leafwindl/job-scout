@@ -118,12 +118,17 @@ class ProjectScan:
     def to_dict(self) -> dict:
         return asdict(self)
 
-    def summary_markdown(self, max_chars: int = 4000) -> str:
-        """生成给 LLM 看的结构化摘要。"""
+    def summary_markdown(self, max_chars: int = 4000, display_name: str = "") -> str:
+        """生成给 LLM 看的结构化摘要。
+
+        display_name 用于显示简历里的项目名（而不是目录名），
+        这样模型看到的是「Echo AI 助手 App」，不是「AI_Chat」。
+        """
         if not self.ok:
             return ""
 
-        lines: list[str] = [f"项目名：{self.name}", f"路径：{self.path}"]
+        name = display_name or self.name
+        lines: list[str] = [f"项目名：{name}", f"路径：{self.path}"]
 
         if self.langs:
             top = sorted(self.langs.items(), key=lambda x: -x[1])[:4]
@@ -491,12 +496,32 @@ def _slug(name: str) -> str:
     return s or "project"
 
 
+def _path_key(p: str) -> str:
+    """路径归一化，用来判断「是不是同一个目录」。"""
+    return (p or "").rstrip("\\/").replace("\\", "/").lower()
+
+
 def save_scan(scan: ProjectScan, project_name: str = "") -> dict:
     """保存一次扫描结果。
 
     project_name 是简历里的项目名，用来建立关联（改写时按它找代码摘要）。
+
+    同一个目录只保留一条：之前可能用目录名存过（AI_Chat），
+    后来用户用简历项目名又绑了一次（Echo AI 助手），旧记录会被清掉，
+    否则 all_contexts 会把同一份代码算两遍。
     """
     CODE_DIR.mkdir(parents=True, exist_ok=True)
+
+    # 清掉指向同一目录的旧记录
+    current = _path_key(scan.path)
+    for old in CODE_DIR.glob("*.json"):
+        try:
+            d = json.loads(old.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if _path_key(d.get("path", "")) == current:
+            old.unlink(missing_ok=True)
+
     # 没指定就退回目录名
     label = project_name.strip() or scan.name
     slug = _slug(label)
@@ -505,7 +530,8 @@ def save_scan(scan: ProjectScan, project_name: str = "") -> dict:
         **scan.to_dict(),
         "project_name": label,
         "slug": slug,
-        "summary": scan.summary_markdown(max_chars=6000),
+        # 摘要里用简历项目名，不暴露目录名
+        "summary": scan.summary_markdown(max_chars=6000, display_name=label),
         "scanned_at": __import__("time").time(),
     }
     (CODE_DIR / f"{slug}.json").write_text(
@@ -576,14 +602,32 @@ def get_context(project_name: str, max_chars: int = 3500) -> str:
     return ""
 
 
-def all_contexts(max_chars: int = 3000) -> str:
-    """把所有已保存项目的摘要拼起来（改写时不指定项目时用）。"""
+def all_contexts(max_chars: int = 3000, only_projects: list[str] | None = None) -> str:
+    """把所有已保存项目的摘要拼起来（改写时不指定项目时用）。
+
+    - 按路径去重：历史数据里同一个目录可能存过两条
+    - only_projects 非空时只拼这些项目（传简历里的项目名列表，
+      避免把简历里根本没有的项目代码也塞给模型）
+    """
     items = list_saved()
     if not items:
         return ""
+
+    allow = {n.strip() for n in only_projects} if only_projects else None
+
+    seen_paths: set[str] = set()
     parts: list[str] = []
-    for it in items[:5]:
+    for it in items:
+        if allow is not None and it["project_name"].strip() not in allow:
+            continue
+        key = _path_key(it.get("path", ""))
+        if key in seen_paths:
+            continue
+        seen_paths.add(key)
         ctx = get_context(it["project_name"], max_chars=800)
         if ctx:
             parts.append(ctx)
+        if len(parts) >= 5:
+            break
+
     return "\n\n---\n\n".join(parts)[:max_chars]

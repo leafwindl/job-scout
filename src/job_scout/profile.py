@@ -199,6 +199,51 @@ def build_profile_text(p: Profile, compact: bool = False) -> str:
 VERDICT_ORDER = {"强推": 0, "可投": 1, "观望": 2, "不建议": 3}
 
 
+REVISE_GREET_PROMPT = """你在**改一条已经写好的**打招呼消息，不是重写。
+
+【当前版本】
+{current}
+
+【求职者觉得哪里不对】
+{feedback}
+
+【参考信息】
+我的简历：{profile}
+目标岗位：{title} ｜ {company}
+JD 摘录：{jd}
+
+要求：
+1. **按修改要求改**，没提到的地方尽量保持原样，别整段推翻
+2. 仍然 **200 字以内**
+3. 仍然禁止编造简历里没有的经历
+4. 仍然避免"贵公司""您好，我是 XX 大学 XX 专业"这类模板腔
+5. 直接输出新版本正文，不要解释、不要引号、不要"修改后："这种前缀
+"""
+
+
+def revise_greeting(
+    profile: Profile,
+    title: str,
+    company: str,
+    jd: str,
+    current: str,
+    feedback: str,
+    llm,
+    max_jd: int = 1500,
+) -> str:
+    """按求职者的反馈重写已有的打招呼消息。"""
+    prompt = REVISE_GREET_PROMPT.format(
+        current=current[:1200],
+        feedback=feedback[:500],
+        profile=build_profile_text(profile, compact=True),
+        title=title,
+        company=company,
+        jd=(jd or "")[:max_jd],
+    )
+    raw = llm.complete("你是一个务实的求职顾问。", prompt, temperature=0.4)
+    return raw.strip().strip('"').strip("“”").strip()
+
+
 GREET_PROMPT = """你在帮求职者写 BOSS 直聘的打招呼消息。
 
 【我的简历】

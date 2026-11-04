@@ -13,6 +13,7 @@ from job_scout.profile import (
     generate_greeting,
     load_profile,
     match_job,
+    revise_greeting,
     rewrite_resume,
 )
 from job_scout.rag.llm import get_llm
@@ -129,4 +130,36 @@ def greet(req: GreetRequest) -> dict:
         "greeting": text,
         "chars": len(text),
         "match": m,
+    }
+
+
+class ReviseGreetRequest(BaseModel):
+    job_id: str
+    # 上一版招呼语
+    current: str = Field(min_length=1, max_length=2000)
+    # 求职者的修改要求，比如「太长了」「别提薪资」「强调 RAG 项目」
+    feedback: str = Field(min_length=1, max_length=500)
+
+
+@router.post("/greet/revise")
+def revise_greet(req: ReviseGreetRequest) -> dict:
+    """按用户反馈重写招呼语。"""
+    profile = _require_profile()
+    llm = _require_llm()
+    row = _get_job(req.job_id)
+
+    text = revise_greeting(
+        profile,
+        row["title"] or "",
+        row["company"] or "",
+        row["description"] or "",
+        req.current,
+        req.feedback,
+        llm,
+    )
+    return {
+        "job_id": req.job_id,
+        "greeting": text,
+        "chars": len(text),
+        "feedback": req.feedback,
     }

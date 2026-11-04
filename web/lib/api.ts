@@ -306,6 +306,11 @@ export const api = {
   patchProfile: (patch: Partial<Profile>) => post<Profile>("/profile", patch),
   match: (jobId: string) => post<MatchResult>(`/match/${jobId}`, {}),
   greet: (jobId: string, extra = "") => post<GreetResult>("/greet", { job_id: jobId, extra }),
+  reviseGreet: (jobId: string, current: string, feedback: string) =>
+    post<{ job_id: string; greeting: string; chars: number; feedback: string }>(
+      "/greet/revise",
+      { job_id: jobId, current, feedback },
+    ),
   rewrite: (jobId: string, project = "") =>
     post<RewriteResult>(
       `/resume/rewrite/${jobId}${project ? `?project=${encodeURIComponent(project)}` : ""}`,

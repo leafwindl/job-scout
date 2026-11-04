@@ -17,6 +17,7 @@ import {
   RefreshCw,
   Sparkles,
   Target,
+  Wand2,
 } from "lucide-react";
 
 import { EmptyState } from "@/components/ui";
@@ -124,6 +125,10 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
   const [busy, setBusy] = useState<"" | TabId>("");
   const [err, setErr] = useState("");
   const [copied, setCopied] = useState(false);
+  // 招呼语：提建议让 AI 重写
+  const [feedback, setFeedback] = useState("");
+  const [revising, setRevising] = useState(false);
+  const [reviseErr, setReviseErr] = useState("");
   const [expanded, setExpanded] = useState({
     matched: false,
     missing: false,
@@ -184,6 +189,26 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
       setTimeout(() => setCopied(false), 2000);
     } catch {
       setErr("复制失败，请手动选中复制");
+    }
+  }
+
+  /** 按用户反馈重写招呼语。 */
+  async function reviseGreet() {
+    if (!greet || !feedback.trim() || revising) return;
+    setRevising(true);
+    setReviseErr("");
+    try {
+      const r = await api.reviseGreet(jobId, greet.greeting, feedback.trim());
+      setGreet({
+        ...greet,
+        greeting: r.greeting,
+        chars: r.chars,
+      });
+      setFeedback("");
+    } catch (e) {
+      setReviseErr(String(e).slice(0, 120));
+    } finally {
+      setRevising(false);
     }
   }
 
@@ -433,11 +458,44 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
                 <button
                   className="btn btn-quiet btn-sm"
                   onClick={runGreet}
-                  disabled={busy !== ""}
+                  disabled={busy !== "" || revising}
                 >
                   <RefreshCw size={12} /> 换一条
                 </button>
                 <span className="text-3xs text-fg3">发送前建议按自己的语气再改两句</span>
+              </div>
+
+              {/* 提建议让 AI 重写 */}
+              <div className="rounded-lg border border-line/60 bg-panel2/30 p-2.5">
+                <div className="mb-1.5 text-2xs text-fg3">不满意？说哪里不对，让它改</div>
+                <div className="flex gap-1.5">
+                  <input
+                    className="input h-8 flex-1 py-0 text-xs"
+                    placeholder="比如：太长了 / 别提薪资 / 强调 RAG 项目"
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") reviseGreet();
+                    }}
+                    disabled={revising}
+                  />
+                  <button
+                    className="btn btn-ghost btn-sm shrink-0"
+                    onClick={reviseGreet}
+                    disabled={!feedback.trim() || revising}
+                  >
+                    {revising ? (
+                      <>
+                        <Loader2 size={12} className="animate-spin" /> 改中
+                      </>
+                    ) : (
+                      <>
+                        <Wand2 size={12} /> 按建议重写
+                      </>
+                    )}
+                  </button>
+                </div>
+                {reviseErr && <p className="mt-1.5 text-2xs text-rose-400">{reviseErr}</p>}
               </div>
             </div>
           ) : (

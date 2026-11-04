@@ -11,6 +11,7 @@ import {
   Copy,
   FileText,
   Loader2,
+  Lock,
   MessageSquare,
   Minus,
   Plus,
@@ -212,11 +213,50 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
     }
   }
 
-  const tabs: { id: TabId; label: string; icon: typeof Target; done: boolean }[] = [
-    { id: "match", label: "匹配度", icon: Target, done: Boolean(match) },
-    { id: "greet", label: "招呼语", icon: MessageSquare, done: Boolean(greet) },
-    { id: "rewrite", label: "简历建议", icon: FileText, done: Boolean(rewrite) },
+  // 三步是递进的：先看匹配度 → 再决定简历怎么改 → 最后据此写招呼语。
+  // 后一步依赖前一步的结论，所以没做前面就不给解锁后面。
+  const lockReason = (id: TabId): string => {
+    if (id === "rewrite" && !match) {
+      return "先做「匹配度」：知道差在哪，才知道简历该往哪个方向改";
+    }
+    if (id === "greet" && !rewrite) {
+      return "先做「简历建议」：招呼语会引用针对这个岗位改过的措辞，直接写容易像群发";
+    }
+    return "";
+  };
+
+  const tabs: {
+    id: TabId;
+    label: string;
+    icon: typeof Target;
+    done: boolean;
+    locked: boolean;
+  }[] = [
+    { id: "match", label: "匹配度", icon: Target, done: Boolean(match), locked: false },
+    {
+      id: "rewrite",
+      label: "简历建议",
+      icon: FileText,
+      done: Boolean(rewrite),
+      locked: Boolean(lockReason("rewrite")),
+    },
+    {
+      id: "greet",
+      label: "招呼语",
+      icon: MessageSquare,
+      done: Boolean(greet),
+      locked: Boolean(lockReason("greet")),
+    },
   ];
+
+  function switchTab(id: TabId) {
+    if (lockReason(id)) {
+      setErr(lockReason(id));
+      return;
+    }
+    setErr("");
+    setTab(id);
+  }
 
   return (
     <div className="card overflow-hidden">
@@ -234,7 +274,7 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
       </div>
 
       <div role="tablist" aria-label="投递助手" className="flex gap-1 border-b border-line/60 p-2">
-        {tabs.map((t) => {
+        {tabs.map((t, idx) => {
           const Icon = t.icon;
           const active = tab === t.id;
           return (
@@ -242,20 +282,39 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
               key={t.id}
               role="tab"
               aria-selected={active}
-              onClick={() => setTab(t.id)}
-              className={`flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md text-xs transition-colors ${
+              aria-disabled={t.locked}
+              onClick={() => switchTab(t.id)}
+              title={t.locked ? lockReason(t.id) : undefined}
+              className={`relative flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md text-xs transition-colors ${
                 active
                   ? "bg-panel2 font-medium text-fg"
-                  : "text-fg3 hover:bg-panel2/60 hover:text-fg2"
+                  : t.locked
+                    ? "cursor-not-allowed text-fg3/50"
+                    : "text-fg3 hover:bg-panel2/60 hover:text-fg2"
               }`}
             >
-              <Icon
-                size={13}
-                strokeWidth={1.9}
-                className={active ? "text-accent" : "text-fg3"}
-              />
+              {/* 步骤序号：让「先做什么」一眼可见 */}
+              <span
+                className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] tabular-nums ${
+                  t.done
+                    ? "bg-mint/15 text-mint"
+                    : active
+                      ? "bg-accent/15 text-accent"
+                      : "bg-panel3/60 text-fg3"
+                }`}
+              >
+                {t.done ? <Check size={9} strokeWidth={3} /> : idx + 1}
+              </span>
+              {t.locked ? (
+                <Lock size={11} className="shrink-0 text-fg3/60" strokeWidth={2} />
+              ) : (
+                <Icon
+                  size={13}
+                  strokeWidth={1.9}
+                  className={active ? "text-accent" : "text-fg3"}
+                />
+              )}
               {t.label}
-              {t.done && <Check size={10} className="text-mint" strokeWidth={2.6} />}
             </button>
           );
         })}
@@ -395,12 +454,12 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
                 <button
                   className="btn btn-primary btn-sm"
                   onClick={() => {
-                    setTab("greet");
-                    if (!greet) runGreet();
+                    setTab("rewrite");
+                    if (!rewrite) runRewrite();
                   }}
                   disabled={busy !== ""}
                 >
-                  <MessageSquare size={13} /> 生成招呼语
+                  <FileText size={13} /> 下一步：看简历建议
                 </button>
               </div>
             </div>
@@ -653,9 +712,16 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
                 >
                   <RefreshCw size={12} /> 重新生成
                 </button>
-                <Link href="/prep" className="text-2xs text-accent hover:underline">
-                  看该补哪些技术 →
-                </Link>
+                <button
+                  className="btn btn-primary btn-sm"
+                  onClick={() => {
+                    setTab("greet");
+                    if (!greet) runGreet();
+                  }}
+                  disabled={busy !== ""}
+                >
+                  <MessageSquare size={13} /> 下一步：写招呼语
+                </button>
               </div>
             </div>
           ) : (

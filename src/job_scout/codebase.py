@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -485,6 +486,201 @@ def discover_projects(parent: str) -> list[dict]:
     return found
 
 
+# ==================== 核心文件抽取 ====================
+
+# 文件名里带这些词，通常是项目的入口或骨架
+_CORE_HINTS = (
+    "main",
+    "app",
+    "server",
+    "router",
+    "api",
+    "agent",
+    "graph",
+    "node",
+    "pipeline",
+    "service",
+    "core",
+    "index",
+    "handler",
+    "engine",
+    "orchestr",
+)
+
+MAX_CORE_FILES = 5
+MAX_CORE_LINES = 120
+
+
+def pick_core_files(scan: ProjectScan, limit: int = 15) -> list[str]:
+    """从扫描结果里挑候选核心文件（返回较多个，交给 build_core_code 按行数筛）。"""
+    if not scan.tree:
+        return []
+
+    # 这些扩展名不是「项目核心逻辑」
+    skip_ext = (".ps1", ".bat", ".sh", ".cmd", ".md", ".yml", ".yaml", ".json", ".toml", ".lock")
+
+    scored: list[tuple[int, str]] = []
+    for rel in scan.tree:
+        low = rel.lower()
+        if low.endswith(skip_ext):
+            continue
+        # 第三方库不代表项目本身
+        if any(
+            seg in low
+            for seg in ("third_party", "vendor/", "external/", "generated", "node_modules")
+        ):
+            continue
+        name = low.rsplit("/", 1)[-1]
+        stem = name.rsplit(".", 1)[0]
+
+        score = 0
+        for hint in _CORE_HINTS:
+            if hint in stem:
+                score += 10 - _CORE_HINTS.index(hint) // 3
+                break
+
+        # 路径越浅越可能是入口
+        score -= rel.count("/")
+
+        # src / app / core 这些目录里的是业务代码，加分
+        if any(seg in ("src", "app", "core", "internal", "lib") for seg in low.split("/")[:-1]):
+            score += 6
+
+        # 测试、脚本、迁移、配置不算核心
+        if any(x in low for x in ("test", "script", "migration", "config", "setup")):
+            score -= 10
+
+        scored.append((score, rel))
+
+    scored.sort(key=lambda x: -x[0])
+    return [rel for score, rel in scored[:limit] if score > 0]
+
+
+def build_core_code(scan: ProjectScan, max_lines: int = MAX_CORE_LINES) -> str:
+    """读出核心文件的代码片段，给 LLM 看。
+
+    先按「名字像入口」挑一批候选，再按实际行数取前几个——
+    只看名字容易选到 __init__.py 这种空文件。
+    """
+    root = Path(scan.path)
+    candidates = pick_core_files(scan)
+
+    loaded: list[tuple[int, str, list[str]]] = []
+    for rel in candidates:
+        full = root / rel.replace("/", os.sep)
+        text = _read_text(full, limit=120_000)
+        if not text:
+            continue
+        lines = text.splitlines()
+        meaningful = sum(1 for ln in lines if ln.strip() and not ln.strip().startswith(("#", "//")))
+        # 太空的文件代表不了项目
+        if meaningful < 25:
+            continue
+        loaded.append((meaningful, rel, lines))
+
+    # 信息量大的优先
+    loaded.sort(key=lambda x: -x[0])
+
+    parts: list[str] = []
+    for meaningful, rel, lines in loaded[:MAX_CORE_FILES]:
+        snippet = "\n".join(lines[:max_lines])
+        head = f"### {rel}（共 {len(lines)} 行"
+        if len(lines) > max_lines:
+            head += f"，下面是前 {max_lines} 行"
+        head += "）"
+        parts.append(f"{head}\n{snippet}")
+
+    return "\n\n".join(parts)[:12000]
+
+
+SUMMARY_PROMPT = """你在给一个代码项目写技术介绍，输出给简历系统用。
+
+【项目基本信息】
+名字：{name}
+规模：{file_count} 个源文件，约 {line_count} 行
+语言：{langs}
+依赖：{deps}
+对外接口：{routes}
+
+【目录结构】
+{tree}
+
+【核心文件代码】
+{code}
+
+请写一段项目介绍，输出 JSON（不要解释、不要 markdown 代码块）：
+{{
+  "intro": "3-5 句话说清：这个项目做什么、解决什么问题、技术架构怎样、有哪些核心模块。要像人写的项目经历开头，不要罗列文件名。",
+  "modules": ["核心模块 1：一句话职责", "核心模块 2：一句话职责"],
+  "highlights": ["技术亮点 1（必须是从代码里能看出来的）", "技术亮点 2"]
+}}
+
+规则：
+- **只依据给出的代码**，代码里看不出来的不要编
+- intro 不要出现「本项目」「该系统」这种腔调，直接说它做什么
+- modules 给 2-4 个，挑真正有代码支撑的
+- highlights 给 2-3 个，写具体做法，不写「采用了先进的」这种形容词
+"""
+
+
+def summarize_with_llm(
+    scan: ProjectScan, core_code: str, llm, display_name: str = ""
+) -> dict:
+    """让 LLM 读核心代码，生成项目介绍（不是罗列清单）。
+
+    display_name 是简历里的项目名——给模型看到的名字要和用户简历一致，
+    否则它会在介绍里写目录名（AI_Chat），写进简历会很怪。
+    """
+    prompt = SUMMARY_PROMPT.format(
+        name=display_name or scan.name,
+        file_count=scan.file_count,
+        line_count=scan.line_count,
+        langs="、".join(f"{k} {v} 行" for k, v in list(scan.langs.items())[:4]) or "未知",
+        deps="、".join(scan.deps[:20]) or "未标注",
+        routes="、".join(scan.routes[:15]) or "未识别",
+        tree="\n".join(scan.tree[:40]),
+        code=core_code or "（没读到核心文件）",
+    )
+    try:
+        raw = llm.complete("你是一个读代码很准的技术顾问。", prompt, temperature=0.2)
+        m = re.search(r"\{.*\}", raw, re.S)
+        data = json.loads(m.group()) if m else {}
+    except Exception as e:  # noqa: BLE001
+        return {"intro": "", "modules": [], "highlights": [], "error": f"{type(e).__name__}"}
+
+    return {
+        "intro": (data.get("intro") or "").strip(),
+        "modules": [str(x).strip() for x in (data.get("modules") or []) if x][:4],
+        "highlights": [str(x).strip() for x in (data.get("highlights") or []) if x][:3],
+    }
+
+
+def render_summary(scan: ProjectScan, display_name: str, llm_summary: dict | None) -> str:
+    """拼最终给模型看的项目摘要。
+
+    有 LLM 结果就用「介绍 + 模块 + 亮点」，没有就退回原来的清单式。
+    """
+    name = display_name or scan.name
+    lines = [f"项目名：{name}"]
+
+    s = llm_summary or {}
+    if s.get("intro"):
+        langs = "、".join(f"{k}" for k in list(scan.langs)[:3])
+        lines.append(f"{s['intro']}（{scan.file_count} 个源文件，{langs}）")
+        if s.get("modules"):
+            lines.append("核心模块：" + "；".join(s["modules"]))
+        if s.get("highlights"):
+            lines.append("技术亮点：" + "；".join(s["highlights"]))
+        if scan.deps:
+            lines.append("依赖：" + "、".join(scan.deps[:16]))
+        if scan.routes:
+            lines.append("对外接口：" + "、".join(scan.routes[:12]))
+        return "\n".join(lines)[:6000]
+
+    # 没 LLM 时退回规则版
+    return scan.summary_markdown(max_chars=6000, display_name=name)
+
+
 # ==================== 存储 ====================
 
 CODE_DIR = Path("data/code")
@@ -501,10 +697,11 @@ def _path_key(p: str) -> str:
     return (p or "").rstrip("\\/").replace("\\", "/").lower()
 
 
-def save_scan(scan: ProjectScan, project_name: str = "") -> dict:
+def save_scan(scan: ProjectScan, project_name: str = "", llm=None) -> dict:
     """保存一次扫描结果。
 
     project_name 是简历里的项目名，用来建立关联（改写时按它找代码摘要）。
+    llm 非空时会读核心文件代码、生成项目介绍；为空则退回清单式摘要。
 
     同一个目录只保留一条：之前可能用目录名存过（AI_Chat），
     后来用户用简历项目名又绑了一次（Echo AI 助手），旧记录会被清掉，
@@ -526,12 +723,23 @@ def save_scan(scan: ProjectScan, project_name: str = "") -> dict:
     label = project_name.strip() or scan.name
     slug = _slug(label)
 
+    # 有 LLM 就抽核心文件让它读，生成真介绍而不是清单
+    llm_summary: dict | None = None
+    core_files: list[str] = []
+    if llm is not None:
+        core_files = pick_core_files(scan)
+        core_code = build_core_code(scan)
+        if core_code:
+            llm_summary = summarize_with_llm(scan, core_code, llm, display_name=label)
+
     payload = {
         **scan.to_dict(),
         "project_name": label,
         "slug": slug,
         # 摘要里用简历项目名，不暴露目录名
-        "summary": scan.summary_markdown(max_chars=6000, display_name=label),
+        "summary": render_summary(scan, label, llm_summary),
+        "core_files": core_files,
+        "llm_summary": llm_summary,
         "scanned_at": __import__("time").time(),
     }
     (CODE_DIR / f"{slug}.json").write_text(

@@ -14,6 +14,7 @@ from job_scout.codebase import (
     save_scan,
     scan_project,
 )
+from job_scout.rag.llm import get_llm
 
 router = APIRouter(prefix="/code", tags=["code"])
 
@@ -51,14 +52,18 @@ class ScanResponse(BaseModel):
 
 @router.post("/scan", response_model=ScanResponse)
 def scan(req: ScanRequest) -> ScanResponse:
-    """扫描一个本地项目并保存摘要。"""
+    """扫描一个本地项目并保存摘要。
+
+    有模型 Key 时会读核心文件代码、让 LLM 写项目介绍（约 20 秒）；
+    没有就退回规则版清单摘要。
+    """
     result = scan_project(req.path)
     if not result.ok:
         raise HTTPException(400, result.error or "扫描失败")
     if result.file_count == 0:
         raise HTTPException(400, "这个目录里没找到源码文件（支持 py/ts/tsx/js/vue/java/go 等）")
 
-    saved = save_scan(result, req.project_name)
+    saved = save_scan(result, req.project_name, llm=get_llm())
     return ScanResponse(
         project_name=saved["project_name"],
         slug=saved["slug"],
@@ -138,12 +143,13 @@ def scan_many(req: ScanManyRequest) -> dict:
         candidates = [c for c in candidates if c["name"] in keep]
 
     results: list[dict] = []
+    llm = get_llm()
     for c in candidates:
         scan = scan_project(c["path"])
         if not scan.ok or scan.file_count == 0:
             results.append({"name": c["name"], "ok": False, "error": scan.error or "没找到源码"})
             continue
-        saved = save_scan(scan, c["name"])
+        saved = save_scan(scan, c["name"], llm=llm)
         results.append(
             {
                 "name": saved["project_name"],

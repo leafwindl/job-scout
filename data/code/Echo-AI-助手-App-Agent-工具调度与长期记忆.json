@@ -1,13 +1,13 @@
 {
   "path": "F:\\project_work\\AI_Chat",
   "name": "AI_Chat",
-  "file_count": 517,
-  "line_count": 63120,
+  "file_count": 518,
+  "line_count": 63285,
   "langs": {
-    "Java": 5552,
+    "Java": 5656,
     "Kotlin": 1116,
     "Shell": 121,
-    "Python": 56080,
+    "Python": 56141,
     "Swift": 67,
     "C/C++": 29,
     "TypeScript": 49,
@@ -1299,7 +1299,9 @@
       "WechatChannelError",
       "__init__",
       "_normalize_for_loop_guard",
+      "_edit_distance",
       "_looks_like_echo_loop",
+      "_allow_inbound",
       "_claim_message_key",
       "handle_wechat_inbound"
     ],
@@ -2701,6 +2703,30 @@
   "error": "",
   "project_name": "Echo AI 助手 App —— Agent 工具调度与长期记忆",
   "slug": "Echo-AI-助手-App-Agent-工具调度与长期记忆",
-  "summary": "项目名：Echo AI 助手 App —— Agent 工具调度与长期记忆\n路径：F:\\project_work\\AI_Chat\n规模：517 个源文件，约 63120 行（Python 56080 行、Java 5552 行、Kotlin 1116 行、Shell 121 行）\n对外接口：/login/phone、/login/verify、/login/refresh、/login/logout、/messages、/events、/clear、/nodes/pair、/nodes、/nodes/{node_id}、/provisioning/sessions、/pairings、/pairings/claim、/{device_id}、/{device_id}/connect\n目录结构：\n  app/android/app/src/main/java/blufi/espressif/BlufiCallback.java\n  app/android/app/src/main/java/blufi/espressif/BlufiClient.java\n  app/android/app/src/main/java/blufi/espressif/BlufiClientImpl.java\n  app/android/app/src/main/java/blufi/espressif/BlufiNotifyData.java\n  app/android/app/src/main/java/blufi/espressif/BuildConfig.java\n  app/android/app/src/main/java/blufi/espressif/FrameCtrlData.java\n  app/android/app/src/main/java/blufi/espressif/params/BlufiConfigureParams.java\n  app/android/app/src/main/java/blufi/espressif/params/BlufiParameter.java\n  app/android/app/src/main/java/blufi/espressif/response/BlufiScanResult.java\n  app/android/app/src/main/java/blufi/espressif/response/BlufiStatusResponse.java\n  app/android/app/src/main/java/blufi/espressif/response/BlufiVersionResponse.java\n  app/android/app/src/main/java/blufi/espressif/security/BlufiAES.java\n  app/android/app/src/main/java/blufi/espressif/security/BlufiCRC.java\n  app/android/app/src/main/java/blufi/espressif/security/BlufiDH.java\n  app/android/app/src/main/java/blufi/espressif/security/BlufiHash.java\n  app/android/app/src/main/java/cn/echoaiforever/echo_app/BlufiProvisioningBridge.kt\n  app/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java\n  app/android/app/src/main/kotlin/cn/echoaiforever/echo_app/DirectUpdatePlugin.kt\n  app/android/app/src/main/kotlin/cn/echoaiforever/echo_app/MainActivity.kt\n  app/ios/Flutter/flutter_export_environment.sh\n  app/ios/Flutter/ephemeral/flutter_lldb_helper.py\n  app/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift\n  app/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Sources/FlutterGeneratedPluginSwiftPackage/FlutterGeneratedPluginSwiftPackage.swift\n  app/ios/Runner/AppDelegate.swift\n  app/ios/Runner/GeneratedPluginRegistrant.h\n  app/ios/Runner/Runner-Bridging-Header.h\n  app/ios/Runner/SceneDelegate.swift\n  app/ios/RunnerTests/RunnerTests.swift\n  app/third_party/getuiflut/android/src/main/java/com/getui/getuiflut/FlutterIntentService.java\n  app/third_party/getuiflut/android/src/main/java/com/getui/getuiflut/FlutterPushService.java\n  app/third_party/getuiflut/android/src/main/java/com/getui/getuiflut/GetuiflutPlugin.java\n  app/third_party/getuiflut/android/src/main/java/com/getui/getuiflut/GetuiPluginActivity.java\n  app/third_party/getuiflut/ios/Classes/GetuiflutPlugin.h\n  app/third_party/getuiflut/ohos/hvigorfile.ts\n  desktop_node/echo_desktop/approvals.py\n  desktop_node/echo_desktop/cli.py\n  desktop_node/echo_desktop/client.py\n  desktop_node/echo_desktop/config.py\n  desktop_node/echo_desktop/executor.py\n  desktop_node/echo_desktop/gui.py\n  desktop_node/echo_desktop/logging.py\n  desktop_node/echo_desktop/protocol.py\n  desktop_node/echo_desktop/__init__.py\n  desktop_node/echo_desktop/__main__.py\n  desktop_node/echo_desktop/actions/apps.py\n主要模块与符号：\n  app/android/app/src/main/java/blufi/espressif/BlufiClientImpl.java: BlufiClientImpl\n  app/android/app/src/main/java/blufi/espressif/BlufiNotifyData.java: BlufiNotifyData\n  app/android/app/src/main/java/blufi/espressif/FrameCtrlData.java: FrameCtrlData\n  app/android/app/src/main/java/cn/echoaiforever/echo_app/BlufiProvisioningBridge.kt: BlufiProvisioningBridge\n  app/android/app/src/main/kotlin/cn/echoaiforever/echo_app/DirectUpdatePlugin.kt: DirectUpdatePlugin\n  app/android/app/src/main/kotlin/cn/echoaiforever/echo_app/MainActivity.kt: MainActivity\n  app/ios/Flutter/ephemeral/flutter_lldb_helper.py: handle_new_rx_page, __lldb_init_module\n  app/ios/Runner/AppDelegate.swift: didInitializeImplicitFlutterEngine\n  app/ios/Runner/SceneDelegate.swift: SceneDelegate\n  app/ios/RunnerTests/RunnerTests.swift: RunnerTests, testExample\n  desktop_node/echo_desktop/approvals.py: ask_windows_approval\n  desktop_node/echo_desktop/cli.py: _build_parser, main\n  desktop_node/echo_desktop/client.py: DesktopAuthenticationError, RuntimeCallbacks, NodeRuntime, _emit, machine_fingerprint, pair_node, _always_allow, __init__\n  desktop_node/echo_desktop/config.py: DesktopConfig, data_dir, config_path, websocket_url, load_config, save_config, clear_config\n  desktop_node/echo_desktop/executor.py: default_approval, _approval_text, _execute_action, execute_command\n  desktop_node/echo_desktop/gui.py: DesktopClientApp, __init__, _build_window, _build_ui, _callbacks, _start_runtime, _toggle_runtime, _toggle_pair_frame\n  desktop_node/echo_desktop/logging.py: log_path, append_log\n  desktop_node/echo_desktop/protocol.py: ActionError, Command, __init__, parse_command, result_payload\n  desktop_node/echo_desktop/actions/apps.py: _find_netease, resolve_app, launch_app\n  desktop_node/echo_desktop/actions/capture.py: _encode_jpeg, capture_screen, capture_camera\n  desktop_node/echo_desktop/actions/dsh.py: _resolve_dsh, run_dsh_task\n  desktop_node/echo_desktop/actions/media.py: _cloudmusic_pids, _find_cloudmusic_window, callback, _focus_window, _is_cloudmusic_running, send_media_key\nREADME 摘录：\n# Echo\n\nEcho 是一个面向个人用户的 AI 陪伴应用，由 Flutter / HarmonyOS 客户端和 FastAPI 服务端组成。它把连续文字聊天、主动联系、定时提醒、语音通话、学习专注、表情包、长期记忆、每日来信和 Presence 持续在场放在同一条可持久化的陪伴链路中。\n\n当前生产版本：**v1.1.10**\n\n| 部件 | 当前值 |\n| --- | --- |\n| Android APK | `1.1.10+26` |\n| Android 包名 | `cn.echoaiforever.echo_app` |\n| HarmonyOS | `1.1.10 (10110)`，开发签名包通过 USB 覆盖安装 |\n| 公网 API | `https://api.echoaiforever.cn` |\n| APK 下载域名 | `https://download.echoaiforever.cn` |\n| 生产分支 | `master`；实际版本以 `/version` 返回为准 |\n| 数据库 | PostgreSQL 16 + pgvector |\n| 推送 | 个推 RestAPI V2 主通道 |\n\n## 界面预览\n\n<p align=\"center\">\n  <img src=\"docs/assets/readme/echo-chat.jpg\" width=\"300\" alt=\"Echo 手机聊天界面与主动消息通知\">\n  <img src=\"docs/assets/readme/echo-desktop.png\" width=\"520\" ",
-  "scanned_at": 1793778824.951197
+  "summary": "项目名：Echo AI 助手 App —— Agent 工具调度与长期记忆\nEcho AI 助手是一个跨端 Agent 助手应用：Flutter 壳层承载对话与主动消息，Android 原生层负责设备配网和直连升级，Python 桌面节点则承接本地工具调用与审批执行。整套系统要解决的是「云端 Agent 如何安全地在用户真实设备上落地动作」——既要能自动打开本机应用、执行任务，也要在敏感操作前确认。架构上分为三部分：移动端通过 MethodChannel/EventChannel 把 BLE BluFi 配网、Wi-Fi 热点连接、通知与安装结果回调暴露给 Dart；桌面端以动作模块 + 协议错误码（ActionError）的形式封装可执行能力，如应用白名单启动；服务侧以 /messages、/events 驱动对话与事件流，用 /nodes、/pairings、/provisioning/sessions 管理节点注册与配对。核心模块包括端侧配网桥接、桌面动作执行器、节点配对与登录鉴权。（518 个源文件，Java、Kotlin、Shell）\n核心模块：移动端配网桥接：在 MainActivity 中注册 echo/device_wifi、echo/device_blufi 及其事件通道，打通 Flutter 与 BluFi、Wi-Fi 热点的连接配置。；桌面动作执行器：按白名单解析应用可执行文件（含注册表回退查找），用 subprocess 启动并返回 pid，失败抛出带错误码的 ActionError。；节点接入与鉴权：通过 /login/phone、/login/verify、/login/refresh 完成手机号登录与令牌刷新，/nodes/pair、/pairings/claim 完成设备配对。；直连更新插件：DirectUpdatePlugin 注册到 FlutterEngine，并在 onNewIntent 中处理安装结果回调。\n技术亮点：把平台能力通过命名通道隔离：Wi-Fi 热点、BluFi 配网、BluFi 事件流分别用独立 MethodChannel/EventChannel 暴露，事件用 EventChannel.EventSink 回传并切到 UI 线程。；BluFi 调用按异常类型细分错误码（BLUFI_ERROR / BLUFI_PERMISSION_ERROR），对参数缺失、状态非法、权限不足分别返回，便于上层给出可读提示。；桌面端应用启动不是硬编码路径，而是先查常见安装目录、PATH，再遍历注册表 Uninstall 项的 InstallLocation/DisplayIcon/UninstallString 逐级回退，找不到时返回结构化错误而不是崩溃。\n对外接口：/login/phone、/login/verify、/login/refresh、/login/logout、/messages、/events、/clear、/nodes/pair、/nodes、/nodes/{node_id}、/provisioning/sessions、/pairings",
+  "core_files": [
+    "app/ios/Runner/AppDelegate.swift",
+    "desktop_node/echo_desktop/approvals.py",
+    "desktop_node/echo_desktop/__main__.py",
+    "app/android/app/src/main/kotlin/cn/echoaiforever/echo_app/MainActivity.kt",
+    "desktop_node/echo_desktop/actions/apps.py",
+    "app/ios/Runner/Runner-Bridging-Header.h",
+    "app/ios/Runner/SceneDelegate.swift",
+    "app/ios/Flutter/ephemeral/flutter_lldb_helper.py"
+  ],
+  "llm_summary": {
+    "intro": "Echo AI 助手是一个跨端 Agent 助手应用：Flutter 壳层承载对话与主动消息，Android 原生层负责设备配网和直连升级，Python 桌面节点则承接本地工具调用与审批执行。整套系统要解决的是「云端 Agent 如何安全地在用户真实设备上落地动作」——既要能自动打开本机应用、执行任务，也要在敏感操作前确认。架构上分为三部分：移动端通过 MethodChannel/EventChannel 把 BLE BluFi 配网、Wi-Fi 热点连接、通知与安装结果回调暴露给 Dart；桌面端以动作模块 + 协议错误码（ActionError）的形式封装可执行能力，如应用白名单启动；服务侧以 /messages、/events 驱动对话与事件流，用 /nodes、/pairings、/provisioning/sessions 管理节点注册与配对。核心模块包括端侧配网桥接、桌面动作执行器、节点配对与登录鉴权。",
+    "modules": [
+      "移动端配网桥接：在 MainActivity 中注册 echo/device_wifi、echo/device_blufi 及其事件通道，打通 Flutter 与 BluFi、Wi-Fi 热点的连接配置。",
+      "桌面动作执行器：按白名单解析应用可执行文件（含注册表回退查找），用 subprocess 启动并返回 pid，失败抛出带错误码的 ActionError。",
+      "节点接入与鉴权：通过 /login/phone、/login/verify、/login/refresh 完成手机号登录与令牌刷新，/nodes/pair、/pairings/claim 完成设备配对。",
+      "直连更新插件：DirectUpdatePlugin 注册到 FlutterEngine，并在 onNewIntent 中处理安装结果回调。"
+    ],
+    "highlights": [
+      "把平台能力通过命名通道隔离：Wi-Fi 热点、BluFi 配网、BluFi 事件流分别用独立 MethodChannel/EventChannel 暴露，事件用 EventChannel.EventSink 回传并切到 UI 线程。",
+      "BluFi 调用按异常类型细分错误码（BLUFI_ERROR / BLUFI_PERMISSION_ERROR），对参数缺失、状态非法、权限不足分别返回，便于上层给出可读提示。",
+      "桌面端应用启动不是硬编码路径，而是先查常见安装目录、PATH，再遍历注册表 Uninstall 项的 InstallLocation/DisplayIcon/UninstallString 逐级回退，找不到时返回结构化错误而不是崩溃。"
+    ]
+  },
+  "scanned_at": 1793780444.1549163
 }

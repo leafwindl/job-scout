@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         job-scout 采集器
-// @version      0.10.5
+// @version      0.10.6
 // @namespace    job-scout.local
 // @description  旁听 BOSS 直聘职位接口，自动滚动翻页，循环补全 JD 正文，推送到本地 job-scout
 // @match        https://www.zhipin.com/*
@@ -1021,6 +1021,159 @@
   let btnEl = null;
   let jdBtn = null;
 
+  // ================= 悬浮分析窗（在 BOSS 上随手刷时用） =================
+  // 不进数据库：直接把当前页的标题/公司/JD 发给 /analyze 现算匹配度。
+  let analyzerEl = null;
+  let analyzerKey = '';
+  let analyzerBusy = false;
+
+  function removeAnalyzer() {
+    if (analyzerEl) {
+      analyzerEl.remove();
+      analyzerEl = null;
+    }
+  }
+
+  function ensureAnalyzer() {
+    if (!isDetailPage()) {
+      removeAnalyzer();
+      return null;
+    }
+    if (analyzerEl && document.body.contains(analyzerEl)) return analyzerEl;
+
+    analyzerEl = document.createElement('div');
+    analyzerEl.id = 'js-analyzer';
+    analyzerEl.style.cssText = [
+      'position:fixed', 'left:18px', 'bottom:18px', 'z-index:2147483646',
+      'width:300px', 'background:#0f172a', 'color:#e5e7eb',
+      'border:1px solid #334155', 'border-radius:12px',
+      'font:12px/1.6 system-ui,sans-serif', 'overflow:hidden',
+      'box-shadow:0 10px 30px rgba(0,0,0,.45)',
+    ].join(';');
+    analyzerEl.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#1e293b">
+        <span style="font-weight:600">岗位快评</span>
+        <span>
+          <button id="js-an-run" style="border:0;border-radius:5px;background:#4f8cff;color:#fff;padding:3px 9px;cursor:pointer;font-size:11px">分析</button>
+          <button id="js-an-min" style="border:0;background:transparent;color:#94a3b8;cursor:pointer;font-size:14px;padding:0 4px">–</button>
+        </span>
+      </div>
+      <div id="js-an-body" style="padding:10px 12px;max-height:340px;overflow:auto">
+        <div id="js-an-result" style="color:#94a3b8">点「分析」看这条岗和你的匹配度</div>
+        <div style="margin-top:9px;display:flex;gap:5px">
+          <input id="js-an-q" placeholder="问这条岗…" style="flex:1;background:#1e293b;border:1px solid #334155;color:#e5e7eb;border-radius:6px;padding:4px 7px;font-size:11px;min-width:0">
+          <button id="js-an-send" style="border:0;border-radius:6px;background:#334155;color:#e5e7eb;padding:4px 9px;cursor:pointer;font-size:11px">问</button>
+        </div>
+        <div id="js-an-answer" style="margin-top:8px;color:#cbd5e1;font-size:11.5px;line-height:1.65"></div>
+      </div>
+    `;
+    document.body.appendChild(analyzerEl);
+
+    analyzerEl.querySelector('#js-an-run').addEventListener('click', () => analyzeCurrent('match'));
+    analyzerEl.querySelector('#js-an-min').addEventListener('click', () => {
+      const body = analyzerEl.querySelector('#js-an-body');
+      body.style.display = body.style.display === 'none' ? 'block' : 'none';
+    });
+    const askHit = () => analyzeCurrent('ask');
+    analyzerEl.querySelector('#js-an-send').addEventListener('click', askHit);
+    analyzerEl.querySelector('#js-an-q').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') askHit();
+    });
+
+    return analyzerEl;
+  }
+
+  /** 从当前详情页取岗位信息。 */
+  function readCurrentJob() {
+    const jd = readDetailDom();
+    const title = (
+      document.querySelector('.job-banner .name, .job-banner h1, h1')?.textContent || ''
+    ).trim();
+    const company = (
+      document.querySelector('.company-info .name, .job-boss-info .name, .company-name')?.textContent || ''
+    ).trim();
+    const salary = (
+      document.querySelector('.job-banner .salary, .salary')?.textContent || ''
+    ).trim();
+    return { jd, title, company, salary };
+  }
+
+  function renderAnalyzerMatch(d) {
+    const box = analyzerEl?.querySelector('#js-an-result');
+    if (!box) return;
+    const score = Number(d.score) || 0;
+    const color = score >= 75 ? '#39d0a8' : score >= 60 ? '#4f8cff' : score >= 45 ? '#f59e0b' : '#f87171';
+    const matched = (d.matched || []).slice(0, 3);
+    const missing = (d.missing || []).slice(0, 3);
+    box.innerHTML = `
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:7px">
+        <span style="font-size:22px;font-weight:700;color:${color}">${score}</span>
+        <span style="font-size:11px;color:#94a3b8">${d.verdict || ''}</span>
+      </div>
+      ${d.reason ? `<div style="color:#cbd5e1;margin-bottom:7px">${escapeHtml(d.reason)}</div>` : ''}
+      ${matched.length ? `<div style="color:#39d0a8;margin-bottom:3px">✓ 匹配</div>` : ''}
+      ${matched.map((x) => `<div style="color:#94a3b8;padding-left:9px">· ${escapeHtml(x)}</div>`).join('')}
+      ${missing.length ? `<div style="color:#f59e0b;margin:6px 0 3px">− 缺口</div>` : ''}
+      ${missing.map((x) => `<div style="color:#94a3b8;padding-left:9px">· ${escapeHtml(x)}</div>`).join('')}
+    `;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+  }
+
+  async function analyzeCurrent(mode) {
+    if (analyzerBusy) return;
+    const job = readCurrentJob();
+    if (!job.jd || job.jd.length < 40) {
+      const box = analyzerEl?.querySelector('#js-an-result');
+      if (box) box.textContent = '没识别到 JD 正文，等页面加载完再试';
+      return;
+    }
+
+    analyzerBusy = true;
+    const resultBox = analyzerEl.querySelector('#js-an-result');
+    const answerBox = analyzerEl.querySelector('#js-an-answer');
+
+    try {
+      if (mode === 'ask') {
+        const q = (analyzerEl.querySelector('#js-an-q')?.value || '').trim();
+        if (!q) return;
+        answerBox.textContent = '思考中…';
+        const r = await fetch(API + '/analyze/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ jd: job.jd.slice(0, 12000), question: q }),
+        });
+        if (!r.ok) throw new Error((await r.json()).detail || r.status);
+        const d = await r.json();
+        answerBox.textContent = d.answer || '';
+      } else {
+        resultBox.textContent = '分析中…（约 15 秒）';
+        const r = await fetch(API + '/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: job.title,
+            company: job.company,
+            salary: job.salary,
+            jd: job.jd.slice(0, 12000),
+          }),
+        });
+        if (!r.ok) throw new Error((await r.json()).detail || r.status);
+        renderAnalyzerMatch(await r.json());
+      }
+    } catch (e) {
+      const msg = String(e).slice(0, 120);
+      if (mode === 'ask') answerBox.textContent = '失败：' + msg;
+      else resultBox.textContent = '失败：' + msg + '（简历上传了吗？服务起了吗？）';
+    } finally {
+      analyzerBusy = false;
+    }
+  }
+
   function buildPanel() {
     if (panel || !document.body) return;
     panel = document.createElement('div');
@@ -1259,13 +1412,20 @@
       await ensureInternFilter();
     }
 
+    // 详情页挂上悬浮分析窗
+    ensureAnalyzer();
+
     // 导航模式的队列优先：详情页抓完就走，列表页则继续下一条
     navModeStep();
     bootAutoRun();
   });
 
-  const observer = new MutationObserver(() => buildPanel());
+  const observer = new MutationObserver(() => {
+    buildPanel();
+    // BOSS 是 SPA，路由切换不会触发 load，这里补一次挂载
+    ensureAnalyzer();
+  });
   observer.observe(document.documentElement, { childList: true, subtree: true });
 
-  console.log('[job-scout] 采集器 v0.10.5 已注入（端口探测 + 定点抓取 + innerText）');
+  console.log('[job-scout] 采集器 v0.10.6 已注入（悬浮快评 + 定点抓取 + 端口探测）');
 })();

@@ -490,25 +490,46 @@ def generate_greeting(
     extra: str = "",
     max_jd: int = 2000,
     code_context: str = "",
+    max_chars: int = 200,
 ) -> str:
     """针对岗位生成打招呼消息。
 
     code_context 非空时，会把项目代码实况一起给模型——
     简历没写透但代码里确实有的技术点，说出来更有说服力。
+
+    字数：LLM 数中文字数不可靠，超了就带反馈重试一次。
     """
-    prompt = GREET_PROMPT.format(
-        profile=build_profile_text(profile),
-        title=title,
-        company=company,
-        jd=(jd or "")[:max_jd],
-        code=(code_context or "")[:2500] or "（未提供）",
-        extra=extra or "无",
-    )
-    try:
-        text = llm.complete("你是一个务实的求职顾问，说话不油腻。", prompt, temperature=0.6)
-    except Exception as e:  # noqa: BLE001
-        return f"生成失败：{type(e).__name__}"
-    return text.strip().strip('"').strip()
+    base_extra = extra or ""
+    text = ""
+
+    for attempt in range(2):
+        prompt = GREET_PROMPT.format(
+            profile=build_profile_text(profile),
+            title=title,
+            company=company,
+            jd=(jd or "")[:max_jd],
+            code=(code_context or "")[:2500] or "（未提供）",
+            extra=base_extra or "无",
+        )
+        try:
+            text = llm.complete("你是一个务实的求职顾问，说话不油腻。", prompt, temperature=0.5)
+        except Exception as e:  # noqa: BLE001
+            return f"生成失败：{type(e).__name__}"
+
+        text = text.strip().strip('"').strip("“”").strip()
+        # 模型偶尔会在末尾自己标字数，清掉
+        text = re.sub(r"[（(]\s*约?\s*\d+\s*字\s*[）)]\s*$", "", text).strip()
+
+        if len(text) <= max_chars + 10:
+            break
+        # 超了：把实际字数告诉它，让它砍
+        base_extra = (
+            (base_extra + " ").strip()
+            + f"上一版写了 {len(text)} 字，超了。这次必须压到 {max_chars} 字以内，"
+            "砍掉次要技术点，只留最相关的一两个。"
+        )
+
+    return text
 
 
 

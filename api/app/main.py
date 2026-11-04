@@ -1,11 +1,11 @@
-"""job-scout API 入口。
+﻿"""job-scout API 入口。
 
 启动：
     uv run uvicorn api.app.main:app --reload --port 8001
 文档：
     http://127.0.0.1:8001/docs
 
-同一个进程里还会起 8765 的采集接收服务，
+同一个进程里还会起 8766 的采集接收服务，
 这样网页端发起采集时油猴脚本有地方推数据，不需要另外开终端。
 """
 

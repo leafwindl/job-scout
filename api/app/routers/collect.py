@@ -32,6 +32,8 @@ TIMEOUT_SEC = 40 * 60
 class StartRequest(BaseModel):
     keyword: str = Field(default="Agent 实习", max_length=50)
     city: str = Field(default="广州", max_length=20)
+    # 只要实习：打开的搜索页会带上 intern=1，油猴脚本会自动点选「实习」筛选
+    intern: bool = Field(default=True)
 
 
 class StartResponse(BaseModel):
@@ -40,6 +42,7 @@ class StartResponse(BaseModel):
     city_code: str
     keyword: str
     city: str
+    intern: bool = True
 
 
 class StatusResponse(BaseModel):
@@ -56,8 +59,14 @@ class StatusResponse(BaseModel):
 def start(req: StartRequest) -> StartResponse:
     code = CITY_CODES.get(req.city) or CITY_CODES["广州"]
     url = f"{BOSS_SEARCH_URL}?query={quote(req.keyword)}&city={code}&jobscout=auto"
+    # intern=1 让脚本打开后自动点选「实习」筛选；BOSS 的 URL 没有可靠的 jobType 参数，
+    # 只能靠页面上的筛选控件（见 userscripts 的 ensureInternFilter）
+    if req.intern:
+        url += "&intern=1"
     now = time.time()
-    _LAST.update({"started_at": now, "keyword": req.keyword, "city": req.city, "url": url})
+    _LAST.update(
+        {"started_at": now, "keyword": req.keyword, "city": req.city, "url": url}
+    )
     _SAMPLES.clear()
     return StartResponse(
         url=url,
@@ -65,6 +74,7 @@ def start(req: StartRequest) -> StartResponse:
         city_code=code,
         keyword=req.keyword,
         city=req.city,
+        intern=req.intern,
     )
 
 

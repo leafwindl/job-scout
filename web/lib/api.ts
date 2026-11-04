@@ -207,8 +207,8 @@ export const api = {
     return get<JobListResponse>(`/jobs?${q.toString()}`);
   },
   job: (id: string) => get<JobDetail>(`/jobs/${id}`),
-  collectStart: (keyword: string, city: string) =>
-    post<CollectStart>("/collect/start", { keyword, city }),
+  collectStart: (keyword: string, city: string, intern = true) =>
+    post<CollectStart>("/collect/start", { keyword, city, intern }),
   collectStatus: () => get<CollectStatus>("/collect/status"),
   collectReset: () => post<{ ok: boolean }>("/collect/reset", {}),
 

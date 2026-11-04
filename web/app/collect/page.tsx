@@ -58,6 +58,7 @@ function fmtElapsed(sec: number): string {
 export default function CollectPage() {
   const [keyword, setKeyword] = useState("Agent 实习");
   const [city, setCity] = useState("广州");
+  const [intern, setIntern] = useState(true);
   const [status, setStatus] = useState<CollectStatus | null>(null);
   const [starting, setStarting] = useState(false);
   const [note, setNote] = useState("");
@@ -85,7 +86,7 @@ export default function CollectPage() {
     // 先同步开窗口，避免 await 之后被弹窗拦截
     const win = window.open("about:blank", "_blank");
     try {
-      const r = await api.collectStart(keyword, city);
+      const r = await api.collectStart(keyword, city, intern);
       if (win) {
         win.location.href = r.url;
         setNote("已打开新标签页，脚本会自动开始。不用时可关掉。");
@@ -190,6 +191,22 @@ export default function CollectPage() {
                 </button>
               </div>
             </div>
+
+            <label className="mt-3 flex cursor-pointer items-start gap-2 text-2xs leading-[1.7] text-fg2">
+              <input
+                type="checkbox"
+                checked={intern}
+                onChange={(e) => setIntern(e.target.checked)}
+                className="mt-0.5 h-3.5 w-3.5 shrink-0 cursor-pointer accent-[#4f8cff]"
+              />
+              <span>
+                只要实习岗
+                <span className="text-fg3">
+                  （打开搜索页后脚本会自动点选「求职类型 → 实习」；无论如何，接口层只收
+                  jobType=4 的岗位）
+                </span>
+              </span>
+            </label>
 
             <div className="mt-3 flex gap-2 rounded-lg border border-line/60 bg-panel2/30 px-3 py-2.5">
               <ExternalLink size={13} className="mt-0.5 shrink-0 text-fg3" />

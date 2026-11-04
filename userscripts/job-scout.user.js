@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         job-scout 采集器
-// @version      0.10.4
+// @version      0.10.5
 // @namespace    job-scout.local
 // @description  旁听 BOSS 直聘职位接口，自动滚动翻页，循环补全 JD 正文，推送到本地 job-scout
 // @match        https://www.zhipin.com/*
@@ -11,10 +11,35 @@
 (function () {
   'use strict';
 
-  const API = 'http://127.0.0.1:8765';
-  const ENDPOINT = API + '/ingest';
-  const HEALTH = API + '/health';
+  // 采集服务端口：8765 常被本地其它工具占用（比如 adb 桥），
+  // 所以启动时依次探测，认「/health 里有 total 字段」的那个。
+  const API_PORTS = [8766, 8765, 8767, 8768];
+  let API = 'http://127.0.0.1:8766';
+  let ENDPOINT = API + '/ingest';
+  let HEALTH = API + '/health';
   const AUTORUN_KEY = 'jobscout.autorun';
+
+  /** 探测哪个端口是 job-scout 的接收服务。返回 true 表示找到了。 */
+  async function probeApi() {
+    for (const port of API_PORTS) {
+      try {
+        const r = await fetch(`http://127.0.0.1:${port}/health`, {
+          cache: 'no-store',
+          signal: AbortSignal.timeout(1500),
+        });
+        if (!r.ok) continue;
+        const d = await r.json();
+        // 我们的 /health 一定带 total；别的服务没有这个字段
+        if (typeof d.total === 'number') {
+          API = `http://127.0.0.1:${port}`;
+          ENDPOINT = API + '/ingest';
+          HEALTH = API + '/health';
+          return true;
+        }
+      } catch (e) {}
+    }
+    return false;
+  }
 
   const state = {
     jobs: new Map(),
@@ -712,6 +737,56 @@
     return m ? m[1] : '';
   }
 
+  // ================= 自动选中「实习」筛选 =================
+  // BOSS 搜索页的 URL 没有可靠的 jobType 参数，只能点页面上的筛选控件。
+  // 做法：找到「求职类型」这一组的标签，在同组里点「实习」。
+  async function ensureInternFilter() {
+    const params = new URLSearchParams(location.search);
+    if (params.get('jobscout') !== 'auto' || params.get('intern') !== '1') {
+      return false;
+    }
+
+    for (let round = 0; round < 16; round++) {
+      // 找写着「求职类型」的元素
+      const label = Array.from(
+        document.querySelectorAll('span, div, dt, label'),
+      ).find((el) => el.children.length === 0 && el.textContent.trim() === '求职类型');
+
+      if (label) {
+        // 往上找两三层，拿到整组筛选项
+        let box = label.parentElement;
+        for (let i = 0; i < 3 && box && !box.querySelector('a, li'); i++) {
+          box = box.parentElement;
+        }
+        if (box) {
+          const opts = Array.from(box.querySelectorAll('a, li, span')).filter(
+            (el) => el.textContent.trim() === '实习',
+          );
+          for (const opt of opts) {
+            const cls = String(opt.className || '');
+            if (cls.includes('active') || cls.includes('checked') || cls.includes('selected')) {
+              state.lastMsg = '「实习」筛选已选中';
+              render();
+              return true;
+            }
+          }
+          if (opts.length) {
+            opts[0].click();
+            state.lastMsg = '已自动选中「实习」筛选，等列表刷新…';
+            render();
+            await sleep(2500);
+            return true;
+          }
+        }
+      }
+      await sleep(500);
+    }
+
+    state.lastMsg = '没找到「求职类型 → 实习」筛选，请手动点一下（脚本会继续按接口过滤）';
+    render();
+    return false;
+  }
+
   // ================= 单条定点抓取 =================
   // 由网页端「抓取这条 JD」按钮打开：?jobscout=one
   // 只抓当前这一页，抓完显示结果，不影响队列和自动模式
@@ -1148,8 +1223,18 @@
     }
   }, 10000);
 
-  window.addEventListener('load', () => {
+  window.addEventListener('load', async () => {
     buildPanel();
+
+    // 先找到真正的采集服务（8765 可能被别的工具占着）
+    const found = await probeApi();
+    if (!found) {
+      state.lastMsg =
+        '没找到 job-scout 采集服务（8766 / 8765 都不通）。先双击 start.bat，或看面板下方排查说明。';
+      render();
+      return;
+    }
+
     fetch(HEALTH)
       .then((r) => r.json())
       .then((d) => {
@@ -1169,6 +1254,11 @@
       return;
     }
 
+    // 自动模式：先把「求职类型」切成实习，再开始滚动
+    if (params.get('jobscout') === 'auto') {
+      await ensureInternFilter();
+    }
+
     // 导航模式的队列优先：详情页抓完就走，列表页则继续下一条
     navModeStep();
     bootAutoRun();
@@ -1177,5 +1267,5 @@
   const observer = new MutationObserver(() => buildPanel());
   observer.observe(document.documentElement, { childList: true, subtree: true });
 
-  console.log('[job-scout] 采集器 v0.10.4 已注入（接口 + 导航 + 定点抓取 + innerText）');
+  console.log('[job-scout] 采集器 v0.10.5 已注入（端口探测 + 定点抓取 + innerText）');
 })();

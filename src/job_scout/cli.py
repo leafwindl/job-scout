@@ -1,4 +1,4 @@
-"""命令行入口。
+﻿"""命令行入口。
 
 分三步走，对应里程碑：
   job-scout config       看配置（确认 YAML 改对了）
@@ -446,7 +446,7 @@ def _get_json(url: str, timeout: float = 3.0) -> dict:
 def auto(
     keyword: str = typer.Option("Agent 实习", help="搜索关键词"),
     city: str = typer.Option("广州", help="城市"),
-    port: int = typer.Option(8765, help="本地接收端口"),
+    port: int = typer.Option(8766, help="本地接收端口"),
     timeout_min: int = typer.Option(40, help="最长等待分钟数"),
     open_browser: bool = typer.Option(True, "--open/--no-open", help="自动打开浏览器"),
 ) -> None:
@@ -598,7 +598,7 @@ def purge_non_intern(
 def daily(
     keyword: str = typer.Option("Agent 实习", help="搜索关键词"),
     city: str = typer.Option("广州", help="城市"),
-    port: int = typer.Option(8765, help="采集接收端口"),
+    port: int = typer.Option(8766, help="采集接收端口"),
     stale_days: int = typer.Option(
         7, help="超过几天没出现算停招（默认 7，太短会误伤没跑的查询）"
     ),
@@ -849,7 +849,7 @@ def cleanup(
 
 
 @app.command()
-def serve(port: int = typer.Option(8765, help="本地接收端口")) -> None:
+def serve(port: int = typer.Option(8766, help="本地接收端口")) -> None:
     """启动本地接收服务，供油猴脚本推送数据。
 
     只监听 127.0.0.1，不对外暴露。

@@ -23,7 +23,8 @@ from job_scout.storage import Storage
 from job_scout.textclean import clean_jd
 
 HOST = "127.0.0.1"
-PORT = 8765
+# 8765 常被别的本地工具占用（比如 adb 桥），换成不容易撞的端口
+PORT = 8766
 
 # 自动模式完成标记：油猴脚本抓完 JD 后 POST /auto-done。
 # 落文件而不是内存，这样 API 进程和采集进程都能读到（可能不是同一个进程）。

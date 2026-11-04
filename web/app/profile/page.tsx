@@ -447,9 +447,13 @@ export default function ProfilePage() {
         </aside>
       </div>
 
-      {/* 项目代码：给简历改写提供事实依据 */}
+      {/* 项目代码：给简历改写提供事实依据。列表直接来自简历里的项目 */}
       <div id="project-code" className="mt-6 scroll-mt-24">
-        <CodeProjects />
+        <CodeProjects
+          projects={(p?.projects ?? [])
+            .map((x) => (x.name ?? "").trim())
+            .filter(Boolean)}
+        />
       </div>
     </div>
   );

@@ -459,6 +459,11 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
             <LoadingPanel label="正在按 JD 重排简历…" />
           ) : rewrite ? (
             <div className="space-y-4">
+              {rewrite.used_code && (
+                <div className="flex items-center gap-1.5 rounded-lg border border-mint/25 bg-mint/[0.06] px-3 py-2 text-2xs text-mint">
+                  <Check size={11} /> 已参考你提交的项目代码
+                </div>
+              )}
               {rewrite.summary && (
                 <p className="rounded-lg border border-accent/20 bg-accent/[0.05] px-3 py-2.5 text-xs leading-[1.7] text-fg2">
                   {rewrite.summary}

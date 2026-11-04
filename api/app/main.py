@@ -1,4 +1,4 @@
-﻿"""job-scout API 入口。
+"""job-scout API 入口。
 
 启动：
     uv run uvicorn api.app.main:app --reload --port 8001
@@ -18,7 +18,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.app.routers import ask, collect, company, jobs, match, profile, search
+from api.app.routers import ask, code, collect, company, jobs, match, profile, search
 from job_scout.rag.pipeline import get_pipeline
 from job_scout.server import PORT as COLLECT_PORT
 from job_scout.server import start_ingest_in_thread
@@ -59,6 +59,7 @@ app.include_router(collect.router)
 app.include_router(profile.router)
 app.include_router(match.router)
 app.include_router(company.router)
+app.include_router(code.router)
 
 
 @app.get("/health", tags=["meta"])

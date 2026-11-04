@@ -16,6 +16,7 @@ import {
   UserRound,
 } from "lucide-react";
 
+import CodeProjects from "@/components/CodeProjects";
 import PageHeader from "@/components/PageHeader";
 import { ProgressBar, SectionHeader, Stat } from "@/components/ui";
 import { api, type Profile } from "@/lib/api";
@@ -434,6 +435,11 @@ export default function ProfilePage() {
             </p>
           </div>
         </aside>
+      </div>
+
+      {/* 项目代码：给简历改写提供事实依据 */}
+      <div className="mt-6">
+        <CodeProjects />
       </div>
     </div>
   );

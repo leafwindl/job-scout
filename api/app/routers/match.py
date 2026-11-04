@@ -7,6 +7,7 @@ import sqlite3
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from job_scout.codebase import all_contexts, get_context
 from job_scout.config import settings
 from job_scout.profile import (
     generate_greeting,
@@ -70,11 +71,18 @@ def match(job_id: str) -> dict:
 
 
 @router.post("/resume/rewrite/{job_id}")
-def rewrite(job_id: str) -> dict:
-    """针对岗位给出简历改写建议（只调整表达，不编造经历）。"""
+def rewrite(job_id: str, project: str = "") -> dict:
+    """针对岗位给出简历改写建议（只调整表达，不编造经历）。
+
+    `project` 指定简历里的项目名时，会带上该项目的代码摘要，
+    让建议能引用代码里确实有的技术点。
+    """
     profile = _require_profile()
     llm = _require_llm()
     row = _get_job(job_id)
+
+    # 指定项目就只取那个；没指定就用全部已扫描的代码摘要
+    code_ctx = get_context(project) if project else all_contexts()
 
     result = rewrite_resume(
         profile,
@@ -82,8 +90,15 @@ def rewrite(job_id: str) -> dict:
         row["company"] or "",
         row["description"] or "",
         llm,
+        code_context=code_ctx,
     )
-    return {"job_id": job_id, "title": row["title"], "company": row["company"], **result}
+    return {
+        "job_id": job_id,
+        "title": row["title"],
+        "company": row["company"],
+        "used_code": bool(code_ctx),
+        **result,
+    }
 
 
 @router.post("/greet")

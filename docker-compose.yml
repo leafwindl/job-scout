@@ -21,6 +21,9 @@ services:
     volumes:
       - ./data:/app/data
       - ./index:/app/index
+      # 「提交自己的项目代码」要读宿主机目录，把开发盘只读挂进来。
+      # 容器内路径 /host/f/<路径> 对应宿主机的 F:\<路径>（见 codebase.resolve_host_path）
+      - "F:/:/host/f:ro"
     environment:
       # 有 Key 时自动切到 LLM 模式；没有则走抽取式
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}

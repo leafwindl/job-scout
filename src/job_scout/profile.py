@@ -232,6 +232,9 @@ REWRITE_PROMPT = """你在帮求职者针对一个具体岗位**改写简历**�
 JD：
 {jd}
 
+【项目代码摘要】（自动扫描的项目实况，可能为空）
+{code}
+
 输出 JSON（不要解释、不要 markdown）：
 {{
   "summary": "一句话：这份简历投这个岗最大的问题是什么",
@@ -249,6 +252,12 @@ JD：
 - 改写要贴 JD 的用词（JD 说"混合检索"，就别只写"检索"）
 - 如果某个项目与岗位无关，直接建议弱化
 
+**如果给了项目代码摘要**：
+- 可以用摘要里**事实性**的内容补充简历（用了什么依赖、有几个接口、代码规模、模块划分）
+- 例如摘要写"依赖 langgraph、fastapi"，简历没提 LangGraph，就可以建议补上
+- 但只能引用摘要里明确出现的内容，**不许推测没写的东西**
+- 补进简历的话要像人写的，别把"144 个文件、15868 行"直接抄进去
+
 额外要求：{extra}
 """
 
@@ -261,13 +270,19 @@ def rewrite_resume(
     llm,
     extra: str = "",
     max_jd: int = 2000,
+    code_context: str = "",
 ) -> dict:
-    """针对岗位生成简历改写建议（不编造，只调整表达）。"""
+    """针对岗位生成简历改写建议（不编造，只调整表达）。
+
+    code_context 非空时，会把项目代码摘要一起给模型，
+    用来补充简历里没写、但代码里确实有的技术点。
+    """
     prompt = REWRITE_PROMPT.format(
         profile=build_profile_text(profile) + "\n\n" + (profile.raw_text[:3000] or ""),
         title=title,
         company=company,
         jd=(jd or "")[:max_jd],
+        code=(code_context or "")[:3500] or "（未提供项目代码）",
         extra=extra or "无",
     )
     try:

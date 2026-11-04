@@ -166,6 +166,25 @@ export type RewriteResult = {
   rewrites: { project?: string; original?: string; suggested?: string; why?: string }[];
   add: string[];
   cut: string[];
+  /** 这次改写是否用上了项目代码摘要 */
+  used_code?: boolean;
+};
+
+export type CodeProject = {
+  slug: string;
+  project_name: string;
+  name: string;
+  path: string;
+  file_count: number;
+  line_count: number;
+  langs: Record<string, number>;
+  deps: string[];
+  scanned_at: number;
+};
+
+export type CodeScanResult = CodeProject & {
+  routes: string[];
+  summary: string;
 };
 
 export type CompanyProfile = {
@@ -229,7 +248,18 @@ export const api = {
   patchProfile: (patch: Partial<Profile>) => post<Profile>("/profile", patch),
   match: (jobId: string) => post<MatchResult>(`/match/${jobId}`, {}),
   greet: (jobId: string, extra = "") => post<GreetResult>("/greet", { job_id: jobId, extra }),
-  rewrite: (jobId: string) => post<RewriteResult>(`/resume/rewrite/${jobId}`, {}),
+  rewrite: (jobId: string, project = "") =>
+    post<RewriteResult>(
+      `/resume/rewrite/${jobId}${project ? `?project=${encodeURIComponent(project)}` : ""}`,
+      {},
+    ),
+  codeList: () => get<{ items: CodeProject[] }>("/code"),
+  codeScan: (path: string, projectName = "") =>
+    post<CodeScanResult>("/code/scan", { path, project_name: projectName }),
+  codeDelete: (slug: string) =>
+    fetch(`${base()}/code/${encodeURIComponent(slug)}`, { method: "DELETE" }).then(
+      (r) => r.json(),
+    ),
   companies: (minJobs = 1) =>
     get<{ items: { company: string; jobs: number; districts: string[] }[] }>(
       `/companies?min_jobs=${minJobs}`,

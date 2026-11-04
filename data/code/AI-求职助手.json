@@ -1,0 +1,591 @@
+{
+  "path": "/host/f/Project_do/Agent/job-scout",
+  "name": "job-scout",
+  "file_count": 146,
+  "line_count": 16173,
+  "langs": {
+    "PowerShell": 269,
+    "Python": 10043,
+    "JavaScript": 1272,
+    "TypeScript": 4589
+  },
+  "deps": [
+    "langgraph",
+    "langchain-core",
+    "playwright",
+    "pydantic",
+    "pydantic-settings",
+    "typer",
+    "rich",
+    "python-dotenv",
+    "pyyaml",
+    "beautifulsoup4",
+    "rank-bm25",
+    "jieba",
+    "numpy",
+    "fastembed",
+    "openai",
+    "fastapi",
+    "uvicorn"
+  ],
+  "tree": [
+    "install-daily-task.ps1",
+    "run.ps1",
+    "start.ps1",
+    "api/__init__.py",
+    "api/app/deps.py",
+    "api/app/main.py",
+    "api/app/schemas.py",
+    "api/app/__init__.py",
+    "api/app/routers/ask.py",
+    "api/app/routers/code.py",
+    "api/app/routers/collect.py",
+    "api/app/routers/company.py",
+    "api/app/routers/jobs.py",
+    "api/app/routers/match.py",
+    "api/app/routers/profile.py",
+    "api/app/routers/search.py",
+    "api/app/routers/__init__.py",
+    "scripts/active_scroll_test.py",
+    "scripts/api_smoke.py",
+    "scripts/api_sse_test.py",
+    "scripts/audit_cleanup.py",
+    "scripts/audit_db.py",
+    "scripts/audit_garbled.py",
+    "scripts/audit_intern.py",
+    "scripts/audit_jd_waste.py",
+    "scripts/audit_relevance.py",
+    "scripts/autoscroll_test.py",
+    "scripts/cdp_check.py",
+    "scripts/cdp_debug.py",
+    "scripts/cdp_debug2.py",
+    "scripts/check_ask_k.py",
+    "scripts/check_ask_render.py",
+    "scripts/check_collect_page.py",
+    "scripts/check_fast_path.py",
+    "scripts/check_grabjd.py",
+    "scripts/check_intern_url.py",
+    "scripts/check_jd.py",
+    "scripts/check_jd_clean.py",
+    "scripts/check_p2p3_ui.py",
+    "scripts/check_profile_ui.py",
+    "scripts/check_retrieval_count.py",
+    "scripts/check_stale.py",
+    "scripts/check_two_phase.py",
+    "scripts/classify_jd.py",
+    "scripts/cleanup_test.py",
+    "scripts/clean_jd_data.py",
+    "scripts/diag_adaptive.py",
+    "scripts/diff_resume_parse.py",
+    "scripts/dom_scroll_probe.py",
+    "scripts/do_search.py",
+    "scripts/eval_faithfulness.py",
+    "scripts/export_by_category.py",
+    "scripts/fresh_scroll_test.py",
+    "scripts/import_user_resumes.py",
+    "scripts/inspect_api_fields.py",
+    "scripts/inspect_capture.py",
+    "scripts/inspect_fail.py",
+    "scripts/inspect_pages.py",
+    "scripts/intern_report.py",
+    "scripts/jd_keyword_report.py"
+  ],
+  "symbols": {
+    "start.ps1": [
+      "Write",
+      "Test",
+      "Wait"
+    ],
+    "api/app/deps.py": [
+      "pipeline_dep"
+    ],
+    "api/app/main.py": [
+      "lifespan",
+      "health"
+    ],
+    "api/app/schemas.py": [
+      "SearchRequest",
+      "SearchHit",
+      "SearchResponse",
+      "AskRequest",
+      "Citation",
+      "AskResponse",
+      "JobItem",
+      "JobListResponse"
+    ],
+    "api/app/routers/ask.py": [
+      "_profile_text",
+      "ask",
+      "ask_stream",
+      "event_gen"
+    ],
+    "api/app/routers/code.py": [
+      "ScanRequest",
+      "ScanResponse",
+      "scan",
+      "items",
+      "remove",
+      "context"
+    ],
+    "api/app/routers/collect.py": [
+      "StartRequest",
+      "StartResponse",
+      "StatusResponse",
+      "start",
+      "status",
+      "reset"
+    ],
+    "api/app/routers/company.py": [
+      "companies",
+      "company",
+      "prep"
+    ],
+    "api/app/routers/jobs.py": [
+      "_conn",
+      "_row_to_item",
+      "list_jobs",
+      "get_job"
+    ],
+    "api/app/routers/match.py": [
+      "GreetRequest",
+      "_get_job",
+      "_require_profile",
+      "_require_llm",
+      "match",
+      "rewrite",
+      "greet"
+    ],
+    "api/app/routers/profile.py": [
+      "ProfilePatch",
+      "get_profile",
+      "upload_resume",
+      "patch_profile"
+    ],
+    "api/app/routers/search.py": [
+      "search"
+    ],
+    "scripts/api_smoke.py": [
+      "post",
+      "get"
+    ],
+    "scripts/api_sse_test.py": [
+      "test_sse",
+      "test_latency"
+    ],
+    "scripts/audit_db.py": [
+      "scalar"
+    ],
+    "scripts/cdp_check.py": [
+      "main"
+    ],
+    "scripts/check_ask_k.py": [
+      "ask"
+    ],
+    "scripts/check_ask_render.py": [
+      "main"
+    ],
+    "scripts/check_collect_page.py": [
+      "main"
+    ],
+    "scripts/check_grabjd.py": [
+      "find_nojd",
+      "main"
+    ],
+    "scripts/check_intern_url.py": [
+      "post"
+    ],
+    "scripts/check_p2p3_ui.py": [
+      "main"
+    ],
+    "scripts/check_profile_ui.py": [
+      "main"
+    ],
+    "scripts/check_two_phase.py": [
+      "main"
+    ],
+    "scripts/classify_jd.py": [
+      "classify",
+      "main"
+    ],
+    "scripts/do_search.py": [
+      "main"
+    ],
+    "scripts/eval_faithfulness.py": [
+      "judge",
+      "main"
+    ],
+    "scripts/inspect_api_fields.py": [
+      "find_job_list"
+    ],
+    "scripts/intern_report.py": [
+      "is_intern"
+    ],
+    "scripts/listen.py": [
+      "main"
+    ],
+    "scripts/make_screenshots.py": [
+      "main",
+      "shot"
+    ],
+    "scripts/page_param_test.py": [
+      "wait_growth"
+    ],
+    "scripts/probe_url.py": [
+      "main"
+    ],
+    "scripts/scroll_probe.py": [
+      "main"
+    ],
+    "scripts/search_and_scroll.py": [
+      "main"
+    ],
+    "scripts/smoke.py": [
+      "main"
+    ],
+    "scripts/test_code_rewrite.py": [
+      "post",
+      "get"
+    ],
+    "scripts/test_rewrite.py": [
+      "get",
+      "post"
+    ],
+    "scripts/verify_container_final.py": [
+      "get"
+    ],
+    "src/job_scout/classify.py": [
+      "classify"
+    ],
+    "src/job_scout/cli.py": [
+      "get_adapter",
+      "config",
+      "probe",
+      "_report_page_state",
+      "parse",
+      "browser",
+      "dashboard",
+      "rag_eval"
+    ],
+    "src/job_scout/codebase.py": [
+      "ProjectScan",
+      "to_dict",
+      "summary_markdown",
+      "_read_text",
+      "_iter_files",
+      "_extract_deps",
+      "_extract_symbols",
+      "resolve_host_path"
+    ],
+    "src/job_scout/company.py": [
+      "_conn",
+      "list_companies",
+      "company_jobs",
+      "_signal_scores",
+      "_skill_counts",
+      "build_company_profile",
+      "prep_analysis",
+      "has"
+    ],
+    "src/job_scout/config.py": [
+      "Settings",
+      "QuerySpec",
+      "Limits",
+      "SearchConfig",
+      "load_search_config"
+    ],
+    "src/job_scout/constants.py": [
+      "title_relevant"
+    ],
+    "src/job_scout/dashboard.py": [
+      "normalize_salary",
+      "extract_jd_keywords",
+      "_bucket_of",
+      "load_postings",
+      "build_payload",
+      "_echarts_source",
+      "render",
+      "open_dashboard"
+    ],
+    "src/job_scout/models.py": [
+      "Source",
+      "SearchQuery",
+      "JobPosting",
+      "ReportInput",
+      "dedupe_key"
+    ],
+    "src/job_scout/profile.py": [
+      "Profile",
+      "to_dict",
+      "from_dict",
+      "has_content",
+      "extract_pdf_text",
+      "parse_profile",
+      "save_profile",
+      "load_profile"
+    ],
+    "src/job_scout/salary.py": [
+      "parse_salary"
+    ],
+    "src/job_scout/server.py": [
+      "Handler",
+      "mark_auto_done",
+      "read_auto_done",
+      "to_posting",
+      "_cors",
+      "_json",
+      "do_OPTIONS",
+      "do_GET"
+    ],
+    "src/job_scout/storage.py": [
+      "Storage",
+      "_now",
+      "__init__",
+      "_migrate",
+      "start_run",
+      "finish_run",
+      "upsert",
+      "count"
+    ],
+    "src/job_scout/textclean.py": [
+      "clean_jd",
+      "is_dirty"
+    ],
+    "src/job_scout/rag/bm25.py": [
+      "BM25Retriever",
+      "tokenize",
+      "__init__",
+      "search"
+    ],
+    "src/job_scout/rag/corpus.py": [
+      "Doc",
+      "_matched_terms",
+      "build_doc",
+      "load_docs"
+    ],
+    "src/job_scout/rag/embedder.py": [
+      "Embedder",
+      "__init__",
+      "encode"
+    ],
+    "src/job_scout/rag/evaluate.py": [
+      "EvalItem",
+      "_add",
+      "build_eval_set",
+      "recall_at_k",
+      "precision_at_k",
+      "mrr",
+      "evaluate",
+      "avg_recall"
+    ],
+    "src/job_scout/rag/generate.py": [
+      "Answer",
+      "build_context",
+      "parse_citations",
+      "build_user_prompt",
+      "extractive_answer",
+      "ask",
+      "_candidate_dict",
+      "stream_ask"
+    ],
+    "src/job_scout/rag/hybrid.py": [
+      "Retriever",
+      "HybridRetriever",
+      "Reranker",
+      "AdaptiveRerankRetriever",
+      "search",
+      "rrf_fuse",
+      "__init__",
+      "score"
+    ],
+    "src/job_scout/rag/llm.py": [
+      "LLMConfig",
+      "LLM",
+      "load_config",
+      "__init__",
+      "complete",
+      "stream",
+      "get_llm"
+    ],
+    "src/job_scout/rag/llm_reranker.py": [
+      "LLMReranker",
+      "__init__",
+      "_build_prompt",
+      "_parse",
+      "score"
+    ],
+    "src/job_scout/rag/pipeline.py": [
+      "RagPipeline",
+      "has_llm",
+      "search",
+      "ask",
+      "get_pipeline",
+      "reset_pipeline"
+    ],
+    "src/job_scout/rag/reranker.py": [
+      "CrossEncoderReranker",
+      "model_available",
+      "__init__",
+      "score"
+    ],
+    "src/job_scout/rag/vector.py": [
+      "VectorRetriever",
+      "__init__",
+      "build",
+      "search",
+      "score"
+    ],
+    "src/job_scout/sources/boss.py": [
+      "BossAdapter",
+      "RiskControlError",
+      "search_url",
+      "parse_list",
+      "parse_detail",
+      "_pick",
+      "_extract_job_id",
+      "_split_area"
+    ],
+    "src/job_scout/sources/shixiseng.py": [
+      "ShixisengAdapter",
+      "search_url",
+      "parse_list",
+      "parse_detail",
+      "_pick"
+    ],
+    "src/job_scout/sources/__init__.py": [
+      "SourceAdapter",
+      "search_url",
+      "parse_list",
+      "parse_detail"
+    ],
+    "src/job_scout/tools/browser.py": [
+      "BrowserDriver",
+      "PlaywrightDriver",
+      "open",
+      "html",
+      "text",
+      "click",
+      "wait_for",
+      "wait_until"
+    ],
+    "src/job_scout/tools/cdp.py": [
+      "CdpCollector",
+      "find_browser",
+      "launch_browser",
+      "cdp_endpoint",
+      "is_cdp_alive",
+      "stop_browser",
+      "__init__",
+      "_find_page"
+    ],
+    "userscripts/job-scout.user.js": [
+      "probeApi",
+      "loadCfg",
+      "saveCfg",
+      "setAutoRun",
+      "autoRunEnabled",
+      "isJobListPage",
+      "bootAutoRun",
+      "isRelevant"
+    ],
+    "web/app/ask/page.tsx": [
+      "linkifyCitations",
+      "patchLast",
+      "toggleProfile",
+      "changeK",
+      "stop",
+      "reset",
+      "send"
+    ],
+    "web/app/collect/page.tsx": [
+      "fmtElapsed",
+      "start",
+      "reset"
+    ],
+    "web/app/company/[name]/page.tsx": [
+      "LoadingView"
+    ],
+    "web/app/eval/page.tsx": [
+      "TableShell",
+      "fmt"
+    ],
+    "web/app/jobs/page.tsx": [
+      "pageWindow",
+      "reset"
+    ],
+    "web/app/jobs/[id]/page.tsx": [
+      "description"
+    ],
+    "web/app/prep/page.tsx": [
+      "LoadingSkeleton"
+    ],
+    "web/app/profile/page.tsx": [
+      "Completeness",
+      "upload"
+    ],
+    "web/components/AiLoading.tsx": [
+      "AiLoading"
+    ],
+    "web/components/GrabJD.tsx": [
+      "start"
+    ],
+    "web/components/JobRow.tsx": [
+      "avatarTone",
+      "JobRowSkeleton"
+    ],
+    "web/components/MatchPanel.tsx": [
+      "scoreColor",
+      "ScoreRing",
+      "LoadingPanel",
+      "MoreButton",
+      "toggle",
+      "runMatch",
+      "runGreet",
+      "runRewrite"
+    ],
+    "web/components/Nav.tsx": [
+      "isActive"
+    ],
+    "web/components/Sidebar.tsx": [
+      "isActive",
+      "Brand",
+      "ProfileBadge"
+    ],
+    "web/components/ui.tsx": [
+      "Stat",
+      "SectionHeader",
+      "EmptyState",
+      "ProgressBar",
+      "SkeletonBlock"
+    ],
+    "web/lib/api.ts": [
+      "base",
+      "post",
+      "get"
+    ]
+  },
+  "routes": [
+    "/health",
+    "/stream",
+    "/scan",
+    "/{slug}",
+    "/context",
+    "/start",
+    "/status",
+    "/reset",
+    "/companies",
+    "/company/{name}",
+    "/prep",
+    "/{job_id}",
+    "/match/{job_id}",
+    "/resume/rewrite/{job_id}",
+    "/greet",
+    "/upload"
+  ],
+  "readme": "# job-scout\n\n> 把「找工作」变成可量化的决策 —— 采集真实招聘 JD，用 RAG 做检索问答，上传简历后给每个岗位算匹配度、生成打招呼消息、指出简历该怎么改。\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/home.png\" alt=\"概览\" width=\"860\">\n</p>\n\n## 这是什么\n\n找工作最难的不是投简历，是**不知道投哪个、不知道该补什么**。\n\n市面上的岗位列表只回答「有什么岗位」，回答不了：\n\n- 这个岗位值不值得投？我的差距在哪？\n- 这家公司在做什么、喜欢什么样的人？\n- 招呼语怎么写才不像群发？\n- 我该补什么、什么不值得补？\n\n这个项目用爬来的真实数据 + RAG + LLM，把这四个问题变成可执行的判断。\n\n## 功能\n\n### 采集与数据\n\n- 浏览器油猴脚本旁听 BOSS 直聘接口响应，**不注入请求、不绕过验证码**\n- 只收 `jobType=4`（实习）+ 标题含 AI/Agent 关键词，挡掉产品/设计/运营类噪音\n- JD 正文用「真实导航到详情页再读 DOM」的方式抓，避开接口风控\n- 每天增量更新，超过 7 天没再出现自动标记停招\n\n### 检索与问答\n\n- 一条 JD = 一个 chunk，标题/公司/技能作为检索信号\n- BM25 + 向量双路召回，RRF 融合\n- 回答带引用编号 `[1]`，可点回原岗位\n- 检索不到就明确说没有，不硬答\n\n### 求职助手\n\n| 能力 | 说明 |\n|---|---|\n| **我的画像** | 上传 PDF 简历 → 提取技能/项目/经历 |\n| **岗位匹配** | 0-100 分 + 匹配点 + 缺口清单 |\n| **打招呼** | 200 字内定制消息，必须扣 JD 的具体要求 |\n| **简历改写** | 原文 → 改写 → 为什么，只调表达不编经历 |\n| **公司画像** | 在做什么 / 技术风格 / 团队特征 / 面试考什么 |\n| **技术准备** | 该补什么、怎么学、什么不值得学 |\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/match.png\" alt=\"匹配与打招呼\" width=\"760\">\n</p>\n\n## 截图\n\n| | |\n|---|---|\n| ![岗位](docs/screenshots/jobs.png) | ![我的](docs/screenshots/profile.png) |\n| 岗位列表 | 简历画像 |\n| ![公司](docs/screenshots/company.png) | ![准备](docs/screenshots/prep.png) |\n| 公司画像 | 技术准备 |\n| ![问答",
+  "ok": true,
+  "error": "",
+  "project_name": "AI 求职助手",
+  "slug": "AI-求职助手",
+  "summary": "项目名：job-scout\n路径：/host/f/Project_do/Agent/job-scout\n规模：146 个源文件，约 16173 行（Python 10043 行、TypeScript 4589 行、JavaScript 1272 行、PowerShell 269 行）\n依赖/技术栈：langgraph、langchain-core、playwright、pydantic、pydantic-settings、typer、rich、python-dotenv、pyyaml、beautifulsoup4、rank-bm25、jieba、numpy、fastembed、openai、fastapi、uvicorn\n对外接口：/health、/stream、/scan、/{slug}、/context、/start、/status、/reset、/companies、/company/{name}、/prep、/{job_id}、/match/{job_id}、/resume/rewrite/{job_id}、/greet\n目录结构：\n  install-daily-task.ps1\n  run.ps1\n  start.ps1\n  api/__init__.py\n  api/app/deps.py\n  api/app/main.py\n  api/app/schemas.py\n  api/app/__init__.py\n  api/app/routers/ask.py\n  api/app/routers/code.py\n  api/app/routers/collect.py\n  api/app/routers/company.py\n  api/app/routers/jobs.py\n  api/app/routers/match.py\n  api/app/routers/profile.py\n  api/app/routers/search.py\n  api/app/routers/__init__.py\n  scripts/active_scroll_test.py\n  scripts/api_smoke.py\n  scripts/api_sse_test.py\n  scripts/audit_cleanup.py\n  scripts/audit_db.py\n  scripts/audit_garbled.py\n  scripts/audit_intern.py\n  scripts/audit_jd_waste.py\n  scripts/audit_relevance.py\n  scripts/autoscroll_test.py\n  scripts/cdp_check.py\n  scripts/cdp_debug.py\n  scripts/cdp_debug2.py\n  scripts/check_ask_k.py\n  scripts/check_ask_render.py\n  scripts/check_collect_page.py\n  scripts/check_fast_path.py\n  scripts/check_grabjd.py\n  scripts/check_intern_url.py\n  scripts/check_jd.py\n  scripts/check_jd_clean.py\n  scripts/check_p2p3_ui.py\n  scripts/check_profile_ui.py\n  scripts/check_retrieval_count.py\n  scripts/check_stale.py\n  scripts/check_two_phase.py\n  scripts/classify_jd.py\n  scripts/cleanup_test.py\n主要模块与符号：\n  start.ps1: Write, Test, Wait\n  api/app/deps.py: pipeline_dep\n  api/app/main.py: lifespan, health\n  api/app/schemas.py: SearchRequest, SearchHit, SearchResponse, AskRequest, Citation, AskResponse, JobItem, JobListResponse\n  api/app/routers/ask.py: _profile_text, ask, ask_stream, event_gen\n  api/app/routers/code.py: ScanRequest, ScanResponse, scan, items, remove, context\n  api/app/routers/collect.py: StartRequest, StartResponse, StatusResponse, start, status, reset\n  api/app/routers/company.py: companies, company, prep\n  api/app/routers/jobs.py: _conn, _row_to_item, list_jobs, get_job\n  api/app/routers/match.py: GreetRequest, _get_job, _require_profile, _require_llm, match, rewrite, greet\n  api/app/routers/profile.py: ProfilePatch, get_profile, upload_resume, patch_profile\n  api/app/routers/search.py: search\n  scripts/api_smoke.py: post, get\n  scripts/api_sse_test.py: test_sse, test_latency\n  scripts/audit_db.py: scalar\n  scripts/cdp_check.py: main\n  scripts/check_ask_k.py: ask\n  scripts/check_ask_render.py: main\n  scripts/check_collect_page.py: main\n  scripts/check_grabjd.py: find_nojd, main\n  scripts/check_intern_url.py: post\n  scripts/check_p2p3_ui.py: main\nREADME 摘录：\n# job-scout\n\n> 把「找工作」变成可量化的决策 —— 采集真实招聘 JD，用 RAG 做检索问答，上传简历后给每个岗位算匹配度、生成打招呼消息、指出简历该怎么改。\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/home.png\" alt=\"概览\" width=\"860\">\n</p>\n\n## 这是什么\n\n找工作最难的不是投简历，是**不知道投哪个、不知道该补什么**。\n\n市面上的岗位列表只回答「有什么岗位」，回答不了：\n\n- 这个岗位值不值得投？我的差距在哪？\n- 这家公司在做什么、喜欢什么样的人？\n- 招呼语怎么写才不像群发？\n- 我该补什么、什么不值得补？\n\n这个项目用爬来的真实数据 + RAG + LLM，把这四个问题变成可执行的判断。\n\n## 功能\n\n### 采集与数据\n\n- 浏览器油猴脚本旁听 BOSS 直聘接口响应，**不注入请求、不绕过验证码**\n- 只收 `jobType=4`（实习）+ 标题含 AI/Agent 关键词，挡掉产品/设计/运营类噪音\n- JD 正文用「真实导航到详情页再读 DOM」的方式抓，避开接口风控\n- 每天增量更新，超过 7 天没再出现自动标记停招\n\n### 检索与问答\n\n- 一条 JD = 一个 chunk，标题/公司/技能作为检索信号\n- BM25 + 向量双路召回，RRF 融合\n- 回答带引用编号 `[1]`，可点回原岗位\n- 检索不到就明确说没有，不硬答\n\n### 求职助手\n\n| 能力 | 说明 |\n|---|---|\n| **我的画像** | 上传 PDF 简历 → 提取技能/项目/经历 |\n| **岗位匹配** | 0-100 分 + 匹配点 + 缺口清单 |\n| **打招呼** | 200 字内定制消息，必须扣 JD 的具体要求 |\n| **简历改写** | 原文 → 改写 → 为什么，只调表达不编经历 |\n| **公司画像** | 在做什么 / 技术风格 / 团队特征 / 面试考什么 |\n| **技术准备** | 该补什么、怎么学、什么不值得学 |\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/match.png\" alt=\"匹配与打招呼\" width=\"760\">\n</p>\n\n## 截图\n\n| | |\n|---|---|\n| ![岗位](docs/screenshots/jobs.png) | ![我的](docs/screenshots/profile.png) |\n| 岗位列表 | 简历画像 |\n| ![公司](docs/screenshots/company.png) | ![准备](docs/screenshots/prep.png) |\n| 公司画像 | 技术准备 |\n| ![问答",
+  "scanned_at": 1793755765.682437
+}

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         job-scout 采集器
-// @version      0.10.6
+// @version      0.10.8
 // @namespace    job-scout.local
 // @description  旁听 BOSS 直聘职位接口，自动滚动翻页，循环补全 JD 正文，推送到本地 job-scout
 // @match        https://www.zhipin.com/*
@@ -17,10 +17,18 @@
   let API = 'http://127.0.0.1:8766';
   let ENDPOINT = API + '/ingest';
   let HEALTH = API + '/health';
+
+  // FastAPI（8001）是另一个服务：匹配度、改写、问答这些在它上面。
+  // 采集服务 8766 只有 ingest / health，打 /analyze 会 404。
+  const SERVER_PORTS = [8001, 8002, 8003];
+  let SERVER = 'http://127.0.0.1:8001';
+
   const AUTORUN_KEY = 'jobscout.autorun';
 
   /** 探测哪个端口是 job-scout 的接收服务。返回 true 表示找到了。 */
   async function probeApi() {
+    // 1) 采集接收服务（/health 带 total）
+    let foundCollect = false;
     for (const port of API_PORTS) {
       try {
         const r = await fetch(`http://127.0.0.1:${port}/health`, {
@@ -34,11 +42,31 @@
           API = `http://127.0.0.1:${port}`;
           ENDPOINT = API + '/ingest';
           HEALTH = API + '/health';
-          return true;
+          foundCollect = true;
+          break;
         }
       } catch (e) {}
     }
-    return false;
+
+    if (!foundCollect) return false;
+
+    // 2) FastAPI（/health 带 docs）
+    for (const port of SERVER_PORTS) {
+      try {
+        const r = await fetch(`http://127.0.0.1:${port}/health`, {
+          cache: 'no-store',
+          signal: AbortSignal.timeout(1500),
+        });
+        if (!r.ok) continue;
+        const d = await r.json();
+        if (typeof d.docs === 'number' && typeof d.has_llm === 'boolean') {
+          SERVER = `http://127.0.0.1:${port}`;
+          break;
+        }
+      } catch (e) {}
+    }
+
+    return true;
   }
 
   const state = {
@@ -1142,7 +1170,7 @@
         const q = (analyzerEl.querySelector('#js-an-q')?.value || '').trim();
         if (!q) return;
         answerBox.textContent = '思考中…';
-        const r = await fetch(API + '/analyze/ask', {
+        const r = await fetch(SERVER + '/analyze/ask', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ jd: job.jd.slice(0, 12000), question: q }),
@@ -1152,7 +1180,7 @@
         answerBox.textContent = d.answer || '';
       } else {
         resultBox.textContent = '分析中…（约 15 秒）';
-        const r = await fetch(API + '/analyze', {
+        const r = await fetch(SERVER + '/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1174,6 +1202,126 @@
     }
   }
 
+  // ================= 当前岗位一键入库 =================
+  /** 从当前详情页提取完整岗位信息。
+   *
+   * BOSS 的 DOM 结构会改版，所以每个字段都给多个候选选择器，
+   * 全落空时退回 document.title / meta 兜底。
+   */
+  function readJobMeta() {
+    const t = (sel) => (document.querySelector(sel)?.textContent || '').trim();
+    const first = (...sels) => {
+      for (const s of sels) {
+        const v = t(s);
+        if (v) return v;
+      }
+      return '';
+    };
+
+    const jobId = jobIdFromUrl();
+
+    let title = first(
+      '.job-banner .name',
+      '.job-banner h1',
+      '.job-title .name',
+      'h1',
+      '.job-name',
+    );
+    if (!title) {
+      // 兜底：<title> 一般是「岗位名 - 公司 - BOSS直聘」
+      title = (document.title || '').split(/[-_|]/)[0].trim();
+    }
+
+    const company = first(
+      '.company-info .name',
+      '.job-boss-info .name',
+      '.company-name',
+      '.sider-company .name',
+      '.job-banner .company',
+    );
+    const salary = first('.job-banner .salary', '.salary', '.job-salary', '.salary-text');
+    const locText = first('.job-banner .text', '.location', '.job-location', '.job-banner .info');
+
+    // 「广州·海珠区·3天/周」拆成城市和区
+    let city = '';
+    let district = '';
+    const loc = locText.match(/([^\s·]+)市?[·\s]+([^\s·]+?区)/);
+    if (loc) {
+      city = loc[1].replace(/市$/, '');
+      district = loc[2];
+    } else if (locText) {
+      city = locText.split(/[·\s]/)[0] || '';
+    }
+
+    const skills = Array.from(
+      document.querySelectorAll(
+        '.job-tags span, .job-tags li, .job-keyword-list li, .tag-list li, .job-tags .tag',
+      ),
+    )
+      .map((el) => (el.textContent || '').trim())
+      .filter((x) => x && x.length <= 20)
+      .slice(0, 12);
+
+    return {
+      job_id: jobId,
+      title,
+      company,
+      salary,
+      city,
+      district,
+      skills,
+      description: readDetailDom(),
+      url: location.href.split('?')[0],
+    };
+  }
+
+  /** 把当前详情页的岗位存进库（用户主动触发）。 */
+  async function grabCurrentJob() {
+    if (!isDetailPage()) {
+      state.lastMsg = '这不是岗位详情页';
+      render();
+      return;
+    }
+
+    let job = readJobMeta();
+    // JD 可能还没渲染完
+    for (let i = 0; i < 10 && (!job.description || job.description.length < 40); i++) {
+      await sleep(600);
+      job = readJobMeta();
+    }
+
+    if (!job.job_id || !job.title) {
+      state.lastMsg = '✗ 没识别到岗位标题，页面可能没加载完';
+      render();
+      return;
+    }
+    if (!job.description || job.description.length < 40) {
+      state.lastMsg = '✗ 没识别到 JD 正文（可能在人机校验页，刷新重试）';
+      render();
+      return;
+    }
+
+    state.lastMsg = '正在入库…';
+    render();
+
+    try {
+      const r = await fetch(API + '/ingest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobs: [job] }),
+      });
+      const d = await r.json();
+      if (d.ok) {
+        state.lastMsg = `✓ 已入库：${job.title.slice(0, 18)}｜${job.description.length} 字（库内 ${d.total} 条）`;
+      } else {
+        state.lastMsg = '✗ 入库失败：' + (d.error || '未知错误');
+      }
+    } catch (e) {
+      state.lastMsg = '✗ 推送失败，服务没起？' + String(e).slice(0, 50);
+    }
+    render();
+  }
+
   function buildPanel() {
     if (panel || !document.body) return;
     panel = document.createElement('div');
@@ -1188,6 +1336,7 @@
     panel.innerHTML = `
       <div style="font-weight:600;margin-bottom:6px">job-scout 采集器</div>
       <div id="js-count" style="color:#9ca3af;margin-bottom:8px">已收集 0 条</div>
+      <button id="js-grab" style="width:100%;padding:8px;border:0;border-radius:6px;background:#4f8cff;color:#fff;cursor:pointer;margin-bottom:6px;display:none">抓取当前岗位入库</button>
       <button id="js-auto" style="width:100%;padding:8px;border:0;border-radius:6px;background:#16a34a;color:#fff;cursor:pointer;margin-bottom:6px">开始自动滚动</button>
       <button id="js-jd" style="width:100%;padding:7px;border:0;border-radius:6px;background:#7c3aed;color:#fff;cursor:pointer;margin-bottom:6px">抓 JD 正文（循环补全）</button>
       <button id="js-nav" style="width:100%;padding:7px;border:0;border-radius:6px;background:#db2777;color:#fff;cursor:pointer;margin-bottom:6px">导航模式抓 JD（最稳，慢）</button>
@@ -1335,6 +1484,7 @@
 
     panel.querySelector('#js-push').addEventListener('click', push);
     panel.querySelector('#js-export').addEventListener('click', exportJson);
+    panel.querySelector('#js-grab').addEventListener('click', grabCurrentJob);
 
     render();
   }
@@ -1345,6 +1495,12 @@
     const withJd = Array.from(state.jobs.values()).filter((j) => j.description).length;
     countEl.textContent = `累计 ${n} 条｜本查询 ${state.total ?? '-'}｜有 JD ${withJd}`;
     msgEl.textContent = state.lastMsg;
+
+    // 「抓取当前岗位」只在详情页显示
+    const grabBtn = document.getElementById('js-grab');
+    if (grabBtn) {
+      grabBtn.style.display = isDetailPage() ? 'block' : 'none';
+    }
 
     if (btnEl) {
       btnEl.textContent = state.timer ? '停止自动滚动' : '开始自动滚动';
@@ -1427,5 +1583,5 @@
   });
   observer.observe(document.documentElement, { childList: true, subtree: true });
 
-  console.log('[job-scout] 采集器 v0.10.6 已注入（悬浮快评 + 定点抓取 + 端口探测）');
+  console.log('[job-scout] 采集器 v0.10.8 已注入（采集走 8766，分析走 8001）');
 })();

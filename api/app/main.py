@@ -55,8 +55,13 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    # 本地开发端口不固定（3000/3001/…），用正则放开 localhost 与 127.0.0.1 的任意端口
-    allow_origin_regex=r"http://(localhost|127\.0\.0\.1)(:\d+)?",
+    # 两类来源：
+    # 1) 本地前端——端口不固定（3000/3001/…），放开 localhost 与 127.0.0.1 任意端口
+    # 2) BOSS 页面里的油猴悬浮窗——必须放行 zhipin.com，否则 fetch 直接 Failed to fetch
+    allow_origin_regex=(
+        r"https?://(localhost|127\.0\.0\.1)(:\d+)?"
+        r"|https://([a-z0-9-]+\.)*zhipin\.com"
+    ),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

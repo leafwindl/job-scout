@@ -19,6 +19,7 @@ import {
 
 import CodeProjects from "@/components/CodeProjects";
 import PageHeader from "@/components/PageHeader";
+import ProjectCodeLink from "@/components/ProjectCodeLink";
 import { ProgressBar, SectionHeader, Stat } from "@/components/ui";
 import { api, type Profile } from "@/lib/api";
 
@@ -234,9 +235,12 @@ export default function ProfilePage() {
                       <li key={i} className="relative pl-6">
                         <span className="absolute left-0 top-[7px] h-[11px] w-[11px] rounded-full border-2 border-panel bg-accent/70" />
                         <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                          <h3 className="text-[13.5px] font-medium text-fg">
-                            {proj.name || `项目 ${i + 1}`}
-                          </h3>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="text-[13.5px] font-medium text-fg">
+                              {proj.name || `项目 ${i + 1}`}
+                            </h3>
+                            {proj.name && <ProjectCodeLink projectName={proj.name} />}
+                          </div>
                           {proj.period && (
                             <span className="text-2xs tabular-nums text-fg3">{proj.period}</span>
                           )}

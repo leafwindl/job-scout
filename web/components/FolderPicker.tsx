@@ -107,6 +107,12 @@ export default function FolderPicker({
           </code>
         </div>
 
+        {dir?.note && (
+          <div className="border-b border-line/60 bg-accent/[0.04] px-4 py-1.5 text-2xs leading-[1.7] text-fg3">
+            {dir.note}
+          </div>
+        )}
+
         <div className="min-h-0 flex-1 overflow-auto px-2 py-2">
           {loading && !dir ? (
             <div className="flex items-center justify-center py-10 text-xs text-fg3">

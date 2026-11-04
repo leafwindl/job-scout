@@ -343,15 +343,53 @@ def browse_dir(path: str = "") -> dict:
     """
     if not path:
         # 列盘符
+        # 只列**真正能访问**的盘符。
+        # 容器里 docker-compose 只挂了 F: 到 /host/f，所以这里从 /host 实际读；
+        # 直接把 C:/D:/E: 都列出来会让用户点了没反应（容器里那些路径不存在）。
+        host_root = Path("/host")
         drives: list[dict] = []
-        for letter in "CDEFGHIJKLMNOPQRSTUVWXYZ":
-            p = Path(f"{letter}:/")
+        if host_root.exists():
             try:
-                if p.exists():
-                    drives.append({"name": f"{letter}:", "path": f"{letter}:\\", "is_project": False})
+                for child in sorted(host_root.iterdir()):
+                    if child.is_dir():
+                        letter = child.name.upper()
+                        drives.append(
+                            {
+                                "name": f"{letter}:",
+                                "path": f"{letter}:\\",
+                                "is_project": False,
+                            }
+                        )
             except OSError:
-                continue
-        return {"path": "", "parent": None, "dirs": drives, "at_root": True}
+                pass
+        else:
+            # 本地直接跑（非容器）时，列真实的 Windows 盘符
+            for letter in "CDEFGHIJKLMNOPQRSTUVWXYZ":
+                try:
+                    if Path(f"{letter}:/").exists():
+                        drives.append(
+                            {
+                                "name": f"{letter}:",
+                                "path": f"{letter}:\\",
+                                "is_project": False,
+                            }
+                        )
+                except OSError:
+                    continue
+
+        return {
+            "path": "",
+            "parent": None,
+            "dirs": drives,
+            "at_root": True,
+            # 只挂了一个盘时提示一下，免得用户以为别的地方还有
+            "note": (
+                f"只能访问已挂载的盘：{'、'.join(d['name'] for d in drives)}"
+                "（要加别的盘，改 docker-compose.yml 的 volumes）"
+                if drives
+                else "容器里没有挂载任何宿主目录，检查 docker-compose.yml 的 volumes"
+            ),
+        }
 
     resolved = resolve_host_path(path)
     root = Path(resolved).expanduser()

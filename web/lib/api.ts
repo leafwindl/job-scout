@@ -208,6 +208,7 @@ export type BrowseResult = {
   parent: string | null;
   dirs: BrowseEntry[];
   at_root?: boolean;
+  note?: string;
   error?: string;
 };
 

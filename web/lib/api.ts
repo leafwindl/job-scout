@@ -197,6 +197,50 @@ export type CodeScanResult = CodeProject & {
   summary: string;
 };
 
+export type BrowseEntry = {
+  name: string;
+  path: string;
+  is_project: boolean;
+};
+
+export type BrowseResult = {
+  path: string;
+  parent: string | null;
+  dirs: BrowseEntry[];
+  at_root?: boolean;
+  error?: string;
+};
+
+export type ProjectCandidate = {
+  name: string;
+  path: string;
+  markers: string[];
+  code_files: number;
+};
+
+export type ScanManyResult = {
+  total: number;
+  ok_count: number;
+  items: {
+    name: string;
+    ok: boolean;
+    slug?: string;
+    file_count?: number;
+    line_count?: number;
+    error?: string;
+  }[];
+};
+
+/** 对照代码审查简历里的项目描述 */
+export type ReviewResult = {
+  project: string;
+  verdict: string;
+  inaccurate: { claim: string; reality: string; fix: string }[];
+  missing: { fact: string; suggest: string }[];
+  rewrites: { original: string; suggested: string; why: string }[];
+  cut: string[];
+};
+
 export type CompanyProfile = {
   company: string;
   job_count: number;
@@ -273,6 +317,15 @@ export const api = {
     fetch(`${base()}/code/${encodeURIComponent(slug)}`, { method: "DELETE" }).then(
       (r) => r.json(),
     ),
+  codeBrowse: (path = "") =>
+    get<BrowseResult>(`/code/browse?path=${encodeURIComponent(path)}`),
+  codeDiscover: (path: string) =>
+    get<{ path: string; items: ProjectCandidate[] }>(
+      `/code/discover?path=${encodeURIComponent(path)}`,
+    ),
+  codeScanMany: (path: string, only: string[] = []) =>
+    post<ScanManyResult>("/code/scan-many", { path, only }),
+  codeReview: (project: string) => post<ReviewResult>("/code/review", { project }),
   companies: (minJobs = 1) =>
     get<{ items: { company: string; jobs: number; districts: string[] }[] }>(
       `/companies?min_jobs=${minJobs}`,

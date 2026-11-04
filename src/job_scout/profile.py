@@ -301,6 +301,132 @@ def rewrite_resume(
     }
 
 
+REVIEW_PROMPT = """你在审查简历里的一个项目描述，对照的是这个项目的**真实代码**。
+
+【简历里的项目描述】
+{resume_project}
+
+【项目代码实际情况】
+{code}
+
+输出 JSON（不要解释、不要 markdown）：
+{{
+  "verdict": "一句话总体判断：这段描述和代码的差距在哪",
+  "inaccurate": [
+    {{"claim": "简历里写的", "reality": "代码里的实际情况", "fix": "建议改成"}}
+  ],
+  "missing": [
+    {{"fact": "代码里有、但简历没写的", "suggest": "可以补进简历的说法"}}
+  ],
+  "rewrites": [
+    {{"original": "原文某句", "suggested": "改写后", "why": "依据代码的哪部分"}}
+  ],
+  "cut": ["建议删掉或弱化的说法"]
+}}
+
+规则：
+- **只依据代码摘要判断**，摘要里没提到的东西不要说「代码里没有」
+- inaccurate 最多 3 条：挑真的会让人怀疑的夸大表述
+- missing 挑 2-4 条**最有说服力**的事实（技术栈、接口数量、模块划分、规模）
+- 改写要像人写的，别把「146 个文件、16171 行」直接抄进去
+- 如果代码和描述基本对得上，inaccurate 可以空，只给 missing 和 rewrites
+- 中文，简洁
+"""
+
+
+def _find_project(profile: Profile, project_name: str) -> dict:
+    """按名字找简历里的项目。
+
+    匹配顺序：完全相同 -> 互相包含 -> 模糊相似度（应对「AI 求职助手」vs「Echo AI 助手」这种改名）。
+    """
+    if not project_name:
+        return {}
+
+    names = [(p.get("name") or "").strip() for p in profile.projects]
+
+    # 1) 完全一致
+    for p, name in zip(profile.projects, names, strict=True):
+        if name == project_name.strip():
+            return p
+
+    # 2) 互相包含
+    target = project_name.strip()
+    for p, name in zip(profile.projects, names, strict=True):
+        if name and (target in name or name in target):
+            return p
+
+    # 3) 字符集覆盖率
+    # 「AI 求职助手」vs「Echo AI 助手 App」——中间隔着「求职」，
+    # 连续子串只有 "AI "，但字符集覆盖了 5/7，用户其实指的就是这个项目。
+    def coverage(a: str, b: str) -> float:
+        sa = {c for c in a if not c.isspace()}
+        sb = {c for c in b if not c.isspace()}
+        if len(sa) < 3:
+            return 0.0
+        common = sa & sb
+        if len(common) < 2:
+            return 0.0
+        return len(common) / len(sa)
+
+    best: dict = {}
+    best_score = 0.0
+    for p, name in zip(profile.projects, names, strict=True):
+        if not name:
+            continue
+        score = coverage(target, name)
+        if score > best_score:
+            best_score = score
+            best = p
+
+    # 字符集容易高分，阈值给高一点，避免关联到无关项目。
+    # 实测「AI 求职助手」对「Echo AI 助手 App…」是 4/6=0.67，所以取 0.6。
+    return best if best_score >= 0.6 else {}
+
+
+def review_resume_vs_code(profile: Profile, project_name: str, code_context: str, llm) -> dict:
+    """对照项目代码审查简历里的该项目描述。"""
+    proj = _find_project(profile, project_name)
+    if not proj:
+        return {
+            "error": f"简历里没有找到「{project_name}」这个项目",
+            "verdict": "",
+            "inaccurate": [],
+            "missing": [],
+            "rewrites": [],
+            "cut": [],
+        }
+
+    bullets = "\n".join(f"- {b}" for b in (proj.get("bullets") or []))
+    resume_text = f"{proj.get('name', '')}\n{bullets}".strip()
+
+    prompt = REVIEW_PROMPT.format(
+        resume_project=resume_text,
+        code=(code_context or "")[:4000] or "（没有代码摘要）",
+    )
+    try:
+        raw = llm.complete("你是一个务实的简历审查员，只依据事实说话。", prompt, temperature=0.2)
+        m = re.search(r"\{.*\}", raw, re.S)
+        data = json.loads(m.group()) if m else {}
+    except Exception as e:  # noqa: BLE001
+        return {
+            "error": f"{type(e).__name__}: {e}",
+            "verdict": "",
+            "inaccurate": [],
+            "missing": [],
+            "rewrites": [],
+            "cut": [],
+        }
+
+    return {
+        "project": proj.get("name", ""),
+        "verdict": data.get("verdict") or "",
+        "inaccurate": data.get("inaccurate") or [],
+        "missing": data.get("missing") or [],
+        "rewrites": data.get("rewrites") or [],
+        "cut": data.get("cut") or [],
+    }
+
+
 def generate_greeting(
     profile: Profile,
     title: str,

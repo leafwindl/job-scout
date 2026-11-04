@@ -316,6 +316,132 @@ def scan_project(path: str | Path) -> ProjectScan:
     return scan
 
 
+# ==================== 目录浏览与项目发现 ====================
+
+# 判定「这是一个项目」的标志文件
+PROJECT_MARKERS = (
+    "package.json",
+    "pyproject.toml",
+    "requirements.txt",
+    "go.mod",
+    "Cargo.toml",
+    "pom.xml",
+    "build.gradle",
+    "settings.gradle",
+    ".git",
+    "README.md",
+)
+
+# 浏览目录时不过滤（用户可能想进任何目录），只挡住系统目录
+BROWSE_SKIP = {".git", "node_modules", ".venv", "venv", "__pycache__", "System Volume Information"}
+
+
+def browse_dir(path: str = "") -> dict:
+    """列出一个目录下的子目录，供前端做文件夹选择器。
+
+    path 为空时回到默认起点（Windows 下是各盘符根目录）。
+    """
+    if not path:
+        # 列盘符
+        drives: list[dict] = []
+        for letter in "CDEFGHIJKLMNOPQRSTUVWXYZ":
+            p = Path(f"{letter}:/")
+            try:
+                if p.exists():
+                    drives.append({"name": f"{letter}:", "path": f"{letter}:\\", "is_project": False})
+            except OSError:
+                continue
+        return {"path": "", "parent": None, "dirs": drives, "at_root": True}
+
+    resolved = resolve_host_path(path)
+    root = Path(resolved).expanduser()
+    if not root.exists() or not root.is_dir():
+        return {"path": path, "parent": None, "dirs": [], "error": "目录不存在"}
+
+    dirs: list[dict] = []
+    try:
+        for child in sorted(root.iterdir(), key=lambda p: p.name.lower()):
+            try:
+                if not child.is_dir():
+                    continue
+            except OSError:
+                continue
+            if child.name in BROWSE_SKIP or child.name.startswith("."):
+                continue
+            is_project = any((child / m).exists() for m in PROJECT_MARKERS)
+            dirs.append(
+                {
+                    "name": child.name,
+                    # 回显成用户能看懂的宿主路径
+                    "path": _to_host_path(child),
+                    "is_project": is_project,
+                }
+            )
+    except PermissionError:
+        return {"path": path, "parent": None, "dirs": [], "error": "没有权限访问"}
+
+    parent = _to_host_path(root.parent) if root.parent != root else None
+    return {"path": _to_host_path(root), "parent": parent, "dirs": dirs, "at_root": False}
+
+
+def _to_host_path(p: Path) -> str:
+    """容器内 /host/f/x 转回 F:\\x，方便前端显示和回传。"""
+    s = str(p).replace("\\", "/")
+    m = re.match(r"^/host/([a-z])/(.*)$", s)
+    if m:
+        drive = m.group(1).upper()
+        rest = m.group(2).replace("/", "\\")
+        return f"{drive}:\\{rest}" if rest else f"{drive}:\\"
+    return str(p)
+
+
+def discover_projects(parent: str) -> list[dict]:
+    """在一个父目录下自动发现一级子项目。
+
+    判定标准：子目录里有 package.json / pyproject.toml / .git 等标志文件，
+    或者子目录本身有 3 个以上源码文件。
+    """
+    resolved = resolve_host_path(parent)
+    root = Path(resolved).expanduser()
+    if not root.exists() or not root.is_dir():
+        return []
+
+    found: list[dict] = []
+    try:
+        children = sorted(root.iterdir(), key=lambda p: p.name.lower())
+    except PermissionError:
+        return []
+
+    for child in children:
+        try:
+            if not child.is_dir() or child.name in BROWSE_SKIP or child.name.startswith("."):
+                continue
+        except OSError:
+            continue
+
+        markers = [m for m in PROJECT_MARKERS if (child / m).exists()]
+        # 没标志文件时，数一下源码文件（只看前两层，别太重）
+        code_files = 0
+        if not markers:
+            for p in child.iterdir():
+                if p.is_file() and p.suffix.lower() in CODE_EXT:
+                    code_files += 1
+                    if code_files >= 3:
+                        break
+
+        if markers or code_files >= 3:
+            found.append(
+                {
+                    "name": child.name,
+                    "path": _to_host_path(child),
+                    "markers": markers[:5],
+                    "code_files": code_files,
+                }
+            )
+
+    return found
+
+
 # ==================== 存储 ====================
 
 CODE_DIR = Path("data/code")

@@ -631,3 +631,109 @@ def all_contexts(max_chars: int = 3000, only_projects: list[str] | None = None) 
             break
 
     return "\n\n---\n\n".join(parts)[:max_chars]
+
+
+# ==================== 按 JD 检索相关代码 ====================
+
+# 判断「这行代码描述和 JD 有关」用的关键词池
+_SKILL_WORDS = re.compile(
+    r"[A-Za-z][A-Za-z0-9+#./-]{1,20}"  # 英文技术词：FastAPI / pgvector / SSE
+    r"|[\u4e00-\u9fff]{2,6}"  # 中文词（粗切，靠命中数排序就够）
+)
+
+
+def _tokens(text: str) -> set[str]:
+    """粗分词：英文词保留原样小写，中文每 2-4 字滑窗。"""
+    out: set[str] = set()
+    for m in re.finditer(r"[A-Za-z][A-Za-z0-9+#./-]{1,20}", text or ""):
+        out.add(m.group().lower())
+    for m in re.finditer(r"[\u4e00-\u9fff]{2,}", text or ""):
+        s = m.group()
+        for size in (2, 3, 4):
+            for i in range(0, max(1, len(s) - size + 1)):
+                out.add(s[i : i + size])
+    return out
+
+
+def relevant_code_context(
+    jd: str,
+    only_projects: list[str] | None = None,
+    max_chars: int = 2500,
+    max_lines_per_project: int = 8,
+    max_projects: int = 2,
+) -> str:
+    """按岗位 JD 从项目代码里挑相关片段。
+
+    不是把所有项目摘要平铺给模型，而是：
+    1. 把 JD 分词，得到关键词集合
+    2. 每个项目的摘要逐行打分（命中多少个 JD 关键词）
+    3. 按项目总分排序，取前 2 个项目
+    4. 每个项目只保留得分最高的若干行 + 项目头
+    """
+    items = list_saved()
+    if not items:
+        return ""
+
+    allow = {n.strip() for n in only_projects} if only_projects else None
+    jd_tokens = _tokens(jd or "")
+
+    seen_paths: set[str] = set()
+    scored: list[tuple[int, str, list[str]]] = []
+
+    for it in items:
+        name = it["project_name"]
+        if allow is not None and name.strip() not in allow:
+            continue
+        key = _path_key(it.get("path", ""))
+        if key in seen_paths:
+            continue
+        seen_paths.add(key)
+
+        ctx = get_context(name, max_chars=6000)
+        if not ctx:
+            continue
+
+        lines = [ln for ln in ctx.splitlines() if ln.strip()]
+        if not lines:
+            continue
+
+        # 每行打分
+        line_scores: list[tuple[int, str]] = []
+        for ln in lines:
+            hits = len(_tokens(ln) & jd_tokens)
+            line_scores.append((hits, ln))
+
+        project_score = sum(s for s, _ in line_scores)
+        if project_score <= 0:
+            continue
+
+        scored.append((project_score, name, [ln for _, ln in sorted(
+            line_scores, key=lambda x: -x[0]
+        )[:max_lines_per_project]]))
+
+    if not scored:
+        # JD 一个词都没命中时，退回前两个项目的概要，别让模型完全没有代码信息
+        fallback = all_contexts(max_chars=max_chars, only_projects=only_projects)
+        return fallback
+
+    # 只保留有信息量的行：去掉路径、重复的项目名、README 表格分隔
+    def useful(ln: str) -> bool:
+        s = ln.strip()
+        if not s:
+            return False
+        if s.startswith(("路径：", "项目名：")):
+            return False
+        if set(s) <= set("|-: "):  # 表格分隔线
+            return False
+        return True
+
+    scored.sort(key=lambda x: -x[0])
+    parts: list[str] = []
+    for score, name, lines in scored[:max_projects]:
+        kept = [ln for ln in lines if useful(ln)][:max_lines_per_project]
+        if not kept:
+            continue
+        parts.append("\n".join([f"项目：{name}（相关度 {score}）", *kept]))
+
+    return "\n\n---\n\n".join(parts)[:max_chars]
+

@@ -7,7 +7,7 @@ import sqlite3
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from job_scout.codebase import all_contexts, get_context
+from job_scout.codebase import all_contexts, get_context, relevant_code_context
 from job_scout.config import settings
 from job_scout.profile import (
     generate_greeting,
@@ -118,9 +118,13 @@ def greet(req: GreetRequest) -> dict:
     if m["matched"]:
         extra = (extra + " 可强调：" + "；".join(m["matched"][:2])).strip()
 
-    # 简历里有的项目才带上代码实况，避免塞进简历没写的项目
+    # 按 JD 检索项目代码里相关的片段（不是把所有项目摘要平铺进去）
     resume_names = [(x.get("name") or "").strip() for x in profile.projects]
-    code_ctx = all_contexts(max_chars=2500, only_projects=resume_names)
+    code_ctx = relevant_code_context(
+        row["description"] or "",
+        only_projects=resume_names,
+        max_chars=2500,
+    )
 
     text = generate_greeting(
         profile,

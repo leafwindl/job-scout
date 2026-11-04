@@ -164,6 +164,8 @@ export type GreetResult = {
   company: string;
   greeting: string;
   chars: number;
+  /** 生成时是否参考了项目代码实况 */
+  used_code?: boolean;
   match: Omit<MatchResult, "job_id" | "title" | "company">;
 };
 

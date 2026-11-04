@@ -424,9 +424,16 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
           ) : greet ? (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-2xs text-fg3">
+                <div className="flex flex-wrap items-center gap-2 text-2xs text-fg3">
                   <MessageSquare size={12} />
-                  {greet.chars} 字
+                  <span className={greet.chars > 200 ? "text-amber-400" : ""}>
+                    {greet.chars} 字{greet.chars > 200 ? "（超 200）" : ""}
+                  </span>
+                  {greet.used_code && (
+                    <span className="tag tag-mint" title="生成时参考了你提交的项目代码">
+                      含代码事实
+                    </span>
+                  )}
                   {match && (
                     <span className="tag tag-accent">{match.score} 分 · {match.verdict}</span>
                   )}

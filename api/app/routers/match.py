@@ -122,6 +122,8 @@ def greet(req: GreetRequest) -> dict:
         row["description"] or "",
         llm,
         extra=extra,
+        # 带上项目代码实况：简历没写透、但代码里确实有的技术点，说出来更有说服力
+        code_context=all_contexts(max_chars=2500),
     )
     return {
         "job_id": req.job_id,
@@ -129,6 +131,7 @@ def greet(req: GreetRequest) -> dict:
         "company": row["company"],
         "greeting": text,
         "chars": len(text),
+        "used_code": bool(all_contexts(max_chars=1)),
         "match": m,
     }
 
@@ -157,6 +160,7 @@ def revise_greet(req: ReviseGreetRequest) -> dict:
         req.feedback,
         llm,
     )
+
     return {
         "job_id": req.job_id,
         "greeting": text,

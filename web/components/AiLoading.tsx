@@ -3,15 +3,20 @@
 import { Loader2, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 
-/** AI 分析进行中的占位：带秒数计数和阶段文案，让 20 秒的等待可感知。 */
+/** AI 分析进行中的占位：带秒数计数和阶段文案，让长等待可感知。 */
 export function AiLoading({
   title = "AI 正在分析",
   stages = ["读取岗位要求", "对比你的技能", "生成建议"],
   compact = false,
+  /** 预估总耗时（秒），用来把阶段均分到时间轴上 */
+  estimatedSeconds = 20,
+  hint,
 }: {
   title?: string;
   stages?: string[];
   compact?: boolean;
+  estimatedSeconds?: number;
+  hint?: string;
 }) {
   const [sec, setSec] = useState(0);
 
@@ -20,8 +25,8 @@ export function AiLoading({
     return () => window.clearInterval(t);
   }, []);
 
-  // 20 秒均分到各阶段，超出后停在最后一步
-  const per = 20 / Math.max(1, stages.length);
+  // 预估时长均分到各阶段，超出后停在最后一步
+  const per = estimatedSeconds / Math.max(1, stages.length);
   const idx = Math.min(stages.length - 1, Math.floor(sec / per));
 
   return (
@@ -53,6 +58,7 @@ export function AiLoading({
           />
         ))}
       </div>
+      {hint && <p className="mt-3 max-w-xs text-3xs leading-[1.7] text-fg3">{hint}</p>}
     </div>
   );
 }

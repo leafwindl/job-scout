@@ -21,6 +21,7 @@ import {
   Wand2,
 } from "lucide-react";
 
+import { AiLoading } from "@/components/AiLoading";
 import { EmptyState } from "@/components/ui";
 import { api, type GreetResult, type MatchResult, type RewriteResult } from "@/lib/api";
 
@@ -256,6 +257,12 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
     }
     setErr("");
     setTab(id);
+
+    // 切过去还是空状态就自动开跑，省掉「点 tab 再点按钮」这一步
+    if (busy !== "") return;
+    if (id === "match" && !match) runMatch();
+    else if (id === "rewrite" && !rewrite) runRewrite();
+    else if (id === "greet" && !greet) runGreet();
   }
 
   return (
@@ -580,7 +587,18 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
         {/* 简历建议 */}
         {tab === "rewrite" &&
           (busy === "rewrite" ? (
-            <LoadingPanel label="正在按 JD 重排简历…" />
+            <AiLoading
+              title="正在读你的项目代码"
+              stages={[
+                "挑选最相关的项目",
+                "浏览项目结构",
+                "读核心模块代码",
+                "对照岗位要求",
+                "整理改写建议",
+              ]}
+              estimatedSeconds={85}
+              hint="模型会自己决定读哪些文件，通常要 1–1.5 分钟。读得越准，改得越贴。"
+            />
           ) : rewrite ? (
             <div className="space-y-4">
               {rewrite.used_code && (

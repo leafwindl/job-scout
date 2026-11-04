@@ -45,6 +45,40 @@ def read_auto_done() -> float:
         return 0.0
 
 
+# 采集配置：从面板搬到网页端（/collect 页），脚本启动时拉一次。
+# 落文件而不是 localStorage，这样 Web 端和脚本共用同一份设置。
+CONFIG_FILE = Path("data/collect_config.json")
+
+DEFAULT_CONFIG: dict = {
+    "only_intern": True,      # 只收实习（jobType=4）
+    "only_relevant": True,    # 只要 AI/Agent 相关
+    "auto_stop": True,        # 无新增自动停
+    "target": 0,              # 目标条数，0=不限
+    "auto_push": True,        # 抓到就推送
+}
+
+
+def read_collect_config() -> dict:
+    cfg = dict(DEFAULT_CONFIG)
+    try:
+        saved = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+        if isinstance(saved, dict):
+            cfg.update({k: saved[k] for k in cfg if k in saved})
+    except Exception:
+        pass
+    return cfg
+
+
+def update_collect_config(patch: dict) -> dict:
+    cfg = read_collect_config()
+    for k in DEFAULT_CONFIG:
+        if k in patch:
+            cfg[k] = patch[k]
+    CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    CONFIG_FILE.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), encoding="utf-8")
+    return cfg
+
+
 def to_posting(raw: dict[str, Any]) -> JobPosting | None:
     job_id = raw.get("job_id")
     title = raw.get("title")
@@ -94,6 +128,10 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self) -> None:  # noqa: N802
+        if self.path.startswith("/config"):
+            self._json(200, {"ok": True, "config": read_collect_config()})
+            return
+
         if self.path.startswith("/health"):
             store = Storage(settings.db_path)
             n = store.count()
@@ -149,6 +187,11 @@ class Handler(BaseHTTPRequestHandler):
             at = mark_auto_done()
             print(f"[auto] 浏览器端报告采集完成 {at:.0f}", flush=True)
             self._json(200, {"ok": True, "at": at})
+            return
+
+        if self.path.startswith("/config"):
+            cfg = update_collect_config(data or {})
+            self._json(200, {"ok": True, "config": cfg})
             return
 
         if self.path.startswith("/debug"):

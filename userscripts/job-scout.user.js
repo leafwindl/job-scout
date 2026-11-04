@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         job-scout 采集器
-// @version      0.10.8
+// @version      0.10.9
 // @namespace    job-scout.local
 // @description  旁听 BOSS 直聘职位接口，自动滚动翻页，循环补全 JD 正文，推送到本地 job-scout
 // @match        https://www.zhipin.com/*
@@ -1338,40 +1338,17 @@
       <div id="js-count" style="color:#9ca3af;margin-bottom:8px">已收集 0 条</div>
       <button id="js-grab" style="width:100%;padding:8px;border:0;border-radius:6px;background:#4f8cff;color:#fff;cursor:pointer;margin-bottom:6px;display:none">抓取当前岗位入库</button>
       <button id="js-auto" style="width:100%;padding:8px;border:0;border-radius:6px;background:#16a34a;color:#fff;cursor:pointer;margin-bottom:6px">开始自动滚动</button>
-      <button id="js-jd" style="width:100%;padding:7px;border:0;border-radius:6px;background:#7c3aed;color:#fff;cursor:pointer;margin-bottom:6px">抓 JD 正文（循环补全）</button>
-      <button id="js-nav" style="width:100%;padding:7px;border:0;border-radius:6px;background:#db2777;color:#fff;cursor:pointer;margin-bottom:6px">导航模式抓 JD（最稳，慢）</button>
-      <button id="js-test" style="width:100%;padding:6px;border:0;border-radius:6px;background:#0ea5e9;color:#fff;cursor:pointer;margin-bottom:6px">测试详情接口（不占额度）</button>
-      <button id="js-verify" style="width:100%;padding:6px;border:0;border-radius:6px;background:#4b5563;color:#fff;cursor:pointer;margin-bottom:6px">打开验证页（手动过验证）</button>
-      <div style="display:flex;gap:6px;margin-bottom:6px">
-        <button id="js-push" style="flex:1;padding:6px 8px;border:0;border-radius:6px;background:#2563eb;color:#fff;cursor:pointer">推送</button>
-        <button id="js-export" style="flex:1;padding:6px 8px;border:0;border-radius:6px;background:#374151;color:#fff;cursor:pointer">导出</button>
-      </div>
-      <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;color:#9ca3af;font-size:12px">
-        <span>目标</span>
-        <input id="js-target" type="number" min="0" value="0"
-               style="width:64px;background:#1f2937;border:1px solid #374151;color:#e5e7eb;border-radius:5px;padding:3px 6px;font-size:12px">
-        <span>条（0=不限）</span>
-      </div>
-      <label style="display:flex;align-items:center;gap:6px;color:#9ca3af;font-size:12px;margin-bottom:4px">
-        <input id="js-autostop" type="checkbox" checked> 无新增自动停
-      </label>
-      <label style="display:flex;align-items:center;gap:6px;color:#9ca3af;font-size:12px;margin-bottom:4px">
-        <input id="js-onlyintern" type="checkbox" checked> 只收实习（jobType=4）
-      </label>
-      <label style="display:flex;align-items:center;gap:6px;color:#9ca3af;font-size:12px;margin-bottom:4px">
-        <input id="js-onlyrelevant" type="checkbox" checked> 只要 AI/Agent 相关
-      </label>
-      <label style="display:flex;align-items:center;gap:6px;color:#9ca3af;font-size:12px">
-        <input id="js-autopush" type="checkbox" checked> 自动推送
-      </label>
-      <div id="js-msg" style="color:#6b7280;font-size:11px;margin-top:6px"></div>
+      <button id="js-push" style="width:100%;padding:6px;border:0;border-radius:6px;background:#2563eb;color:#fff;cursor:pointer;margin-bottom:6px;display:none">推送</button>
+      <div id="js-msg" style="color:#6b7280;font-size:11px;margin-top:2px"></div>
+      <a id="js-settings" href="http://localhost:3000/collect" target="_blank"
+         style="display:block;margin-top:8px;color:#4b5563;font-size:10px;text-decoration:none">采集开关在网页「采集任务」页 ›</a>
     `;
     document.body.appendChild(panel);
 
     countEl = panel.querySelector('#js-count');
     msgEl = panel.querySelector('#js-msg');
     btnEl = panel.querySelector('#js-auto');
-    jdBtn = panel.querySelector('#js-jd');
+    jdBtn = null;
 
     btnEl.addEventListener('click', () => {
       if (state.timer) {
@@ -1383,110 +1360,31 @@
       }
     });
 
-    jdBtn.addEventListener('click', () => {
-      if (state.jdRunning) {
-        state.jdStop = true;
-        setAutoRun(false);
-        state.lastMsg = '正在停止…（当前这条抓完就停）';
-        render();
-      } else {
-        state.blockedUntil = 0;
-        runJD();
-      }
-    });
-
-    panel.querySelector('#js-nav').addEventListener('click', () => {
-      if (loadQueue()) {
-        clearQueue();
-        state.lastMsg = '已取消导航模式队列';
-        render();
-        return;
-      }
-      startNavMode(300);
-    });
-
-    panel.querySelector('#js-test').addEventListener('click', async () => {
-      if (state.testing) return;
-      state.testing = true;
-      state.lastMsg = '测试详情接口中…';
-      render();
-      try {
-        const pending = await fetchPending(1);
-        if (!pending.ok) {
-          state.lastMsg = '✗ 本地服务没有 /pending，先重启 job-scout serve';
-          return;
-        }
-        if (!pending.jobs.length) {
-          state.lastMsg = '✓ 没有待补岗位，说明都抓完了';
-          return;
-        }
-        const job = pending.jobs[0];
-        const r = await fetchOneJDApi(job);
-        if (r.text) {
-          state.lastMsg =
-            '✓ 接口可用！抓到 ' + r.text.length + ' 字：' + r.text.slice(0, 50) + '…';
-        } else {
-          state.lastMsg = '✗ 接口失败：' + r.reason + '（会自动回退整页 HTML）';
-        }
-      } catch (e) {
-        state.lastMsg = '✗ 测试异常：' + e;
-      } finally {
-        state.testing = false;
-        render();
-      }
-    });
-
-    panel.querySelector('#js-verify').addEventListener('click', () => {
-      const url = state.lastJobUrl || 'https://www.zhipin.com/web/geek/jobs';
-      window.open(url, '_blank');
-    });
-
-    const autopushEl = panel.querySelector('#js-autopush');
-    const autostopEl = panel.querySelector('#js-autostop');
-    const onlyInternEl = panel.querySelector('#js-onlyintern');
-    const onlyRelevantEl = panel.querySelector('#js-onlyrelevant');
-    const targetEl = panel.querySelector('#js-target');
-
-    autopushEl.checked = state.autoPush;
-    autostopEl.checked = state.autoStop;
-    onlyInternEl.checked = state.onlyIntern;
-    onlyRelevantEl.checked = state.onlyRelevant;
-    targetEl.value = String(state.target);
-
-    autopushEl.addEventListener('change', (e) => {
-      state.autoPush = e.target.checked;
-      saveCfg();
-    });
-    autostopEl.addEventListener('change', (e) => {
-      state.autoStop = e.target.checked;
-      saveCfg();
-    });
-    onlyInternEl.addEventListener('change', (e) => {
-      state.onlyIntern = e.target.checked;
-      saveCfg();
-      state.lastMsg = state.onlyIntern
-        ? '只收实习：非实习岗位会被跳过'
-        : '注意：现在会收全职岗位';
-      render();
-    });
-    onlyRelevantEl.addEventListener('change', (e) => {
-      state.onlyRelevant = e.target.checked;
-      saveCfg();
-      state.lastMsg = state.onlyRelevant
-        ? '只要 AI/Agent 相关：产品/设计等模糊结果会跳过'
-        : '注意：现在会收所有实习岗（含产品/设计）';
-      render();
-    });
-    targetEl.addEventListener('input', (e) => {
-      state.target = parseInt(e.target.value, 10) || 0;
-      saveCfg();
-    });
-
     panel.querySelector('#js-push').addEventListener('click', push);
-    panel.querySelector('#js-export').addEventListener('click', exportJson);
     panel.querySelector('#js-grab').addEventListener('click', grabCurrentJob);
 
     render();
+  }
+
+  /** 从服务端拉采集配置（开关都在网页「采集任务」页设）。 */
+  async function loadRemoteConfig() {
+    try {
+      const r = await fetch(API + '/config', {
+        cache: 'no-store',
+        signal: AbortSignal.timeout(3000),
+      });
+      if (!r.ok) return false;
+      const d = await r.json();
+      const c = d.config || {};
+      if (typeof c.only_intern === 'boolean') state.onlyIntern = c.only_intern;
+      if (typeof c.only_relevant === 'boolean') state.onlyRelevant = c.only_relevant;
+      if (typeof c.auto_stop === 'boolean') state.autoStop = c.auto_stop;
+      if (typeof c.auto_push === 'boolean') state.autoPush = c.auto_push;
+      if (typeof c.target === 'number') state.target = c.target;
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   function render() {
@@ -1505,10 +1403,6 @@
     if (btnEl) {
       btnEl.textContent = state.timer ? '停止自动滚动' : '开始自动滚动';
       btnEl.style.background = state.timer ? '#dc2626' : '#16a34a';
-    }
-    if (jdBtn) {
-      jdBtn.textContent = state.jdRunning ? '停止抓取' : '抓 JD 正文（循环补全）';
-      jdBtn.style.background = state.jdRunning ? '#dc2626' : '#7c3aed';
     }
   }
 
@@ -1539,10 +1433,13 @@
     const found = await probeApi();
     if (!found) {
       state.lastMsg =
-        '没找到 job-scout 采集服务（8766 / 8765 都不通）。先双击 start.bat，或看面板下方排查说明。';
+        '没找到 job-scout 采集服务（8766 / 8765 都不通）。先双击 start.bat。';
       render();
       return;
     }
+
+    // 开关统一在网页「采集任务」页设置，这里拉一次同步过来
+    await loadRemoteConfig();
 
     fetch(HEALTH)
       .then((r) => r.json())
@@ -1583,5 +1480,5 @@
   });
   observer.observe(document.documentElement, { childList: true, subtree: true });
 
-  console.log('[job-scout] 采集器 v0.10.8 已注入（采集走 8766，分析走 8001）');
+  console.log('[job-scout] 采集器 v0.10.9 已注入（精简面板，开关在网页端）');
 })();

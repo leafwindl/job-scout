@@ -86,6 +86,16 @@ export type CollectStart = {
   city_code: string;
   keyword: string;
   city: string;
+  intern?: boolean;
+};
+
+/** 采集开关：和油猴脚本共用，存在 data/collect_config.json */
+export type CollectConfig = {
+  only_intern: boolean;
+  only_relevant: boolean;
+  auto_stop: boolean;
+  auto_push: boolean;
+  target: number;
 };
 
 export type Health = {
@@ -232,6 +242,9 @@ export const api = {
     post<CollectStart>("/collect/start", { keyword, city, intern }),
   collectStatus: () => get<CollectStatus>("/collect/status"),
   collectReset: () => post<{ ok: boolean }>("/collect/reset", {}),
+  collectConfig: () => get<{ config: CollectConfig; defaults: CollectConfig }>("/collect/config"),
+  setCollectConfig: (patch: Partial<CollectConfig>) =>
+    post<{ config: CollectConfig }>("/collect/config", patch),
 
   // ---- 画像 / 匹配 / 招呼语 ----
   profile: () => get<Profile>("/profile"),

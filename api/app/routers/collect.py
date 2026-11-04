@@ -16,7 +16,12 @@ from pydantic import BaseModel, Field
 
 from job_scout.config import settings
 from job_scout.constants import BOSS_SEARCH_URL, CITY_CODES
-from job_scout.server import read_auto_done
+from job_scout.server import (
+    DEFAULT_CONFIG,
+    read_auto_done,
+    read_collect_config,
+    update_collect_config,
+)
 from job_scout.storage import Storage
 
 router = APIRouter(prefix="/collect", tags=["collect"])
@@ -129,3 +134,24 @@ def reset() -> dict:
     _LAST.update({"started_at": 0.0, "keyword": "", "city": "", "url": ""})
     _SAMPLES.clear()
     return {"ok": True}
+
+
+class ConfigPatch(BaseModel):
+    only_intern: bool | None = None
+    only_relevant: bool | None = None
+    auto_stop: bool | None = None
+    auto_push: bool | None = None
+    target: int | None = Field(default=None, ge=0, le=10000)
+
+
+@router.get("/config")
+def get_config() -> dict:
+    """采集开关（和油猴脚本共用同一份文件）。"""
+    return {"config": read_collect_config(), "defaults": DEFAULT_CONFIG}
+
+
+@router.post("/config")
+def set_config(patch: ConfigPatch) -> dict:
+    """改采集开关。油猴脚本下次打开页面时会拉到新值。"""
+    data = {k: v for k, v in patch.model_dump().items() if v is not None}
+    return {"config": update_collect_config(data)}

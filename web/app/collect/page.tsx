@@ -12,6 +12,7 @@ import {
   Terminal,
 } from "lucide-react";
 
+import CollectSettings from "@/components/CollectSettings";
 import PageHeader from "@/components/PageHeader";
 import { ProgressBar, SectionHeader, Stat } from "@/components/ui";
 import { api, type CollectStatus } from "@/lib/api";
@@ -221,6 +222,9 @@ export default function CollectPage() {
               </div>
             )}
           </section>
+
+          {/* 采集开关（油猴脚本从这里读） */}
+          <CollectSettings />
 
           {/* 排查清单 */}
           <section className="card p-5">

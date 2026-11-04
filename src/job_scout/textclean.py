@@ -94,3 +94,41 @@ def is_dirty(text: str) -> bool:
         return True
     # 直聘后面紧跟汉字/数字，且前面没有 BOSS，说明是水印
     return bool(re.search(r"(?<!BOSS)直聘(?=[\u4e00-\u9fff0-9])", text))
+
+
+# JD 里真正有用的段落起点
+_JD_CORE_MARKERS = (
+    "岗位职责",
+    "工作职责",
+    "职位职责",
+    "工作内容",
+    "任职要求",
+    "岗位要求",
+    "任职资格",
+    "职位要求",
+    "我们希望",
+    "你需要",
+)
+
+
+def extract_jd_core(text: str, max_chars: int = 900) -> str:
+    """从 JD 里只抽「岗位职责 + 任职要求」部分。
+
+    招聘页前面通常有一大段公司宣传（融资、福利、获奖、创始人讲话），
+    对写招呼语没用，还容易把模型带跑。这里从第一个职责/要求标记开始截。
+    """
+    if not text:
+        return ""
+
+    src = text.strip()
+
+    # 找最早出现的职责/要求标记
+    hit = -1
+    for marker in _JD_CORE_MARKERS:
+        pos = src.find(marker)
+        if pos != -1 and (hit == -1 or pos < hit):
+            hit = pos
+
+    core = src[hit:] if hit != -1 else src
+    core = re.sub(r"\s+", " ", core).strip()
+    return core[:max_chars]

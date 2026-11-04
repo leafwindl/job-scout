@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 from job_scout.codebase import all_contexts, get_context, relevant_code_context
 from job_scout.config import settings
 from job_scout.profile import (
+    build_rewrite_brief,
     generate_greeting,
     load_profile,
     match_job,
@@ -107,24 +108,35 @@ def rewrite(job_id: str, project: str = "") -> dict:
 
 @router.post("/greet")
 def greet(req: GreetRequest) -> dict:
+    """生成打招呼消息。
+
+    按用户要求简化输入：JD 的职责/要求段 + 简历改写建议 + 简历摘要。
+    简历建议针对这个岗位调过措辞，比简历原文更贴。
+    """
     profile = _require_profile()
     llm = _require_llm()
     row = _get_job(req.job_id)
 
-    # 先算匹配度，让招呼语知道哪些点值得强调
+    # 先算匹配度：既给招呼语提供可强调的点，也返回给前端
     m = match_job(profile, row["title"] or "", row["company"] or "",
                   row["description"] or "", llm)
-    extra = req.extra
-    if m["matched"]:
-        extra = (extra + " 可强调：" + "；".join(m["matched"][:2])).strip()
 
-    # 按 JD 检索项目代码里相关的片段（不是把所有项目摘要平铺进去）
+    # 简历改写建议：针对这个岗位，措辞已经调过，拿来写招呼语最贴
     resume_names = [(x.get("name") or "").strip() for x in profile.projects]
     code_ctx = relevant_code_context(
         row["description"] or "",
         only_projects=resume_names,
-        max_chars=2500,
+        max_chars=2000,
     )
+    rw = rewrite_resume(
+        profile,
+        row["title"] or "",
+        row["company"] or "",
+        row["description"] or "",
+        llm,
+        code_context=code_ctx,
+    )
+    brief = build_rewrite_brief(rw)
 
     text = generate_greeting(
         profile,
@@ -132,9 +144,8 @@ def greet(req: GreetRequest) -> dict:
         row["company"] or "",
         row["description"] or "",
         llm,
-        extra=extra,
-        # 带上项目代码实况：简历没写透、但代码里确实有的技术点，说出来更有说服力
-        code_context=code_ctx,
+        extra=req.extra,
+        rewrite_brief=brief,
     )
     return {
         "job_id": req.job_id,
@@ -143,6 +154,7 @@ def greet(req: GreetRequest) -> dict:
         "greeting": text,
         "chars": len(text),
         "used_code": bool(code_ctx),
+        "used_brief": len(brief) > 20,
         "match": m,
     }
 

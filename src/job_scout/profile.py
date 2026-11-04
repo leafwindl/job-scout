@@ -246,34 +246,54 @@ def revise_greeting(
 
 GREET_PROMPT = """你在帮求职者写 BOSS 直聘的打招呼消息。
 
+【岗位关键要求】（只保留职责与要求，不含公司宣传）
+{jd_core}
+
+【针对这个岗位的简历改写建议】
+{rewrite_brief}
+
 【我的简历】
 {profile}
 
-【目标岗位】
-{title} ｜ {company}
-JD 摘录：
-{jd}
-
-【我的项目代码实况】（简历里可能没全写出来，但这些是真的）
-{code}
-
 要求：
 0. **硬性字数上限 200 字。写完先自己数一遍，超了就删到 200 以内。**
-   宁可少说一个技术点，也不要超字数——HR 在手机上只扫三秒
-1. 第一句：我是谁 + 为什么投这个岗，必须扣住 JD 里的**某个具体要求**，不要泛泛说"对贵司感兴趣"
-2. 中间：用 1-2 个具体事实证明能力，带上项目名或数字
-   - **优先用「项目代码实况」里的东西**：简历没写透、但代码里确实有的技术点，
-     说出来比复述简历更有说服力（比如具体依赖、模块划分、关键机制）
-   - **禁止说「X 万行代码」「X 个文件」这种外行话**，
-     要翻译成业务语言（"后端按能力拆成 9 个路由模块"可以，"共 6 万行"不行）
-   - 代码实况里没有的，就按简历写
+1. 第一句：我是谁 + 为什么投这个岗，扣住「岗位关键要求」里的**某一条具体要求**
+2. 中间：用 1-2 个具体事实证明能力
+   - **直接用「简历改写建议」里「改后」的说法**——那些话已经针对这个岗位调过用词了，
+     比你自己从简历原文里挑更贴
+   - 「简历改写建议」里说要补充的点，如果确有其事，就写进来
+   - 禁止说「X 万行代码」「X 个文件」这种外行话
 3. 最后：表达可实习时间和意愿，一句话
-4. 禁止编造简历和代码里都没有的经历
-5. 禁止"贵公司""您好，我是 XX 大学 XX 专业"这类模板腔
+4. 禁止编造简历和建议里都没有的经历
+5. 禁止「贵公司」「您好，我是 XX 大学 XX 专业」这类模板腔
 6. 直接输出消息正文，不要任何前后缀、不要引号
 
-额外要求：{extra}
+额外补充：{extra}
 """
+
+
+def build_rewrite_brief(result: dict, max_chars: int = 1200) -> str:
+    """把简历改写建议压成一段短文本，喂给招呼语生成。
+
+    只保留「改后怎么说」和「建议补什么」，这两部分对写招呼语最有用。
+    """
+    lines: list[str] = []
+
+    if result.get("summary"):
+        lines.append(f"总体判断：{result['summary']}")
+
+    for x in (result.get("rewrites") or [])[:3]:
+        sug = (x.get("suggested") or "").strip()
+        if sug:
+            lines.append(f"改后这样说：{sug}")
+
+    for x in (result.get("add") or [])[:3]:
+        s = str(x).strip()
+        if s:
+            lines.append(f"建议补充：{s}")
+
+    text = "\n".join(lines)
+    return text[:max_chars] or "（还没生成简历改写建议）"
 
 
 REWRITE_PROMPT = """你在帮求职者针对一个具体岗位**改写简历**（不是重写，是调整表达）。
@@ -489,26 +509,29 @@ def generate_greeting(
     llm,
     extra: str = "",
     max_jd: int = 2000,
-    code_context: str = "",
+    rewrite_brief: str = "",
     max_chars: int = 200,
 ) -> str:
     """针对岗位生成打招呼消息。
 
-    code_context 非空时，会把项目代码实况一起给模型——
-    简历没写透但代码里确实有的技术点，说出来更有说服力。
+    输入只保留三样有用的东西：
+    1. JD 的职责/要求段（调用方用 extract_jd_core 先截好）
+    2. 简历改写建议（针对这个岗位调过措辞，比简历原文更贴）
+    3. 简历摘要
 
     字数：LLM 数中文字数不可靠，超了就带反馈重试一次。
     """
+    from job_scout.textclean import extract_jd_core
+
+    jd_core = extract_jd_core(jd or "", max_chars=max_jd)
     base_extra = extra or ""
     text = ""
 
     for attempt in range(2):
         prompt = GREET_PROMPT.format(
+            jd_core=jd_core or "（无）",
+            rewrite_brief=(rewrite_brief or "")[:1200] or "（还没生成简历改写建议）",
             profile=build_profile_text(profile),
-            title=title,
-            company=company,
-            jd=(jd or "")[:max_jd],
-            code=(code_context or "")[:2500] or "（未提供）",
             extra=base_extra or "无",
         )
         try:

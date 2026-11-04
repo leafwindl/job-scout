@@ -34,8 +34,8 @@ class RagPipeline:
     def ask(
         self,
         question: str,
-        k: int = 5,
-        max_chars: int = 4000,
+        k: int = 8,
+        max_chars: int = 16000,
         profile_text: str = "",
     ) -> Answer:
         return ask_impl(

@@ -9,6 +9,7 @@ import {
   Check,
   Circle,
   FileText,
+  FolderCode,
   GraduationCap,
   Loader2,
   Sparkles,
@@ -119,11 +120,16 @@ export default function ProfilePage() {
         title="我的简历"
         description="上传 PDF 后自动提取技能与项目经历，用于岗位匹配、招呼语和简历改写。文件只存在本地。"
         actions={
-          hasProfile ? (
-            <Link href="/prep" className="btn btn-ghost">
-              看该补什么 <ArrowRight size={15} />
-            </Link>
-          ) : undefined
+          <div className="flex flex-wrap items-center gap-2">
+            <a href="#project-code" className="btn btn-ghost">
+              <FolderCode size={15} /> 项目代码
+            </a>
+            {hasProfile && (
+              <Link href="/prep" className="btn btn-ghost">
+                看该补什么 <ArrowRight size={15} />
+              </Link>
+            )}
+          </div>
         }
       />
 
@@ -438,7 +444,7 @@ export default function ProfilePage() {
       </div>
 
       {/* 项目代码：给简历改写提供事实依据 */}
-      <div className="mt-6">
+      <div id="project-code" className="mt-6 scroll-mt-24">
         <CodeProjects />
       </div>
     </div>

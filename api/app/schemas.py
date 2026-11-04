@@ -30,7 +30,8 @@ class SearchResponse(BaseModel):
 
 class AskRequest(BaseModel):
     question: str = Field(min_length=1, max_length=500)
-    k: int = Field(default=5, ge=1, le=10)
+    # 检索条数：条数越多上下文越长，8 条左右是质量和延迟的平衡点
+    k: int = Field(default=8, ge=1, le=20)
     use_profile: bool = Field(default=False, description="是否结合简历回答")
 
 

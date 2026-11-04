@@ -29,6 +29,10 @@ SYSTEM_PROMPT = """你是招聘信息助手。你只能依据下面给出的岗�
 5. 尽可能沿用片段里的动词和限定词；关键结论用引号标出原文
 6. 回答用中文，简洁，先给结论再列证据
 7. **只写片段里出现过的话**。不确定某条要求是否存在时，宁可不说，也不要补充
+8. **找岗位类问题要列全**：当问题是在找岗位（「有哪些」「推荐」「有什么」），
+   把上下文里符合的岗位**逐条列出**，不要只挑最匹配的两三条就收尾。
+   每条给出：岗位名、公司、区、薪资、一句匹配理由，并标注来源编号。
+   上下文里不符合的岗位不要硬凑，但要先说清楚「共检索 N 条，其中 M 条符合」
 """
 
 CITATION_RE = re.compile(r"\[(\d+)\]")
@@ -139,7 +143,7 @@ def ask(
     retriever,
     llm=None,
     k: int = 5,
-    max_chars: int = 4000,
+    max_chars: int = 16000,
     profile_text: str = "",
 ) -> Answer:
     """完整问答流程：检索 → 组装 → 生成 → 解析引用。
@@ -194,7 +198,7 @@ def stream_ask(
     retriever,
     llm=None,
     k: int = 5,
-    max_chars: int = 4000,
+    max_chars: int = 16000,
     profile_text: str = "",
 ):
     """流式问答：依次 yield (event, payload)。

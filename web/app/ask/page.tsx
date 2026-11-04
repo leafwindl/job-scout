@@ -52,6 +52,7 @@ export default function AskPage() {
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [busy, setBusy] = useState(false);
   const [useProfile, setUseProfile] = useState(false);
+  const [topK, setTopK] = useState(8);
   const esRef = useRef<EventSource | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +60,8 @@ export default function AskPage() {
   useEffect(() => {
     try {
       setUseProfile(localStorage.getItem("jobscout.askProfile") === "1");
+      const savedK = Number(localStorage.getItem("jobscout.askK"));
+      if (savedK >= 3 && savedK <= 20) setTopK(savedK);
     } catch {
       /* ignore */
     }
@@ -68,6 +71,15 @@ export default function AskPage() {
     setUseProfile(next);
     try {
       localStorage.setItem("jobscout.askProfile", next ? "1" : "0");
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function changeK(next: number) {
+    setTopK(next);
+    try {
+      localStorage.setItem("jobscout.askK", String(next));
     } catch {
       /* ignore */
     }
@@ -111,7 +123,7 @@ export default function AskPage() {
     ]);
 
     const es = new EventSource(
-      `${API_BASE}/ask/stream?q=${encodeURIComponent(text)}&k=5&use_profile=${
+      `${API_BASE}/ask/stream?q=${encodeURIComponent(text)}&k=${topK}&use_profile=${
         useProfile ? 1 : 0
       }`,
     );
@@ -133,8 +145,14 @@ export default function AskPage() {
 
     es.addEventListener("done", (e) => {
       const data = JSON.parse((e as MessageEvent).data) as { citations: Citation[] };
+      const citedIdx = new Set((data.citations ?? []).map((c) => c.index));
       setMsgs((m) =>
-        patchLast(m, (x) => ({ ...x, citations: data.citations ?? [], pending: false })),
+        patchLast(m, (x) => ({
+          ...x,
+          // 保留全部检索结果，只标记哪些被回答引用了
+          citations: x.citations.map((c) => ({ ...c, cited: citedIdx.has(c.index) })),
+          pending: false,
+        })),
       );
       es.close();
       esRef.current = null;
@@ -162,7 +180,22 @@ export default function AskPage() {
         title="智能问答"
         description="用自然语言问岗位数据。回答只依据检索到的 JD 片段，每条结论标注来源编号。"
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <label className="flex items-center gap-1.5 text-2xs text-fg3">
+              检索
+              <select
+                className="select h-7 w-auto py-0 text-2xs"
+                value={topK}
+                onChange={(e) => changeK(Number(e.target.value))}
+                title="每次检索几条岗位作为回答依据"
+              >
+                {[3, 5, 8, 12, 20].map((n) => (
+                  <option key={n} value={n}>
+                    {n} 条
+                  </option>
+                ))}
+              </select>
+            </label>
             <button
               type="button"
               onClick={() => toggleProfile(!useProfile)}
@@ -190,6 +223,7 @@ export default function AskPage() {
               </div>
               <p className="mt-1 text-xs leading-[1.7] text-fg3">
                 检索会同时走 BM25 和向量，再用 RRF 融合；答案里的 [1] 就是下面的岗位来源。
+                右上角可以调每次检索几条（默认 8 条）。
               </p>
               <div className="mt-4 grid gap-2 sm:grid-cols-3">
                 {EXAMPLES.map((ex) => (
@@ -266,7 +300,8 @@ export default function AskPage() {
                     <div className="mt-3">
                       <div className="flex items-center gap-1.5 text-2xs text-fg3">
                         <Quote size={11} />
-                        引用 {m.citations.length} 条岗位
+                        检索 {m.citations.length} 条，回答引用了{" "}
+                        {m.citations.filter((c) => c.cited).length} 条
                       </div>
                       <div className="mt-2 grid gap-2 sm:grid-cols-2">
                         {m.citations.map((c) => (
@@ -274,9 +309,19 @@ export default function AskPage() {
                             key={c.index}
                             id={`cite-${i}-${c.index}`}
                             href={`/jobs/${c.job_id}`}
-                            className="cite-card group flex scroll-mt-24 items-start gap-2 rounded-lg border border-line/70 bg-panel2/30 px-3 py-2 transition-colors hover:border-accent/40 hover:bg-panel2/60"
+                            className={`cite-card group flex scroll-mt-24 items-start gap-2 rounded-lg border px-3 py-2 transition-colors hover:border-accent/40 hover:bg-panel2/60 ${
+                              c.cited
+                                ? "border-accent/30 bg-accent/[0.04]"
+                                : "border-line/70 bg-panel2/30"
+                            }`}
                           >
-                            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded bg-accent/10 text-3xs font-medium text-accent">
+                            <span
+                              className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded text-3xs font-medium ${
+                                c.cited
+                                  ? "bg-accent/15 text-accent"
+                                  : "bg-panel3/60 text-fg3"
+                              }`}
+                            >
                               {c.index}
                             </span>
                             <span className="min-w-0 flex-1">

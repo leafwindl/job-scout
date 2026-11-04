@@ -34,6 +34,8 @@ export type Citation = {
   district: string;
   salary: string;
   url: string;
+  /** 前端标记：本条是否被回答正文引用 */
+  cited?: boolean;
 };
 
 export type AskResponse = {

@@ -51,7 +51,7 @@ def ask(req: AskRequest, pipe: Pipeline) -> AskResponse:
 def ask_stream(
     q: str,
     pipe: Pipeline,
-    k: int = 5,
+    k: int = 8,
     use_profile: bool = False,
 ) -> EventSourceResponse:
     """SSE 事件流：meta → token* → done。

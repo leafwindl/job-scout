@@ -41,6 +41,20 @@ def _get_job(job_id: str) -> sqlite3.Row:
     return row
 
 
+def _jd_text(row: sqlite3.Row, budget: int = 2500) -> str:
+    """给 LLM 用的 JD 文本。
+
+    超长 JD（>2000 字）有 LLM 洗过的精简版（jd_clean），优先用它；
+    没有就用原文截断——95% 的 JD 本来就短，直接给就行。
+    """
+    keys = row.keys() if hasattr(row, "keys") else []
+    if "jd_clean" in keys:
+        clean = row["jd_clean"]
+        if clean and len(clean) > 50:
+            return clean[:budget]
+    return (row["description"] or "")[:budget]
+
+
 def _require_profile():
     p = load_profile()
     if p is None or not p.has_content:
@@ -58,6 +72,8 @@ def _require_llm():
 class GreetRequest(BaseModel):
     job_id: str
     extra: str = Field(default="", max_length=200, description="额外要求，比如突出某个项目")
+    # 前端如果已经跑过「简历建议」，把结果传过来，省一次 20 秒的 LLM 调用
+    rewrite: dict | None = Field(default=None, description="已有的简历改写建议")
 
 
 @router.post("/match/{job_id}")
@@ -70,7 +86,7 @@ def match(job_id: str) -> dict:
         profile,
         row["title"] or "",
         row["company"] or "",
-        row["description"] or "",
+        _jd_text(row),
         llm,
     )
     return {
@@ -97,7 +113,7 @@ def rewrite(job_id: str, project: str = "") -> dict:
     row = _get_job(job_id)
 
     resume_names = [(x.get("name") or "").strip() for x in profile.projects]
-    jd = row["description"] or ""
+    jd = _jd_text(row)
     jd_core = extract_jd_core(jd, 900)
 
     # 1) 选项目
@@ -181,30 +197,34 @@ def greet(req: GreetRequest) -> dict:
 
     # 先算匹配度：既给招呼语提供可强调的点，也返回给前端
     m = match_job(profile, row["title"] or "", row["company"] or "",
-                  row["description"] or "", llm)
+                  _jd_text(row), llm)
 
-    # 简历改写建议：针对这个岗位，措辞已经调过，拿来写招呼语最贴
-    resume_names = [(x.get("name") or "").strip() for x in profile.projects]
-    code_ctx = relevant_code_context(
-        row["description"] or "",
-        only_projects=resume_names,
-        max_chars=2000,
-    )
-    rw = rewrite_resume(
-        profile,
-        row["title"] or "",
-        row["company"] or "",
-        row["description"] or "",
-        llm,
-        code_context=code_ctx,
-    )
-    brief = build_rewrite_brief(rw)
+    # 简历改写建议：前端已经跑过就复用（省 20 秒），没跑才现算
+    reuse = bool(req.rewrite)
+    if reuse:
+        brief = build_rewrite_brief(req.rewrite or {})
+    else:
+        resume_names = [(x.get("name") or "").strip() for x in profile.projects]
+        code_ctx = relevant_code_context(
+            _jd_text(row),
+            only_projects=resume_names,
+            max_chars=2000,
+        )
+        rw = rewrite_resume(
+            profile,
+            row["title"] or "",
+            row["company"] or "",
+            _jd_text(row),
+            llm,
+            code_context=code_ctx,
+        )
+        brief = build_rewrite_brief(rw)
 
     text = generate_greeting(
         profile,
         row["title"] or "",
         row["company"] or "",
-        row["description"] or "",
+        _jd_text(row),
         llm,
         extra=req.extra,
         rewrite_brief=brief,
@@ -215,8 +235,8 @@ def greet(req: GreetRequest) -> dict:
         "company": row["company"],
         "greeting": text,
         "chars": len(text),
-        "used_code": bool(code_ctx),
         "used_brief": len(brief) > 20,
+        "reused_rewrite": reuse,
         "match": m,
     }
 
@@ -240,7 +260,7 @@ def revise_greet(req: ReviseGreetRequest) -> dict:
         profile,
         row["title"] or "",
         row["company"] or "",
-        row["description"] or "",
+        _jd_text(row),
         req.current,
         req.feedback,
         llm,

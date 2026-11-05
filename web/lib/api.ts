@@ -307,7 +307,13 @@ export const api = {
   },
   patchProfile: (patch: Partial<Profile>) => post<Profile>("/profile", patch),
   match: (jobId: string) => post<MatchResult>(`/match/${jobId}`, {}),
-  greet: (jobId: string, extra = "") => post<GreetResult>("/greet", { job_id: jobId, extra }),
+  greet: (jobId: string, extra = "", rewrite?: RewriteResult) =>
+    post<GreetResult>("/greet", {
+      job_id: jobId,
+      extra,
+      // 已经跑过简历建议就把结果带上，后端复用它省一次 LLM 调用
+      ...(rewrite ? { rewrite } : {}),
+    }),
   reviseGreet: (jobId: string, current: string, feedback: string) =>
     post<{ job_id: string; greeting: string; chars: number; feedback: string }>(
       "/greet/revise",

@@ -159,7 +159,7 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
     setBusy("greet");
     setErr("");
     try {
-      const r = await api.greet(jobId);
+      const r = await api.greet(jobId, "", rewrite ?? undefined);
       setGreet(r);
       setMatch(
         (m) => m ?? { ...r.match, job_id: jobId, title: r.title, company: r.company },

@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS postings (
     jd_attempts  INTEGER NOT NULL DEFAULT 0,
     jd_last_try  TEXT,
     is_relevant  INTEGER NOT NULL DEFAULT 1,
+    jd_clean     TEXT,
     PRIMARY KEY (source, job_id)
 );
 
@@ -78,6 +79,8 @@ MIGRATIONS = {
     "jd_attempts": "INTEGER NOT NULL DEFAULT 0",
     "jd_last_try": "TEXT",
     "is_relevant": "INTEGER NOT NULL DEFAULT 1",
+    # 超长 JD（>2000 字）用 LLM 洗过之后的精简版，读的时候优先用它
+    "jd_clean": "TEXT",
 }
 
 

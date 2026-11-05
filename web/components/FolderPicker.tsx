@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import { AiLoading } from "@/components/AiLoading";
 import { api, type BrowseResult } from "@/lib/api";
 
 /**
@@ -114,7 +115,22 @@ export default function FolderPicker({
         )}
 
         <div className="min-h-0 flex-1 overflow-auto px-2 py-2">
-          {loading && !dir ? (
+          {busy ? (
+            // 扫描会跑 ReAct 读代码（约 50 秒），分阶段提示比分阶段转圈有用
+            <div className="px-3 py-4">
+              <AiLoading
+                title={`正在读「${projectName}」的代码`}
+                stages={[
+                  "扫描目录结构",
+                  "挑选核心文件",
+                  "阅读主要模块",
+                  "生成技术画像",
+                ]}
+                estimatedSeconds={50}
+                hint="模型会自己决定读哪些文件，产出「技术偏向 + 项目结构 + 核心实现」，用来写简历。"
+              />
+            </div>
+          ) : loading && !dir ? (
             <div className="flex items-center justify-center py-10 text-xs text-fg3">
               <Loader2 size={14} className="mr-2 animate-spin" /> 读取目录…
             </div>

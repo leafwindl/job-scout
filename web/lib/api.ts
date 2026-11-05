@@ -175,7 +175,14 @@ export type RewriteResult = {
   company: string;
   summary: string;
   reorder: string[];
-  rewrites: { project?: string; original?: string; suggested?: string; why?: string }[];
+  rewrites: {
+    project?: string;
+    original?: string;
+    suggested?: string;
+    why?: string;
+    /** HR 扫这一行时会看到什么（HR 平均只花 20 秒看简历） */
+    hr_note?: string;
+  }[];
   add: string[];
   cut: string[];
   /** 这次改写是否用上了项目代码摘要 */

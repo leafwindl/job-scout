@@ -657,6 +657,12 @@ export default function MatchPanel({ jobId }: { jobId: string }) {
                           {r.why}
                         </div>
                       )}
+                      {r.hr_note && (
+                        <div className="mt-1.5 flex gap-1.5 rounded border border-amber-500/20 bg-amber-500/[0.05] px-2 py-1.5 text-[12px] leading-[1.7] text-amber-200/90">
+                          <span className="shrink-0 font-medium">HR 视角</span>
+                          <span className="text-fg2">{r.hr_note}</span>
+                        </div>
+                      )}
                     </div>
                   ))}
                   {rewrite.rewrites.length > 2 && (

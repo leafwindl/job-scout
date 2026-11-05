@@ -41,8 +41,10 @@ print(f"\n总结：{d.get('summary', '')[:160]}")
 print(f"\n改写建议 {len(d.get('rewrites') or [])} 条：")
 for x in (d.get("rewrites") or [])[:3]:
     print(f"\n  原文：{(x.get('original') or '')[:60]}")
-    print(f"  改后：{(x.get('suggested') or '')[:130]}")
-    print(f"  依据：{(x.get('why') or '')[:100]}")
+    print(f"  改后：{(x.get('suggested') or '')[:110]}")
+    print(f"  依据：{(x.get('why') or '')[:90]}")
+    hr = x.get("hr_note") or ""
+    print(f"  HR：{'（模型没给）' if not hr else hr[:90]}")
 print(f"\n可补 {len(d.get('add') or [])} 条：")
 for x in (d.get("add") or [])[:2]:
     print(f"  + {x[:110]}")

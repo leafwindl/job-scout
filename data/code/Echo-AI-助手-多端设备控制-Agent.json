@@ -1,0 +1,2708 @@
+{
+  "path": "/host/f/project_work/AI_Chat",
+  "name": "AI_Chat",
+  "file_count": 504,
+  "line_count": 63570,
+  "langs": {
+    "Java": 5701,
+    "Kotlin": 1116,
+    "Shell": 121,
+    "Python": 56395,
+    "Swift": 67,
+    "C/C++": 29,
+    "TypeScript": 35,
+    "PowerShell": 106
+  },
+  "deps": [],
+  "tree": [
+    "app/android/app/src/main/java/blufi/espressif/BlufiCallback.java",
+    "app/android/app/src/main/java/blufi/espressif/BlufiClient.java",
+    "app/android/app/src/main/java/blufi/espressif/BlufiClientImpl.java",
+    "app/android/app/src/main/java/blufi/espressif/BlufiNotifyData.java",
+    "app/android/app/src/main/java/blufi/espressif/BuildConfig.java",
+    "app/android/app/src/main/java/blufi/espressif/FrameCtrlData.java",
+    "app/android/app/src/main/java/blufi/espressif/params/BlufiConfigureParams.java",
+    "app/android/app/src/main/java/blufi/espressif/params/BlufiParameter.java",
+    "app/android/app/src/main/java/blufi/espressif/response/BlufiScanResult.java",
+    "app/android/app/src/main/java/blufi/espressif/response/BlufiStatusResponse.java",
+    "app/android/app/src/main/java/blufi/espressif/response/BlufiVersionResponse.java",
+    "app/android/app/src/main/java/blufi/espressif/security/BlufiAES.java",
+    "app/android/app/src/main/java/blufi/espressif/security/BlufiCRC.java",
+    "app/android/app/src/main/java/blufi/espressif/security/BlufiDH.java",
+    "app/android/app/src/main/java/blufi/espressif/security/BlufiHash.java",
+    "app/android/app/src/main/java/cn/echoaiforever/echo_app/BlufiProvisioningBridge.kt",
+    "app/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+    "app/android/app/src/main/kotlin/cn/echoaiforever/echo_app/DirectUpdatePlugin.kt",
+    "app/android/app/src/main/kotlin/cn/echoaiforever/echo_app/MainActivity.kt",
+    "app/ios/Flutter/flutter_export_environment.sh",
+    "app/ios/Flutter/ephemeral/flutter_lldb_helper.py",
+    "app/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift",
+    "app/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Sources/FlutterGeneratedPluginSwiftPackage/FlutterGeneratedPluginSwiftPackage.swift",
+    "app/ios/Runner/AppDelegate.swift",
+    "app/ios/Runner/GeneratedPluginRegistrant.h",
+    "app/ios/Runner/Runner-Bridging-Header.h",
+    "app/ios/Runner/SceneDelegate.swift",
+    "app/ios/RunnerTests/RunnerTests.swift",
+    "app/third_party/getuiflut/android/src/main/java/com/getui/getuiflut/FlutterIntentService.java",
+    "app/third_party/getuiflut/android/src/main/java/com/getui/getuiflut/FlutterPushService.java",
+    "app/third_party/getuiflut/android/src/main/java/com/getui/getuiflut/GetuiflutPlugin.java",
+    "app/third_party/getuiflut/android/src/main/java/com/getui/getuiflut/GetuiPluginActivity.java",
+    "app/third_party/getuiflut/ios/Classes/GetuiflutPlugin.h",
+    "app/third_party/getuiflut/ohos/hvigorfile.ts",
+    "desktop_node/echo_desktop/approvals.py",
+    "desktop_node/echo_desktop/cli.py",
+    "desktop_node/echo_desktop/client.py",
+    "desktop_node/echo_desktop/config.py",
+    "desktop_node/echo_desktop/executor.py",
+    "desktop_node/echo_desktop/gui.py",
+    "desktop_node/echo_desktop/logging.py",
+    "desktop_node/echo_desktop/protocol.py",
+    "desktop_node/echo_desktop/__init__.py",
+    "desktop_node/echo_desktop/__main__.py",
+    "desktop_node/echo_desktop/actions/apps.py",
+    "desktop_node/echo_desktop/actions/capture.py",
+    "desktop_node/echo_desktop/actions/dsh.py",
+    "desktop_node/echo_desktop/actions/media.py",
+    "desktop_node/echo_desktop/actions/music_search.py",
+    "desktop_node/echo_desktop/actions/notepad.py",
+    "desktop_node/echo_desktop/actions/__init__.py",
+    "desktop_node/tests/test_config.py",
+    "desktop_node/tests/test_executor.py",
+    "desktop_node/tests/test_protocol.py",
+    "desktop_node/tests/__init__.py",
+    "docs/chat-context-page/build_page.py",
+    "docs/chat-context-page/prepare_template.py",
+    "docs/chat-flow-page/build_page.py",
+    "docs/chat-source-map/build_page.py",
+    "docs/chat-source-map/prepare_template.py"
+  ],
+  "symbols": {
+    "app/android/app/src/main/java/blufi/espressif/BlufiClientImpl.java": [
+      "BlufiClientImpl"
+    ],
+    "app/android/app/src/main/java/blufi/espressif/BlufiNotifyData.java": [
+      "BlufiNotifyData"
+    ],
+    "app/android/app/src/main/java/blufi/espressif/FrameCtrlData.java": [
+      "FrameCtrlData"
+    ],
+    "app/android/app/src/main/java/cn/echoaiforever/echo_app/BlufiProvisioningBridge.kt": [
+      "BlufiProvisioningBridge"
+    ],
+    "app/android/app/src/main/kotlin/cn/echoaiforever/echo_app/DirectUpdatePlugin.kt": [
+      "DirectUpdatePlugin"
+    ],
+    "app/android/app/src/main/kotlin/cn/echoaiforever/echo_app/MainActivity.kt": [
+      "MainActivity"
+    ],
+    "app/ios/Flutter/ephemeral/flutter_lldb_helper.py": [
+      "handle_new_rx_page",
+      "__lldb_init_module"
+    ],
+    "app/ios/Runner/AppDelegate.swift": [
+      "didInitializeImplicitFlutterEngine"
+    ],
+    "app/ios/Runner/SceneDelegate.swift": [
+      "SceneDelegate"
+    ],
+    "app/ios/RunnerTests/RunnerTests.swift": [
+      "RunnerTests",
+      "testExample"
+    ],
+    "desktop_node/echo_desktop/approvals.py": [
+      "ask_windows_approval"
+    ],
+    "desktop_node/echo_desktop/cli.py": [
+      "_build_parser",
+      "main"
+    ],
+    "desktop_node/echo_desktop/client.py": [
+      "DesktopAuthenticationError",
+      "RuntimeCallbacks",
+      "NodeRuntime",
+      "_emit",
+      "machine_fingerprint",
+      "pair_node",
+      "_always_allow",
+      "__init__"
+    ],
+    "desktop_node/echo_desktop/config.py": [
+      "DesktopConfig",
+      "data_dir",
+      "config_path",
+      "websocket_url",
+      "load_config",
+      "save_config",
+      "clear_config"
+    ],
+    "desktop_node/echo_desktop/executor.py": [
+      "default_approval",
+      "_approval_text",
+      "_execute_action",
+      "execute_command"
+    ],
+    "desktop_node/echo_desktop/gui.py": [
+      "DesktopClientApp",
+      "__init__",
+      "_build_window",
+      "_build_ui",
+      "_callbacks",
+      "_start_runtime",
+      "_toggle_runtime",
+      "_toggle_pair_frame"
+    ],
+    "desktop_node/echo_desktop/logging.py": [
+      "log_path",
+      "append_log"
+    ],
+    "desktop_node/echo_desktop/protocol.py": [
+      "ActionError",
+      "Command",
+      "__init__",
+      "parse_command",
+      "result_payload"
+    ],
+    "desktop_node/echo_desktop/actions/apps.py": [
+      "_find_netease",
+      "resolve_app",
+      "launch_app"
+    ],
+    "desktop_node/echo_desktop/actions/capture.py": [
+      "_encode_jpeg",
+      "capture_screen",
+      "capture_camera"
+    ],
+    "desktop_node/echo_desktop/actions/dsh.py": [
+      "_resolve_dsh",
+      "run_dsh_task"
+    ],
+    "desktop_node/echo_desktop/actions/media.py": [
+      "_cloudmusic_pids",
+      "_find_cloudmusic_window",
+      "callback",
+      "_focus_window",
+      "_is_cloudmusic_running",
+      "send_media_key"
+    ],
+    "desktop_node/echo_desktop/actions/music_search.py": [
+      "_key",
+      "_combo",
+      "_click_search_box",
+      "search_and_play"
+    ],
+    "desktop_node/echo_desktop/actions/notepad.py": [
+      "_set_clipboard",
+      "_find_notepad_window",
+      "callback",
+      "_focus",
+      "_paste",
+      "write_notepad"
+    ],
+    "desktop_node/tests/test_config.py": [
+      "ConfigTests",
+      "test_round_trips_auto_approve_and_defaults_missing_field"
+    ],
+    "desktop_node/tests/test_executor.py": [
+      "ExecutorTests",
+      "test_denied_command_does_not_launch",
+      "deny",
+      "test_approved_open_app_dispatches",
+      "allow",
+      "test_unsupported_action_is_rejected_before_approval"
+    ],
+    "desktop_node/tests/test_protocol.py": [
+      "ProtocolTests",
+      "test_parse_command_defaults_and_clamps_timeout",
+      "test_result_payload_shapes",
+      "test_websocket_url_uses_secure_scheme"
+    ],
+    "docs/chat-context-page/build_page.py": [
+      "add"
+    ],
+    "docs/chat-flow-page/build_page.py": [
+      "diagram",
+      "add"
+    ],
+    "docs/chat-source-map/build_page.py": [
+      "ref",
+      "add"
+    ],
+    "docs/chat-source-map/prepare_template.py": [
+      "refCard",
+      "renderEvidence",
+      "renderRules",
+      "renderReferences"
+    ],
+    "docs/chat-turn-walkthrough/build_page.py": [
+      "read",
+      "isolated_module",
+      "source_prompts",
+      "build",
+      "ref",
+      "material"
+    ],
+    "docs/context-assembly-guide/build_page.py": [
+      "ref",
+      "source",
+      "layer",
+      "diagram"
+    ],
+    "docs/persona-prompt-review/audit_prompt.py": [
+      "tree"
+    ],
+    "Echo-backend/main.py": [
+      "run_voice_audio_cleanup_once",
+      "run_voice_audio_cleanup_loop",
+      "run_daily_letter_loop",
+      "run_sticker_generation_loop",
+      "run_sticker_embedding_backfill_once",
+      "run_chat_turn_loop",
+      "run_presence_loop",
+      "run_proactive_chat_loop"
+    ],
+    "Echo-backend/db/postgres_connection.py": [
+      "get_database_url",
+      "get_connection",
+      "transaction"
+    ],
+    "Echo-backend/db/postgres_schema.py": [
+      "build_postgres_schema_sql",
+      "build_postgres_schema_text",
+      "init_db"
+    ],
+    "Echo-backend/features/agent/public.py": [
+      "run_chat_agent",
+      "run_daily_letter_agent",
+      "plan_proactive_message"
+    ],
+    "Echo-backend/features/agent/application/call_progress.py": [
+      "build_call_progress_text"
+    ],
+    "Echo-backend/features/agent/application/execute_tool.py": [
+      "ToolExecutor",
+      "__init__",
+      "execute"
+    ],
+    "Echo-backend/features/agent/application/orchestrate_chat.py": [
+      "OrchestrateChatWithAgent",
+      "__init__",
+      "execute",
+      "_try_final_response",
+      "_final_retry_instruction",
+      "_delivery_retry_messages",
+      "_recover_metadata_prefixed_delivery",
+      "_sanitize_time_metadata"
+    ],
+    "Echo-backend/features/agent/domain/call_routing.py": [
+      "CallToolMode",
+      "CallToolRoute",
+      "route_call_tools"
+    ],
+    "Echo-backend/features/agent/domain/delivery.py": [
+      "AgentDeliveryPlan",
+      "AgentDeliveryPlanError",
+      "DeliveryItem",
+      "reply_text",
+      "build_delivery_items",
+      "validate_agent_delivery_segments",
+      "_validate_delivery_segment",
+      "build_natural_delivery_plan"
+    ],
+    "Echo-backend/features/agent/domain/entities.py": [
+      "ToolRisk",
+      "AgentToolStatus",
+      "AgentRunStatus",
+      "ProactiveAction",
+      "ProactiveDecision",
+      "SourceReference",
+      "ContentPart",
+      "AgentToolCall"
+    ],
+    "Echo-backend/features/agent/domain/repositories.py": [
+      "AgentRunRepository",
+      "start",
+      "record_tool_call",
+      "finish"
+    ],
+    "Echo-backend/features/agent/domain/services.py": [
+      "AgentModelTimeoutError",
+      "ProactivePlannerError",
+      "Clock",
+      "SystemClock",
+      "AgentConversationModel",
+      "ProactiveDecisionPlanner",
+      "__init__",
+      "now"
+    ],
+    "Echo-backend/features/agent/domain/tools.py": [
+      "ToolExecutionContext",
+      "ToolArgumentsModel",
+      "ToolDefinition",
+      "ToolRegistry",
+      "model_validate",
+      "model_json_schema",
+      "model_description",
+      "__init__"
+    ],
+    "Echo-backend/features/agent/infrastructure/container.py": [
+      "get_chat_agent",
+      "get_call_agent",
+      "get_proactive_planner",
+      "get_daily_letter_agent"
+    ],
+    "Echo-backend/features/agent/infrastructure/model.py": [
+      "ProviderAgentConversationModel",
+      "__init__",
+      "complete",
+      "stream_complete"
+    ],
+    "Echo-backend/features/agent/infrastructure/postgres_repository.py": [
+      "PostgresAgentRunRepository",
+      "start",
+      "record_tool_call",
+      "finish"
+    ],
+    "Echo-backend/features/agent/infrastructure/proactive_planner.py": [
+      "_ProactiveDecisionPayload",
+      "_PlannerPayloadError",
+      "ProviderProactiveDecisionPlanner",
+      "__init__",
+      "decide",
+      "_forced_send_fallback",
+      "_parse_response",
+      "_sanitize_facts"
+    ],
+    "Echo-backend/features/agent/infrastructure/tools/beat_tools.py": [
+      "EmitChatBeatsArguments",
+      "_clean_beats",
+      "register_beat_tools",
+      "emit_handler"
+    ],
+    "Echo-backend/features/agent/infrastructure/tools/desktop_tools.py": [
+      "DesktopOpenAppArguments",
+      "DesktopMediaArguments",
+      "DesktopLookArguments",
+      "DesktopScreenArguments",
+      "DesktopMusicSearchArguments",
+      "DesktopNotepadWriteArguments",
+      "DesktopDshTaskArguments",
+      "DesktopStatusArguments"
+    ],
+    "Echo-backend/features/agent/infrastructure/tools/mobile_tools.py": [
+      "PhoneStatusArguments",
+      "PhoneObserveArguments",
+      "PhoneScreenshotArguments",
+      "PhoneScreenOcrArguments",
+      "PhoneLaunchAppArguments",
+      "PhoneActionArguments",
+      "PhoneNotificationsArguments",
+      "PhonePlayMusicArguments"
+    ],
+    "Echo-backend/features/agent/infrastructure/tools/proactive_tools.py": [
+      "PauseProactiveArguments",
+      "ResumeProactiveArguments",
+      "register_proactive_tools",
+      "pause_handler",
+      "resume_handler"
+    ],
+    "Echo-backend/features/agent/infrastructure/tools/relationship_tools.py": [
+      "ProposeRelationshipArguments",
+      "RespondRelationshipArguments",
+      "register_relationship_tools",
+      "propose_handler",
+      "respond_handler"
+    ],
+    "Echo-backend/features/agent/infrastructure/tools/schedule_tools.py": [
+      "CreateChatScheduleArguments",
+      "ListChatSchedulesArguments",
+      "CancelChatScheduleArguments",
+      "_is_explicit_user_request",
+      "register_schedule_tools",
+      "create_handler",
+      "list_handler",
+      "cancel_handler"
+    ],
+    "Echo-backend/features/agent/infrastructure/tools/sticker_tools.py": [
+      "SendStickerArguments",
+      "_sticker_search_terms",
+      "register_sticker_tools",
+      "send_handler"
+    ],
+    "Echo-backend/features/agent/infrastructure/tools/time_tools.py": [
+      "GetCurrentTimeArguments",
+      "register_time_tool",
+      "handler"
+    ],
+    "Echo-backend/features/agent/infrastructure/tools/web_search_tools.py": [
+      "SearchWebArguments",
+      "register_web_search_tool",
+      "handler"
+    ],
+    "Echo-backend/features/assistant_persona/public.py": [
+      "get_assistant_persona"
+    ],
+    "Echo-backend/features/assistant_persona/domain/entities.py": [
+      "AssistantPersonaNotFoundError",
+      "AssistantPersona"
+    ],
+    "Echo-backend/features/assistant_persona/infrastructure/default_persona.py": [
+      "get_configured_assistant_persona"
+    ],
+    "Echo-backend/features/auth/public.py": [
+      "send_phone_verification",
+      "verify_phone_verification",
+      "refresh_phone_session",
+      "logout_phone_session",
+      "ensure_user_identity"
+    ],
+    "Echo-backend/features/auth/application/phone_auth.py": [
+      "PhoneAuthService",
+      "normalize_mainland_phone",
+      "mask_phone",
+      "hash_sms_code",
+      "__init__",
+      "request_phone_code",
+      "verify_phone_code",
+      "refresh_session"
+    ],
+    "Echo-backend/features/auth/domain/entities.py": [
+      "AuthError",
+      "AuthConfigurationError",
+      "AuthenticatedSession",
+      "SmsChallenge",
+      "RefreshTokenMaterial",
+      "__init__"
+    ],
+    "Echo-backend/features/auth/domain/services.py": [
+      "SmsProvider",
+      "SessionTokenIssuer",
+      "AuthRepository",
+      "send_code",
+      "issue_access_token",
+      "new_refresh_token",
+      "hash_refresh_token",
+      "create_challenge"
+    ],
+    "Echo-backend/features/auth/infrastructure/adapters.py": [
+      "LoggingSmsProvider",
+      "_ConfigurableVendorStub",
+      "AliyunSmsProvider",
+      "TencentSmsProvider",
+      "__init__",
+      "send_code",
+      "build_sms_provider"
+    ],
+    "Echo-backend/features/auth/infrastructure/container.py": [
+      "get_phone_auth_service",
+      "reset_auth_use_cases_for_tests"
+    ],
+    "Echo-backend/features/auth/infrastructure/postgres_repositories.py": [
+      "PostgresAuthRepository",
+      "_phone_user_id",
+      "create_challenge",
+      "invalidate_challenge",
+      "verify_challenge_and_create_session",
+      "_create_phone_session",
+      "rotate_refresh_token",
+      "revoke_refresh_family"
+    ],
+    "Echo-backend/features/auth/infrastructure/tokens.py": [
+      "AuthSessionTokenIssuer",
+      "__init__",
+      "issue_access_token",
+      "new_refresh_token",
+      "hash_refresh_token"
+    ],
+    "Echo-backend/features/auth/interface/router.py": [
+      "AuthContractRoute",
+      "_trace_request_id",
+      "_error_response",
+      "get_route_handler",
+      "contract_handler",
+      "_client_host",
+      "_opaque_rate_key",
+      "_consume_rate_limit"
+    ],
+    "Echo-backend/features/auth/interface/schemas.py": [
+      "PhoneLoginRequest",
+      "PhoneLoginResponse",
+      "VerifyLoginRequest",
+      "TokenResponse",
+      "VerifyLoginResponse",
+      "RefreshLoginRequest",
+      "LogoutRequest",
+      "AuthErrorResponse"
+    ],
+    "Echo-backend/features/chat/public.py": [
+      "clear_chat_context",
+      "accept_chat_message",
+      "process_pending_chat_turn_once",
+      "list_recent_assistant_contents_for_guard",
+      "list_recent_chat_user_ids",
+      "list_chat_messages",
+      "generate_chat_reply",
+      "send_chat_message"
+    ],
+    "Echo-backend/features/chat/application/accept_message.py": [
+      "ChatIntakePolicy",
+      "AcceptChatMessage",
+      "__init__",
+      "execute"
+    ],
+    "Echo-backend/features/chat/application/call_reply_limiter.py": [
+      "CallReplyStreamLimiter",
+      "__init__",
+      "text",
+      "observed_chars",
+      "push",
+      "finish",
+      "_drain_complete_sentences",
+      "_emit"
+    ],
+    "Echo-backend/features/chat/application/clear_context.py": [
+      "ClearChatContext",
+      "__init__",
+      "execute"
+    ],
+    "Echo-backend/features/chat/application/generate_reply.py": [
+      "GenerateChatReply",
+      "_speaker_guidance",
+      "__init__",
+      "_update_summary",
+      "_schedule_summary_update",
+      "_complete_turn",
+      "_run_post_persistence",
+      "finalize_persisted_turn"
+    ],
+    "Echo-backend/features/chat/application/list_messages.py": [
+      "ListChatMessages",
+      "__init__",
+      "execute"
+    ],
+    "Echo-backend/features/chat/application/process_turns.py": [
+      "ProcessPendingChatTurns",
+      "__init__",
+      "run_once",
+      "_reply_group_payload"
+    ],
+    "Echo-backend/features/chat/application/send_message.py": [
+      "SendChatMessage",
+      "__init__",
+      "execute",
+      "_request_fingerprint"
+    ],
+    "Echo-backend/features/chat/domain/delivery_timing.py": [
+      "DeliveryTimingPolicy",
+      "build"
+    ],
+    "Echo-backend/features/chat/domain/dialogue_style.py": [
+      "should_pause_followup_questions",
+      "starts_with_session_greeting",
+      "should_suppress_repeated_greeting",
+      "remove_repeated_session_greeting",
+      "_weekday_keys",
+      "_question_count",
+      "remove_followup_questions",
+      "find_dialogue_style_violations"
+    ],
+    "Echo-backend/features/chat/domain/entities.py": [
+      "ChatValidationError",
+      "ChatRequestInProgressError",
+      "ChatQueueFullError",
+      "ChatRequestClaimStatus",
+      "ChatTurnStatus",
+      "ChatContext",
+      "MemoryExtractionScheduleResult",
+      "ChatTurnResult"
+    ],
+    "Echo-backend/features/chat/domain/repositories.py": [
+      "ChatConversationRepository",
+      "ChatContextRepository",
+      "ChatHistoryRepository",
+      "ChatIntakeRepository",
+      "ChatTurnRepository",
+      "ChatRequestResultRepository",
+      "ensure_conversation",
+      "get_or_create_active_conversation"
+    ],
+    "Echo-backend/features/chat/domain/services.py": [
+      "ChatContextProvider",
+      "ChatAgentOrchestrator",
+      "ConversationSummaryUpdater",
+      "MemoryExtractionScheduler",
+      "RelationshipTurnRecorder",
+      "ChatVoiceReplySynthesizer",
+      "ChatRequestGuard",
+      "build_context"
+    ],
+    "Echo-backend/features/chat/domain/temporal_context.py": [
+      "build_temporal_context",
+      "resolve_temporal_expressions",
+      "add",
+      "weekday_name",
+      "day_period",
+      "format_gap_seconds",
+      "_period_window",
+      "_relation"
+    ],
+    "Echo-backend/features/chat/infrastructure/adapters.py": [
+      "ChatAgentOrchestratorAdapter",
+      "ProactiveDecisionPlannerAdapter",
+      "InMemoryChatRequestGuard",
+      "ChatConversationRepositoryAdapter",
+      "ChatContextRepositoryAdapter",
+      "ChatHistoryRepositoryAdapter",
+      "PostgresChatRequestResultRepositoryAdapter",
+      "ChatContextProviderAdapter"
+    ],
+    "Echo-backend/features/chat/infrastructure/async_postgres_repository.py": [
+      "PostgresAsyncChatRepository",
+      "accept_message",
+      "claim_due_turn",
+      "load_batch",
+      "complete_turn",
+      "fail_turn",
+      "reschedule_turn",
+      "has_running_turn"
+    ],
+    "Echo-backend/features/chat/infrastructure/container.py": [
+      "_presence_cue",
+      "get_delivery_timing_policy",
+      "get_generate_chat_reply_use_case",
+      "get_send_chat_message_use_case",
+      "get_clear_chat_context_use_case",
+      "get_list_chat_messages_use_case",
+      "get_accept_chat_message_use_case",
+      "get_process_pending_chat_turns_use_case"
+    ],
+    "Echo-backend/features/chat/infrastructure/context_builder.py": [
+      "_list_active_memories_for_context",
+      "_load_long_term_memories",
+      "_call_requires_extended_context",
+      "_clean_call_history_content",
+      "_build_call_history",
+      "_build_call_temporal_context",
+      "_turn_input_message",
+      "_clean_proactive_history_content"
+    ],
+    "Echo-backend/features/chat/infrastructure/conversation_summary.py": [
+      "_format_messages_for_summary",
+      "_build_summary_messages",
+      "maybe_update_conversation_summary"
+    ],
+    "Echo-backend/features/chat/infrastructure/events.py": [
+      "ChatEvent",
+      "ChatEventBroker",
+      "__init__",
+      "publish",
+      "subscribe",
+      "get_chat_event_broker"
+    ],
+    "Echo-backend/features/chat/infrastructure/postgres_repositories.py": [
+      "get_user_timezone",
+      "_resolve_timezone",
+      "ensure_conversation",
+      "get_or_create_active_conversation",
+      "get_conversation_summary",
+      "update_conversation_summary",
+      "add_message",
+      "_add_message_record"
+    ],
+    "Echo-backend/features/chat/interface/router.py": [
+      "consume_chat_quota",
+      "_history_message_response",
+      "_history_message_payload",
+      "_encode_sse",
+      "chat_messages",
+      "accept_message",
+      "chat_events",
+      "stream"
+    ],
+    "Echo-backend/features/chat/interface/schemas.py": [
+      "AsyncChatMessageRequest",
+      "ChatContentPart",
+      "ChatSource",
+      "ClearChatResponse",
+      "ChatHistoryMessageResponse",
+      "ChatHistoryResponse",
+      "ChatAcceptedTurnResponse",
+      "ChatMessageAcceptedResponse"
+    ],
+    "Echo-backend/features/desktop/public.py": [
+      "create_desktop_pairing_code",
+      "pair_desktop_node",
+      "list_desktop_nodes",
+      "revoke_desktop_node",
+      "mark_desktop_node_online",
+      "mark_desktop_node_offline",
+      "authenticate_desktop_node",
+      "execute_desktop_action"
+    ],
+    "Echo-backend/features/desktop/application/desktop_service.py": [
+      "DesktopNodeStatus",
+      "DesktopService",
+      "__init__",
+      "mark_online",
+      "update_capabilities",
+      "mark_offline",
+      "revoke_node",
+      "status"
+    ],
+    "Echo-backend/features/desktop/application/manage_nodes.py": [
+      "PairingCode",
+      "PairedNode",
+      "DesktopNodeManagement",
+      "__init__",
+      "create_pairing_code",
+      "pair_node",
+      "list_nodes",
+      "revoke_node"
+    ],
+    "Echo-backend/features/desktop/application/node_hub.py": [
+      "DesktopNodeChannel",
+      "_Connection",
+      "DesktopNodeHub",
+      "send",
+      "close",
+      "__init__",
+      "register",
+      "unregister"
+    ],
+    "Echo-backend/features/desktop/domain/entities.py": [
+      "DesktopNode",
+      "DesktopCommandResult",
+      "DesktopError",
+      "DesktopOfflineError",
+      "DesktopTimeoutError",
+      "DesktopActionError",
+      "DesktopPairingError",
+      "__init__"
+    ],
+    "Echo-backend/features/desktop/domain/repositories.py": [
+      "DesktopRepository",
+      "create_pairing_code",
+      "pair_node",
+      "find_node_by_token_hash",
+      "list_nodes",
+      "revoke_node",
+      "mark_online",
+      "mark_offline"
+    ],
+    "Echo-backend/features/desktop/domain/rules.py": [
+      "normalize_pairing_code",
+      "generate_pairing_code",
+      "pairing_code_hash",
+      "node_token_hash",
+      "generate_node_token",
+      "normalize_capabilities",
+      "validate_action_arguments"
+    ],
+    "Echo-backend/features/desktop/infrastructure/container.py": [
+      "get_desktop_node_hub",
+      "get_desktop_repository",
+      "get_desktop_node_management",
+      "get_desktop_service",
+      "reset_desktop_services_for_tests"
+    ],
+    "Echo-backend/features/desktop/infrastructure/postgres_repository.py": [
+      "PostgresDesktopRepository",
+      "_node",
+      "create_pairing_code",
+      "pair_node",
+      "find_node_by_token_hash",
+      "list_nodes",
+      "revoke_node",
+      "mark_online"
+    ],
+    "Echo-backend/features/desktop/interface/router.py": [
+      "_WebSocketChannel",
+      "_client_fingerprint",
+      "_consume_pairing_limit",
+      "_node_response",
+      "pair_node",
+      "get_nodes",
+      "delete_node",
+      "__init__"
+    ],
+    "Echo-backend/features/desktop/interface/schemas.py": [
+      "PairDesktopNodeRequest",
+      "PairDesktopNodeResponse",
+      "DesktopNodeResponse",
+      "DesktopNodeListResponse"
+    ],
+    "Echo-backend/features/devices/application/device_probe.py": [
+      "DeviceProbe",
+      "__init__",
+      "check",
+      "receive",
+      "disconnect"
+    ],
+    "Echo-backend/features/devices/application/latency.py": [
+      "DeviceLatencyTracker",
+      "__init__",
+      "mark",
+      "elapsed_ms",
+      "log_summary",
+      "value"
+    ],
+    "Echo-backend/features/devices/application/process_voice_turn.py": [
+      "ProcessDeviceVoiceTurn",
+      "__init__",
+      "execute"
+    ],
+    "Echo-backend/features/devices/application/sentence_chunker.py": [
+      "SentenceChunker",
+      "__init__",
+      "push",
+      "finish",
+      "_find_boundary",
+      "_take"
+    ],
+    "Echo-backend/features/devices/application/speaker_calibration.py": [
+      "Calibration",
+      "SpeakerCalibration",
+      "view",
+      "__init__",
+      "_prune",
+      "start",
+      "pending",
+      "cancel"
+    ],
+    "Echo-backend/features/devices/application/speaker_dialogue.py": [
+      "EnrollmentSession",
+      "SpeakerDialogue",
+      "clean",
+      "__init__",
+      "prune",
+      "pending",
+      "approve",
+      "cancel"
+    ],
+    "Echo-backend/features/devices/application/speaker_people.py": [
+      "SpeakerPeopleService",
+      "__init__",
+      "owned",
+      "people",
+      "create_person",
+      "delete_person",
+      "start_calibration",
+      "calibration_status"
+    ],
+    "Echo-backend/features/devices/application/stream_voice_turn.py": [
+      "_QueuedPhrase",
+      "StreamDeviceVoiceTurn",
+      "is_actionable_device_text",
+      "__init__",
+      "execute",
+      "collect_prefetched_audio",
+      "enqueue_phrase",
+      "on_text_delta"
+    ],
+    "Echo-backend/features/devices/application/transcript_guard.py": [
+      "maximum_transcript_chars",
+      "is_plausible_device_transcript"
+    ],
+    "Echo-backend/features/devices/domain/entities.py": [
+      "DeviceAudioFormat",
+      "DeviceConfiguration",
+      "DeviceTurnResult"
+    ],
+    "Echo-backend/features/devices/domain/services.py": [
+      "DeviceVoiceRecognizer",
+      "DeviceConversationService",
+      "DeviceSpeechSynthesizer",
+      "DeviceAudioSource",
+      "DeviceChatNotifier",
+      "recognize_pcm16",
+      "reply",
+      "stream_pcm16"
+    ],
+    "Echo-backend/features/devices/domain/speaker_people.py": [
+      "SpeakerPeopleError",
+      "SpeakerPeopleRepository",
+      "__init__",
+      "owned",
+      "people",
+      "create_person",
+      "load_person",
+      "save_sample"
+    ],
+    "Echo-backend/features/devices/domain/speaker_vectors.py": [
+      "SpeakerUnavailable",
+      "similarity",
+      "centroid",
+      "identify"
+    ],
+    "Echo-backend/features/devices/infrastructure/adapters.py": [
+      "EchoVoiceRecognizer",
+      "EchoConversationService",
+      "EchoSpeechSynthesizer",
+      "EchoAudioSource",
+      "EchoChatNotifier",
+      "recognize_pcm16",
+      "reply",
+      "stream_pcm16"
+    ],
+    "Echo-backend/features/devices/infrastructure/audio_codec.py": [
+      "Pcm16SilenceLimiter",
+      "OpusPacketDecoder",
+      "StreamingPcmOpusEncoder",
+      "__init__",
+      "trimmed_silence_ms",
+      "push",
+      "finish",
+      "_flush_pending_silence"
+    ],
+    "Echo-backend/features/devices/infrastructure/container.py": [
+      "get_process_device_voice_turn",
+      "get_stream_device_voice_turn",
+      "reset_device_services_for_tests"
+    ],
+    "Echo-backend/features/devices/infrastructure/device_management.py": [
+      "normalize_device_id",
+      "normalize_client_id",
+      "hash_credential",
+      "issue_device_credential",
+      "_device_row",
+      "_bind_device_to_user",
+      "create_provisioning_session",
+      "claim_provisioning_session"
+    ],
+    "Echo-backend/features/devices/infrastructure/endpoint_detector.py": [
+      "AudioEndpointDetector",
+      "pcm16_rms",
+      "__init__",
+      "push",
+      "elapsed_ms",
+      "speech_elapsed_ms",
+      "has_speech_candidate",
+      "_classify_level"
+    ],
+    "Echo-backend/features/devices/infrastructure/neural_speaker.py": [
+      "extract"
+    ],
+    "Echo-backend/features/devices/infrastructure/speaker_people_container.py": [
+      "create_voice_person"
+    ],
+    "Echo-backend/features/devices/infrastructure/speaker_people_repository.py": [
+      "owned",
+      "lock_owned",
+      "summary",
+      "people",
+      "create_person",
+      "load_person",
+      "save_sample",
+      "save_hardware_calibration"
+    ],
+    "Echo-backend/features/devices/infrastructure/speaker_verification.py": [
+      "extract_speaker_embedding",
+      "cosine_similarity",
+      "audio_quality"
+    ],
+    "Echo-backend/features/devices/interface/router.py": [
+      "_device_map",
+      "_clean_bearer",
+      "_device_key",
+      "_resolve_device_user",
+      "_authenticate_personal_device",
+      "_device_request_token",
+      "_verify_device_speaker",
+      "_websocket_url"
+    ],
+    "Echo-backend/features/devices/interface/schemas.py": [
+      "DeviceFirmwareResponse",
+      "DeviceWebSocketConfig",
+      "DeviceActivationResponse",
+      "DeviceBootstrapResponse",
+      "DevicePairingResponse",
+      "DeviceProvisioningSessionResponse",
+      "DevicePairingClaimRequest",
+      "DeviceCredentialResponse"
+    ],
+    "Echo-backend/features/devices/interface/speaker_router.py": [
+      "ApprovalRequest",
+      "PersonRequest",
+      "CalibrationRequest",
+      "map_speaker_errors",
+      "translate",
+      "async_handler",
+      "handler",
+      "people"
+    ],
+    "Echo-backend/features/firmware_releases/public.py": [
+      "get_latest_firmware_release"
+    ],
+    "Echo-backend/features/firmware_releases/domain/entities.py": [
+      "FirmwareRelease"
+    ],
+    "Echo-backend/features/firmware_releases/infrastructure/postgres_repository.py": [
+      "PostgresFirmwareReleaseRepository",
+      "_release",
+      "find_latest",
+      "get_by_version",
+      "publish"
+    ],
+    "Echo-backend/features/letters/public.py": [
+      "generate_due_letters",
+      "publish_due_letters"
+    ],
+    "Echo-backend/features/letters/application/assemble_context.py": [
+      "LetterContextConfig",
+      "LetterContext",
+      "LetterContextAssembler",
+      "__init__",
+      "build",
+      "_load_memories",
+      "_load_persona",
+      "_load_relationship"
+    ],
+    "Echo-backend/features/letters/application/generate_image.py": [
+      "LetterImageResult",
+      "LetterImagePolicy",
+      "GenerateLetterImage",
+      "__init__",
+      "execute",
+      "_build_prompt",
+      "_utc_now",
+      "_signed_reference_url"
+    ],
+    "Echo-backend/features/letters/application/generate_letters.py": [
+      "LetterGenerationPolicy",
+      "GenerateDueLetters",
+      "__init__",
+      "execute",
+      "_process_task",
+      "_generate_output",
+      "_parse_output",
+      "_successful_reply"
+    ],
+    "Echo-backend/features/letters/domain/entities.py": [
+      "DailyLetter",
+      "LetterGenerationTask",
+      "LetterAgentOutput",
+      "LetterPreference"
+    ],
+    "Echo-backend/features/letters/domain/output.py": [
+      "LetterOutputValidationError",
+      "parse_letter_agent_output",
+      "_text",
+      "_texts",
+      "_positive_ints",
+      "_image_brief",
+      "_clean_image_text",
+      "_clean_image_items"
+    ],
+    "Echo-backend/features/letters/domain/repositories.py": [
+      "LetterRepository",
+      "get_preference",
+      "save_preference",
+      "list_letters",
+      "source_messages",
+      "ensure_due_generation_tasks",
+      "claim_generation_task",
+      "complete_generation"
+    ],
+    "Echo-backend/features/letters/domain/services.py": [
+      "LetterImageGenerator",
+      "LetterImageStorage",
+      "generate",
+      "put_bytes",
+      "download_url"
+    ],
+    "Echo-backend/features/letters/infrastructure/container.py": [
+      "get_letter_repository",
+      "get_letter_image_generator",
+      "get_letter_generator",
+      "_image_configuration_complete",
+      "_reference_storage_key"
+    ],
+    "Echo-backend/features/letters/infrastructure/postgres_repository.py": [
+      "LetterRepositoryConfig",
+      "PostgresLetterRepository",
+      "_default_config",
+      "_retry_offsets",
+      "_json",
+      "__init__",
+      "_image_url",
+      "_letter"
+    ],
+    "Echo-backend/features/letters/interface/router.py": [
+      "_response",
+      "list_letters",
+      "latest_letter",
+      "get_preferences",
+      "update_preferences",
+      "get_letter",
+      "mark_read"
+    ],
+    "Echo-backend/features/letters/interface/schemas.py": [
+      "LetterResponse",
+      "LetterListResponse",
+      "LetterPreferenceRequest",
+      "LetterPreferenceResponse"
+    ],
+    "Echo-backend/features/memory/public.py": [
+      "list_memories",
+      "remember_presence_thought",
+      "recall_memory",
+      "delete_memory",
+      "clear_memories",
+      "cancel_pending_memory_extraction_jobs",
+      "backfill_memory_embeddings",
+      "schedule_memory_extraction"
+    ],
+    "Echo-backend/features/memory/application/memory_extraction.py": [
+      "MemoryExtractionService",
+      "__init__",
+      "extract_and_store_memories",
+      "_apply_extracted_memory",
+      "_resolve_target_memory",
+      "_safe_upsert_memory_embedding",
+      "_safe_delete_memory_embedding",
+      "schedule_memory_extraction"
+    ],
+    "Echo-backend/features/memory/application/memory_management.py": [
+      "MemoryManagementService",
+      "normalize_memory_status",
+      "clamp_limit",
+      "__init__",
+      "list_memories",
+      "delete_memory",
+      "clear_memories",
+      "backfill_memory_embeddings"
+    ],
+    "Echo-backend/features/memory/domain/entities.py": [
+      "MemoryValidationError",
+      "InvalidMemoryStatusError",
+      "MemoryNotFoundError",
+      "MemoryOperationError",
+      "MemoryImportance",
+      "Memory",
+      "MemoryListResult",
+      "MemoryDeleteResult"
+    ],
+    "Echo-backend/features/memory/domain/extraction_rules.py": [
+      "should_extract_memory",
+      "normalize_memory_content",
+      "coerce_confidence",
+      "coerce_importance",
+      "format_existing_memories",
+      "build_extraction_messages",
+      "strip_json_text",
+      "parse_memory_extraction"
+    ],
+    "Echo-backend/features/memory/domain/repositories.py": [
+      "MemoryRepository",
+      "MemoryEmbeddingRepository",
+      "MemoryVectorIndex",
+      "MemoryExtractionJobRepository",
+      "MemoryExtractionLLM",
+      "list_memories",
+      "list_active_memories",
+      "get_memory"
+    ],
+    "Echo-backend/features/memory/infrastructure/adapters.py": [
+      "MemoryRepositoryAdapter",
+      "MemoryEmbeddingRepositoryAdapter",
+      "MemoryVectorIndexAdapter",
+      "MemoryExtractionJobRepositoryAdapter",
+      "MemoryExtractionLLMAdapter",
+      "_optional_datetime_to_iso",
+      "_memory_from_record",
+      "list_memories"
+    ],
+    "Echo-backend/features/memory/infrastructure/container.py": [
+      "get_memory_extraction_service",
+      "get_memory_management_service",
+      "reset_memory_extraction_service_for_tests"
+    ],
+    "Echo-backend/features/memory/infrastructure/postgres_repositories.py": [
+      "_row_to_memory",
+      "list_user_memories",
+      "get_user_memory",
+      "add_user_memory",
+      "update_user_memory",
+      "touch_user_memory",
+      "deactivate_user_memory",
+      "delete_user_memory"
+    ],
+    "Echo-backend/features/memory/infrastructure/vector_index.py": [
+      "_cosine_similarity",
+      "_get_active_memory_map",
+      "upsert_memory_embedding_record",
+      "upsert_memory_embedding",
+      "delete_memory_embedding",
+      "clear_memory_embeddings",
+      "list_memory_embedding_records",
+      "retrieve_relevant_memories"
+    ],
+    "Echo-backend/features/memory/interface/router.py": [
+      "_memory_item_from_domain",
+      "memory_list",
+      "memory_delete",
+      "memory_clear"
+    ],
+    "Echo-backend/features/memory/interface/schemas.py": [
+      "MemoryItem",
+      "MemoryListResponse",
+      "MemoryDeleteResponse",
+      "MemoryClearResponse",
+      "MemoryBackfillEmbeddingsRequest",
+      "MemoryBackfillEmbeddingsResponse"
+    ],
+    "Echo-backend/features/mobile_agent/public.py": [
+      "MobileAgentDeviceStatus",
+      "list_mobile_agent_devices",
+      "execute_mobile_agent_action"
+    ],
+    "Echo-backend/features/mobile_agent/application/hub.py": [
+      "MobileAgentChannel",
+      "_Connection",
+      "MobileAgentHub",
+      "send",
+      "close",
+      "__init__",
+      "register",
+      "unregister"
+    ],
+    "Echo-backend/features/mobile_agent/application/management.py": [
+      "PairingCode",
+      "PairedDevice",
+      "MobileAgentManagement",
+      "__init__",
+      "create_pairing_code",
+      "pair_device",
+      "authenticate",
+      "list_devices"
+    ],
+    "Echo-backend/features/mobile_agent/application/service.py": [
+      "MobileAgentService",
+      "__init__",
+      "create_pairing_code",
+      "pair_device",
+      "authenticate",
+      "list_devices",
+      "mark_online",
+      "mark_offline"
+    ],
+    "Echo-backend/features/mobile_agent/application/skills.py": [
+      "AppSkillError",
+      "SkillRunResult",
+      "AppSkill",
+      "SkillRunner",
+      "BilibiliSkill",
+      "DouyinSkill",
+      "XiaohongshuSkill",
+      "WechatSkill"
+    ],
+    "Echo-backend/features/mobile_agent/application/wechat_channel.py": [
+      "WechatChannelError",
+      "__init__",
+      "_normalize_for_loop_guard",
+      "_edit_distance",
+      "_looks_like_echo_loop",
+      "_short_sticker_keyword",
+      "_sticker_keyword",
+      "_claim_message_key"
+    ],
+    "Echo-backend/features/mobile_agent/domain/entities.py": [
+      "MobileAgentDevice",
+      "MobileAgentCommandResult",
+      "MobileAgentError",
+      "MobileAgentPairingError",
+      "MobileAgentOfflineError",
+      "MobileAgentTimeoutError",
+      "MobileAgentActionError",
+      "__init__"
+    ],
+    "Echo-backend/features/mobile_agent/domain/repositories.py": [
+      "MobileAgentRepository",
+      "create_pairing_code",
+      "pair_device",
+      "find_by_token_hash",
+      "list_devices",
+      "revoke_device",
+      "mark_online",
+      "mark_offline"
+    ],
+    "Echo-backend/features/mobile_agent/domain/rules.py": [
+      "hash_secret",
+      "generate_pairing_code",
+      "generate_device_token",
+      "normalize_device_name"
+    ],
+    "Echo-backend/features/mobile_agent/infrastructure/container.py": [
+      "get_mobile_agent_hub",
+      "get_mobile_agent_repository",
+      "get_mobile_agent_management",
+      "get_mobile_agent_service",
+      "reset_mobile_agent_services_for_tests"
+    ],
+    "Echo-backend/features/mobile_agent/infrastructure/postgres_repository.py": [
+      "PostgresMobileAgentRepository",
+      "_device",
+      "create_pairing_code",
+      "pair_device",
+      "find_by_token_hash",
+      "list_devices",
+      "revoke_device",
+      "mark_online"
+    ],
+    "Echo-backend/features/mobile_agent/interface/router.py": [
+      "_WebSocketChannel",
+      "_client_fingerprint",
+      "_consume_pair_limit",
+      "_device_response",
+      "_validate_command",
+      "create_pairing_code",
+      "pair_device",
+      "unpair_device"
+    ],
+    "Echo-backend/features/mobile_agent/interface/schemas.py": [
+      "PairingCodeResponse",
+      "PairMobileAgentRequest",
+      "MobileAgentDeviceResponse",
+      "PairMobileAgentResponse",
+      "MobileAgentDeviceListResponse",
+      "MobileAgentCommandRequest",
+      "MobileAgentCommandResponse",
+      "MobileAgentAuditItem"
+    ],
+    "Echo-backend/features/persona/public.py": [
+      "get_persona",
+      "update_persona",
+      "reset_persona",
+      "reset_persona_companionship_preferences"
+    ],
+    "Echo-backend/features/persona/application/persona_management.py": [
+      "PersonaManagementService",
+      "__init__",
+      "get",
+      "update",
+      "reset",
+      "reset_companionship_preferences"
+    ],
+    "Echo-backend/features/persona/domain/entities.py": [
+      "PersonaValidationError",
+      "PersonaOperationError",
+      "PersonaUpdate",
+      "UserPreferences",
+      "_normalize_optional_text",
+      "_normalize_choice",
+      "_normalize_avoid_topics",
+      "build_user_preferences"
+    ],
+    "Echo-backend/features/persona/domain/repositories.py": [
+      "PersonaRepository",
+      "get",
+      "save"
+    ],
+    "Echo-backend/features/persona/infrastructure/container.py": [
+      "get_persona_management_service",
+      "reset_persona_management_service_for_tests"
+    ],
+    "Echo-backend/features/persona/infrastructure/postgres_repository.py": [
+      "PostgresPersonaRepository",
+      "_timestamp_text",
+      "_topics_from_database",
+      "_persona_from_row",
+      "get",
+      "save"
+    ],
+    "Echo-backend/features/persona/interface/router.py": [
+      "_response_from_domain",
+      "persona_get",
+      "persona_update",
+      "persona_reset"
+    ],
+    "Echo-backend/features/persona/interface/schemas.py": [
+      "PersonaUpdateRequest",
+      "PersonaResponse"
+    ],
+    "Echo-backend/features/presence/public.py": [
+      "get_presence_state",
+      "list_presence_thoughts",
+      "run_presence_tick",
+      "build_presence_cue",
+      "process_presence_once"
+    ],
+    "Echo-backend/features/presence/application/presence_service.py": [
+      "PresenceService",
+      "_compact",
+      "_is_duplicate",
+      "__init__",
+      "state",
+      "thoughts",
+      "tick",
+      "_maybe_execute_action"
+    ],
+    "Echo-backend/features/presence/domain/entities.py": [
+      "PresenceStatus",
+      "PresenceState",
+      "PresenceThought",
+      "PresenceMessage",
+      "PresenceContext",
+      "PresenceMemory",
+      "ThoughtDraft",
+      "PresenceTickResult"
+    ],
+    "Echo-backend/features/presence/domain/ports.py": [
+      "PresenceRepository",
+      "PresenceContextSource",
+      "PresenceMemorySource",
+      "PresenceThoughtGenerator",
+      "PresenceQuietHours",
+      "PresenceMessageComposer",
+      "PresenceActionExecutor",
+      "PresenceMemoryWriter"
+    ],
+    "Echo-backend/features/presence/infrastructure/adapters.py": [
+      "ChatPresenceContextSource",
+      "MemoryPresenceSource",
+      "DesktopPresenceActionExecutor",
+      "MemoryPresenceWriter",
+      "ChatPresenceMessageDelivery",
+      "ProactiveQuietHours",
+      "load",
+      "recent_user_ids"
+    ],
+    "Echo-backend/features/presence/infrastructure/container.py": [
+      "get_presence_service",
+      "reset_presence_service_for_tests"
+    ],
+    "Echo-backend/features/presence/infrastructure/message_composer.py": [
+      "ProviderPresenceMessageComposer",
+      "__init__",
+      "compose"
+    ],
+    "Echo-backend/features/presence/infrastructure/postgres_repository.py": [
+      "PostgresPresenceRepository",
+      "_state",
+      "_thought",
+      "get_or_create_state",
+      "save_state",
+      "recent_thoughts",
+      "add_thought",
+      "record_event"
+    ],
+    "Echo-backend/features/presence/infrastructure/thought_generator.py": [
+      "ProviderPresenceThoughtGenerator",
+      "__init__",
+      "generate"
+    ],
+    "Echo-backend/features/presence/interface/router.py": [
+      "get_my_presence"
+    ],
+    "Echo-backend/features/presence/interface/schemas.py": [
+      "PresenceThoughtResponse",
+      "PresenceResponse"
+    ],
+    "Echo-backend/features/proactive_chat/public.py": [
+      "get_proactive_repository",
+      "get_proactive_preferences",
+      "get_proactive_worker",
+      "process_proactive_chat_once",
+      "reset_user_proactive_state"
+    ],
+    "Echo-backend/features/proactive_chat/application/explicit_reminders.py": [
+      "ExplicitRelativeReminder",
+      "_parse_amount",
+      "parse_explicit_relative_reminder"
+    ],
+    "Echo-backend/features/proactive_chat/application/worker.py": [
+      "ProcessProactiveChatJobs",
+      "__init__",
+      "run_once",
+      "_suppress_changed_spontaneous_job"
+    ],
+    "Echo-backend/features/proactive_chat/domain/entities.py": [
+      "ProactiveChatPreferences",
+      "ChatSchedule",
+      "ProactiveChatJob"
+    ],
+    "Echo-backend/features/proactive_chat/infrastructure/postgres_repository.py": [
+      "PostgresProactiveChatRepository",
+      "_slot_probability",
+      "_timezone",
+      "_normalize_delivery_text",
+      "_as_utc",
+      "_preference",
+      "_schedule",
+      "get_preferences"
+    ],
+    "Echo-backend/features/proactive_chat/interface/router.py": [
+      "_preferences_response",
+      "_schedule_response",
+      "get_preferences",
+      "update_preferences",
+      "pause_spontaneous",
+      "resume_spontaneous",
+      "list_schedules",
+      "create_schedule"
+    ],
+    "Echo-backend/features/proactive_chat/interface/schemas.py": [
+      "ProactivePreferencesRequest",
+      "ProactivePreferencesResponse",
+      "ProactivePauseRequest",
+      "ChatScheduleCreateRequest",
+      "ChatScheduleUpdateRequest",
+      "ChatScheduleResponse",
+      "ChatScheduleListResponse",
+      "clean_intent"
+    ],
+    "Echo-backend/features/push/public.py": [
+      "get_push_target_manager",
+      "get_push_sender",
+      "send_pending_notification_once"
+    ],
+    "Echo-backend/features/push/application/manage_targets.py": [
+      "ManagePushTargets",
+      "__init__",
+      "register",
+      "unregister"
+    ],
+    "Echo-backend/features/push/domain/repositories.py": [
+      "PushTargetWriter",
+      "register_target",
+      "revoke_target"
+    ],
+    "Echo-backend/features/push/infrastructure/getui_sender.py": [
+      "_AccessToken",
+      "_Credentials",
+      "GetuiNotificationSender",
+      "configured",
+      "__init__",
+      "run_once",
+      "_is_configured",
+      "_credentials_for"
+    ],
+    "Echo-backend/features/push/infrastructure/postgres_repository.py": [
+      "NotificationOutboxItem",
+      "PushTarget",
+      "PostgresPushRepository",
+      "register_target",
+      "revoke_target",
+      "claim_due",
+      "list_targets",
+      "mark_sent"
+    ],
+    "Echo-backend/features/push/interface/router.py": [
+      "PushTokenRequest",
+      "register_token",
+      "unregister_token"
+    ],
+    "Echo-backend/features/relationship/public.py": [
+      "get_relationship_context",
+      "record_relationship_turn",
+      "get_relationship_state",
+      "reset_relationship_state",
+      "update_relationship_mode",
+      "get_pending_relationship_proposal",
+      "propose_relationship",
+      "accept_relationship_proposal"
+    ],
+    "Echo-backend/features/relationship/application/relationship_management.py": [
+      "RelationshipManagementService",
+      "_utc_now",
+      "_parse_timestamp",
+      "__init__",
+      "_active_boundaries",
+      "_blocked_directions",
+      "get_context",
+      "record_turn"
+    ],
+    "Echo-backend/features/relationship/domain/entities.py": [
+      "RelationshipValidationError",
+      "RelationshipSignal",
+      "RelationshipState",
+      "RelationshipContext",
+      "RelationshipProposal",
+      "RelationshipDirectionBoundary",
+      "RelationshipProgress",
+      "default_relationship_state"
+    ],
+    "Echo-backend/features/relationship/domain/repositories.py": [
+      "RelationshipRepository",
+      "get_or_create",
+      "count_active_memories",
+      "save_progress",
+      "reset",
+      "update_mode",
+      "update_relationship_type",
+      "create_proposal"
+    ],
+    "Echo-backend/features/relationship/domain/rules.py": [
+      "detect_relationship_signals",
+      "calculate_relationship_score",
+      "resolve_relationship_stage",
+      "resolve_proposable_direction",
+      "infer_interaction_warmth",
+      "build_relationship_context",
+      "advance_relationship_state"
+    ],
+    "Echo-backend/features/relationship/infrastructure/container.py": [
+      "get_relationship_management_service",
+      "reset_relationship_management_service_for_tests"
+    ],
+    "Echo-backend/features/relationship/infrastructure/postgres_repository.py": [
+      "PostgresRelationshipRepository",
+      "_timestamp_text",
+      "_state_from_row",
+      "_proposal_from_row",
+      "_boundary_from_row",
+      "_get",
+      "_build_historical_baseline",
+      "get_or_create"
+    ],
+    "Echo-backend/features/relationship/interface/router.py": [
+      "_proposal_response",
+      "_response_from_domain",
+      "relationship_get",
+      "relationship_reset",
+      "relationship_update_mode",
+      "relationship_pending_proposal",
+      "relationship_accept_proposal",
+      "relationship_defer_proposal"
+    ],
+    "Echo-backend/features/relationship/interface/schemas.py": [
+      "RelationshipModeUpdateRequest",
+      "RelationshipProposalResponse",
+      "RelationshipResponse"
+    ],
+    "Echo-backend/features/releases/domain/entities.py": [
+      "AppRelease",
+      "is_mandatory_for"
+    ],
+    "Echo-backend/features/releases/infrastructure/postgres_repository.py": [
+      "PostgresReleaseRepository",
+      "_release",
+      "get_by_version",
+      "find_latest",
+      "get_active",
+      "get_active_by_id",
+      "publish"
+    ],
+    "Echo-backend/features/releases/interface/router.py": [
+      "get_release_repository",
+      "_client_host",
+      "_consume_rate_limit",
+      "_allow_public_site_release_read",
+      "_response",
+      "_artifact_signature",
+      "_artifact_url",
+      "_download_filename"
+    ],
+    "Echo-backend/features/releases/interface/schemas.py": [
+      "ReleaseResponse",
+      "LatestReleaseResponse",
+      "ReleaseDownloadRequest",
+      "ReleaseDownloadResponse"
+    ],
+    "Echo-backend/features/stickers/public.py": [
+      "search_stickers",
+      "send_sticker",
+      "generate_pending_stickers",
+      "resolve_sticker_asset_url"
+    ],
+    "Echo-backend/features/stickers/application/generate_stickers.py": [
+      "GeneratePendingStickers",
+      "__init__",
+      "execute"
+    ],
+    "Echo-backend/features/stickers/domain/entities.py": [
+      "Sticker"
+    ],
+    "Echo-backend/features/stickers/domain/repositories.py": [
+      "StickerGenerationRepository",
+      "claim_generation_jobs",
+      "complete_generation",
+      "fail_generation"
+    ],
+    "Echo-backend/features/stickers/domain/services.py": [
+      "ImageGenerator",
+      "generate",
+      "validate_image",
+      "normalize_tags",
+      "build_sticker_semantic_text",
+      "build_sticker_query_text"
+    ],
+    "Echo-backend/features/stickers/infrastructure/container.py": [
+      "get_sticker_generator"
+    ],
+    "Echo-backend/features/stickers/infrastructure/postgres_repository.py": [
+      "PostgresStickerRepository",
+      "_sticker",
+      "_vector_literal",
+      "sticker_row_visible_to_user",
+      "filter_semantically_close_rows",
+      "rank_sticker_rows",
+      "score",
+      "create_upload"
+    ],
+    "Echo-backend/features/stickers/infrastructure/urls.py": [
+      "resolve_sticker_url"
+    ],
+    "Echo-backend/features/stickers/infrastructure/vector_index.py": [
+      "upsert_sticker_embedding",
+      "safe_upsert_sticker_embedding",
+      "backfill_sticker_embeddings",
+      "search_sticker_embeddings"
+    ],
+    "Echo-backend/features/stickers/interface/router.py": [
+      "_response",
+      "list_stickers",
+      "upload_sticker",
+      "confirm_sticker",
+      "delete_sticker",
+      "create_generation",
+      "get_generation"
+    ],
+    "Echo-backend/features/stickers/interface/schemas.py": [
+      "StickerResponse",
+      "StickerListResponse",
+      "StickerGenerationRequest",
+      "StickerGenerationResponse"
+    ],
+    "Echo-backend/features/study_focus/public.py": [
+      "list_study_focus_evidence"
+    ],
+    "Echo-backend/features/study_focus/domain/entities.py": [
+      "StudyFocusSession"
+    ],
+    "Echo-backend/features/study_focus/infrastructure/postgres_repository.py": [
+      "PostgresStudyFocusRepository",
+      "create_session",
+      "update_session",
+      "mark_completion_message",
+      "list_sessions",
+      "sessions_for_local_date",
+      "_transition_allowed",
+      "_session"
+    ],
+    "Echo-backend/features/study_focus/interface/router.py": [
+      "_response",
+      "create_session",
+      "update_session",
+      "list_sessions",
+      "_completion_message"
+    ],
+    "Echo-backend/features/study_focus/interface/schemas.py": [
+      "StudyFocusCreateRequest",
+      "StudyFocusUpdateRequest",
+      "StudyFocusResponse",
+      "StudyFocusListResponse",
+      "clean_required_text"
+    ],
+    "Echo-backend/features/system/application/reset_companionship.py": [
+      "ResetCompanionshipResult",
+      "ResetCompanionship",
+      "execute"
+    ],
+    "Echo-backend/features/system/infrastructure/health.py": [
+      "is_database_ready"
+    ],
+    "Echo-backend/features/system/interface/router.py": [
+      "health_check",
+      "readiness_check",
+      "reset_companionship",
+      "version_info"
+    ],
+    "Echo-backend/features/voice/public.py": [
+      "recognize_voice",
+      "synthesize_voice_reply",
+      "open_streaming_voice_recognition",
+      "cleanup_expired_voice_audio"
+    ],
+    "Echo-backend/features/voice/application/use_cases.py": [
+      "RecognizeVoice",
+      "SynthesizeVoiceReply",
+      "OpenStreamingVoiceRecognition",
+      "__init__",
+      "execute"
+    ],
+    "Echo-backend/features/voice/domain/entities.py": [
+      "UnsupportedVoiceFormatError",
+      "VoiceRecognitionResult",
+      "SynthesizedVoiceAudio",
+      "VoiceSynthesisResult",
+      "StreamingRecognitionUpdate"
+    ],
+    "Echo-backend/features/voice/domain/services.py": [
+      "VoiceAudioStorage",
+      "VoiceRecognizer",
+      "VoiceSynthesizer",
+      "VoiceStreamingRecognitionSession",
+      "VoiceStreamingRecognizer",
+      "save_upload",
+      "delete_upload",
+      "save_generated_audio"
+    ],
+    "Echo-backend/features/voice/domain/speech_delivery.py": [
+      "prepare_speech_text"
+    ],
+    "Echo-backend/features/voice/infrastructure/adapters.py": [
+      "LocalVoiceAudioStorage",
+      "TencentVoiceRecognizer",
+      "ProviderVoiceSynthesizer",
+      "save_upload",
+      "delete_upload",
+      "save_generated_audio",
+      "recognize",
+      "synthesize"
+    ],
+    "Echo-backend/features/voice/infrastructure/audio_storage.py": [
+      "VoiceAudioCleanupResult",
+      "merge",
+      "get_voice_upload_dir",
+      "get_voice_generated_dir",
+      "save_upload_audio_file",
+      "save_audio_file",
+      "delete_upload_audio_file",
+      "cleanup_expired_voice_audio_files"
+    ],
+    "Echo-backend/features/voice/infrastructure/container.py": [
+      "get_recognize_voice_use_case",
+      "get_synthesize_voice_reply_use_case",
+      "get_open_streaming_voice_recognition_use_case",
+      "reset_voice_use_cases_for_tests"
+    ],
+    "Echo-backend/features/voice/infrastructure/streaming_asr.py": [
+      "TencentASRTranscriptAccumulator",
+      "TencentASRStreamingRecognitionSession",
+      "TencentASRStreamingVoiceRecognizer",
+      "__init__",
+      "current_text",
+      "apply",
+      "send_audio",
+      "finish"
+    ],
+    "Echo-backend/features/voice/interface/router.py": [
+      "consume_voice_quota",
+      "read_upload_with_limit",
+      "voice_asr",
+      "voice_asr_stream",
+      "send_recognition_updates"
+    ],
+    "Echo-backend/features/voice/interface/schemas.py": [
+      "VoiceASRResponse"
+    ],
+    "Echo-backend/providers/asr_provider.py": [
+      "ASRProvider",
+      "TencentASRProvider",
+      "recognize",
+      "sync_recognize",
+      "get_asr_provider"
+    ],
+    "Echo-backend/providers/embedding_provider.py": [
+      "EmbeddingProvider",
+      "OpenAICompatibleEmbeddingProvider",
+      "create_embedding",
+      "__init__",
+      "_http_client",
+      "get_embedding_provider"
+    ],
+    "Echo-backend/providers/image_generation_provider.py": [
+      "OpenAICompatibleImageGenerationProvider",
+      "generate"
+    ],
+    "Echo-backend/providers/llm_provider.py": [
+      "LLMProviderTimeoutError",
+      "ProviderToolCall",
+      "ProviderAssistantMessage",
+      "LLMProvider",
+      "OpenAICompatibleLLMProvider",
+      "chat_completion",
+      "chat_completion_message",
+      "stream_chat_completion_message"
+    ],
+    "Echo-backend/providers/minimax_image_provider.py": [
+      "MiniMaxImageProviderConfig",
+      "MiniMaxImageGenerationProvider",
+      "__init__",
+      "generate",
+      "_request_payload",
+      "_parse_response",
+      "_decode_candidate",
+      "_decode_base64"
+    ],
+    "Echo-backend/providers/registry.py": [
+      "register_provider_factory",
+      "get_provider",
+      "reset_provider_registry_for_tests"
+    ],
+    "Echo-backend/providers/tts_provider.py": [
+      "TTSOutput",
+      "TTSProvider",
+      "EdgeTTSProvider",
+      "_CosyVoiceResultCallback",
+      "CosyVoiceTTSProvider",
+      "text_to_speech",
+      "stream_text_to_speech",
+      "stream_pcm16"
+    ],
+    "Echo-backend/providers/vision_provider.py": [
+      "VisionUnavailableError",
+      "describe_desktop_image"
+    ],
+    "Echo-backend/providers/web_search_provider.py": [
+      "WebSearchRequest",
+      "WebSearchItem",
+      "WebSearchResult",
+      "WebSearchProvider",
+      "TavilyWebSearchProvider",
+      "search"
+    ],
+    "Echo-backend/shared/config/settings.py": [
+      "Settings",
+      "get_settings"
+    ],
+    "Echo-backend/shared/interface/dependencies.py": [
+      "CurrentUser",
+      "_clean_user_id",
+      "_token_service",
+      "resolve_current_user_from_token",
+      "get_current_user"
+    ],
+    "Echo-backend/shared/prompting/contracts.py": [
+      "AssistantPersona",
+      "UserPreferences",
+      "RelationshipState",
+      "RelationshipContext"
+    ],
+    "Echo-backend/shared/prompting/renderer.py": [
+      "_load_rule",
+      "_escape_untrusted_text",
+      "estimate_prompt_tokens",
+      "_truncate_to_token_budget",
+      "format_long_term_memories",
+      "render_persona",
+      "render_assistant_persona",
+      "render_relationship_guidance"
+    ],
+    "Echo-backend/shared/security/logging_filter.py": [
+      "SensitiveDataFilter",
+      "redact_sensitive_text",
+      "_redact_log_argument",
+      "filter",
+      "install_sensitive_data_filter"
+    ],
+    "Echo-backend/shared/security/rate_limit.py": [
+      "RateLimitRule",
+      "RateLimitExceeded",
+      "InMemoryRateLimiter",
+      "__init__",
+      "consume",
+      "reset",
+      "_check_rule",
+      "_record_rule"
+    ],
+    "Echo-backend/shared/security/token_service.py": [
+      "TokenError",
+      "TokenService",
+      "_base64_url_encode",
+      "_base64_url_decode",
+      "parse_verification_keys",
+      "issue_token",
+      "verify_token",
+      "_secret_for_key_id"
+    ],
+    "Echo-backend/shared/storage/cos_storage.py": [
+      "CosStorageConfigurationError",
+      "CosStorageConfig",
+      "CosObjectMetadata",
+      "CosObjectStorage",
+      "validate",
+      "normalize_cos_custom_domain",
+      "normalize_cos_object_prefix",
+      "_validate_object_path"
+    ],
+    "Echo-backend/tests/test_agent_feature.py": [
+      "FakeClock",
+      "SequenceAgentModel",
+      "FakeAgentRunRepository",
+      "FakeWebSearch",
+      "AgentDomainTests",
+      "AgentProviderTests",
+      "RecordingProvider",
+      "RecordingResponse"
+    ],
+    "Echo-backend/tests/test_agent_schema.py": [
+      "AgentSchemaTests",
+      "test_agent_letters_and_sticker_schema_is_present"
+    ],
+    "Echo-backend/tests/test_api_dependencies.py": [
+      "CurrentUserTests",
+      "setUp",
+      "tearDown",
+      "test_resolves_user_exclusively_from_bearer_token",
+      "test_rejects_missing_token",
+      "test_token_resolver_returns_none_for_absent_header",
+      "test_rejects_invalid_authorization_header",
+      "test_rejects_invalid_token"
+    ],
+    "Echo-backend/tests/test_architecture_rules.py": [
+      "ArchitectureRulesTests",
+      "test_routes_cannot_be_future_placeholders",
+      "test_empty_async_route_is_rejected",
+      "test_consumed_contracts_and_real_routes_are_allowed",
+      "test_shared_prompting_cannot_import_business_or_database",
+      "test_neutral_prompt_contracts_are_allowed",
+      "test_prompt_assets_require_current_consumers_and_nonempty_content"
+    ],
+    "Echo-backend/tests/test_assistant_persona.py": [
+      "AssistantPersonaTests",
+      "test_echo_persona_v3_has_stable_behavior_contract",
+      "test_existing_environment_pin_cannot_restore_the_old_identity",
+      "test_unknown_persona_version_is_rejected"
+    ],
+    "Echo-backend/tests/test_async_chat_feature.py": [
+      "FakeIntakeRepository",
+      "AcceptChatMessageTests",
+      "AgentDeliveryPlanTests",
+      "DeliveryTimingPolicyTests",
+      "FakeTurnRepository",
+      "FakeReplyGenerator",
+      "FakeGuard",
+      "FakeEventBroker"
+    ],
+    "Echo-backend/tests/test_auth_feature.py": [
+      "AccessTokenContractTests",
+      "PhoneContractTests",
+      "AuthHttpContractTests",
+      "_decode_segment",
+      "test_issues_standard_access_jwt_with_required_claims",
+      "test_accepts_previous_key_only_when_kid_is_configured",
+      "test_normalizes_supported_mainland_forms",
+      "test_rejects_unsupported_phone"
+    ],
+    "Echo-backend/tests/test_chat_feature.py": [
+      "FakeConversationRepository",
+      "FakeContextProvider",
+      "SequenceAgentOrchestrator",
+      "StreamingCallAgentOrchestrator",
+      "LongStreamingCallAgentOrchestrator",
+      "FakeProactivePlanner",
+      "FailedProactivePlanner",
+      "FakeSummaryUpdater"
+    ],
+    "Echo-backend/tests/test_chat_history.py": [
+      "FakeChatHistoryRepository",
+      "ListChatMessagesTests",
+      "ChatHistoryInterfaceTests",
+      "__init__",
+      "get_or_create_active_conversation",
+      "list_messages_page",
+      "message",
+      "test_lists_latest_page_and_returns_oldest_id_as_cursor"
+    ],
+    "Echo-backend/tests/test_chat_postgres_repository.py": [
+      "_FakeCursor",
+      "_FakeConnection",
+      "ChatPostgresRepositoryTests",
+      "__init__",
+      "__enter__",
+      "__exit__",
+      "execute",
+      "fetchone"
+    ],
+    "Echo-backend/tests/test_context_builder.py": [
+      "ContextBuilderTests",
+      "test_empty_or_invalid_user_timezone_falls_back_to_default",
+      "test_proactive_trigger_is_internal_system_context",
+      "test_temporal_context_resolves_local_time_and_relative_expressions",
+      "test_history_keeps_local_timestamps_and_inserts_session_boundary",
+      "test_call_history_keeps_only_plain_recent_dialogue",
+      "test_call_temporal_context_omits_historical_absolute_timestamps",
+      "test_call_extended_context_requires_an_explicit_recall_reference"
+    ],
+    "Echo-backend/tests/test_conversation_summary.py": [
+      "FakeSummaryLLM",
+      "ConversationSummaryTests",
+      "__init__",
+      "chat_completion",
+      "test_summary_uses_provenance_prompt_and_dedicated_generation_budget"
+    ],
+    "Echo-backend/tests/test_cos_storage.py": [
+      "FakeCosClient",
+      "FakeRawStream",
+      "FakeStreamBody",
+      "CosObjectStorageTests",
+      "__init__",
+      "put_object",
+      "head_object",
+      "delete_object"
+    ],
+    "Echo-backend/tests/test_desktop_feature.py": [
+      "FakeChannel",
+      "FakeRepository",
+      "DesktopDomainTests",
+      "DesktopManagementTests",
+      "DesktopHubTests",
+      "DesktopServiceTests",
+      "__init__",
+      "send"
+    ],
+    "Echo-backend/tests/test_devices_feature.py": [
+      "DeviceAudioCodecTests",
+      "SentenceChunkerTests",
+      "DeviceTranscriptGuardTests",
+      "DeviceStreamingCodecTests",
+      "DeviceEndpointDetectorTests",
+      "FakeRecognizer",
+      "FakeConversation",
+      "FakeNotifier"
+    ],
+    "Echo-backend/tests/test_device_management.py": [
+      "DeviceManagementTests",
+      "test_normalizes_device_identifiers_and_hashes_credentials",
+      "test_speaker_embedding_is_stable_and_comparable",
+      "test_claim_pairing_allows_code_only_claims",
+      "test_create_provisioning_session_uses_current_user",
+      "test_provisioning_session_tokens_are_hashed",
+      "test_bootstrap_claims_direct_provisioning_token",
+      "test_bootstrap_binds_legacy_device_to_configured_user"
+    ],
+    "Echo-backend/tests/test_device_probe.py": [
+      "ProbeTests",
+      "test_requires_matching_session_and_reply",
+      "test_timeout_is_not_success",
+      "test_duplicate_request_and_disconnect",
+      "test_mcp_error_cannot_acknowledge",
+      "test_empty_status_is_not_acknowledgement"
+    ],
+    "Echo-backend/tests/test_dialogue_style.py": [
+      "DialogueStyleTests",
+      "test_repeated_greeting_cooldown_only_applies_inside_live_session",
+      "test_repeated_greeting_is_removed_by_deterministic_fallback",
+      "test_server_weekday_is_grounded_but_wrong_weekday_is_rejected",
+      "test_question_cooldown_after_two_consecutive_assistant_questions",
+      "test_detects_common_stage_direction_formats",
+      "test_does_not_flag_normal_parenthetical_explanation",
+      "test_sanitizer_preserves_spoken_content"
+    ],
+    "Echo-backend/tests/test_letters_feature.py": [
+      "_FakeLetterRepository",
+      "_FakeContextAssembler",
+      "_FakeImageGenerator",
+      "LetterGenerationTests",
+      "LetterOutputTests",
+      "_FakeImageProvider",
+      "_FakeImageStorage",
+      "LetterImageTests"
+    ],
+    "Echo-backend/tests/test_memory_extractor.py": [
+      "MemoryExtractorTests",
+      "test_gate_detects_memory_signal",
+      "test_gate_skips_plain_chat",
+      "test_gate_detects_semantic_identity_goal_and_relationship_preference",
+      "test_periodic_batch_review_bypasses_narrow_realtime_gate",
+      "test_extraction_prompt_requires_source_message_provenance",
+      "test_parse_json_wrapped_in_markdown_fence"
+    ],
+    "Echo-backend/tests/test_memory_infrastructure_adapter.py": [
+      "MemoryInfrastructureAdapterTests",
+      "test_postgres_datetimes_are_converted_to_iso_strings"
+    ],
+    "Echo-backend/tests/test_memory_management_feature.py": [
+      "FakeMemoryRepository",
+      "FakeVectorIndex",
+      "MemoryManagementFeatureTests",
+      "__init__",
+      "list_memories",
+      "list_active_memories",
+      "get_memory",
+      "delete_memory"
+    ],
+    "Echo-backend/tests/test_mobile_agent_feature.py": [
+      "FakeRepository",
+      "MobileAgentManagementTests",
+      "FakeChannel",
+      "MobileAgentHubTests",
+      "__init__",
+      "create_pairing_code",
+      "pair_device",
+      "find_by_token_hash"
+    ],
+    "Echo-backend/tests/test_mobile_agent_skills.py": [
+      "AppSkillParsingTests",
+      "test_picks_first_visible_song_result",
+      "test_bilibili_clickable_result",
+      "test_ignores_search_box_and_tabs"
+    ],
+    "Echo-backend/tests/test_mobile_agent_tools.py": [
+      "MobileAgentToolTests",
+      "test_phone_status_lists_paired_devices",
+      "test_mobile_tools_are_registered"
+    ],
+    "Echo-backend/tests/test_natural_dialogue_acceptance_cases.py": [
+      "NaturalDialogueAcceptanceCasesTests",
+      "test_internal_acceptance_set_has_20_unique_cases",
+      "test_fixture_persona_values_follow_domain_contract"
+    ],
+    "Echo-backend/tests/test_neural_speaker.py": [
+      "NeuralSpeakerTests",
+      "profile",
+      "test_no_fallback_without_model_service",
+      "test_rejects_unknown_and_model_mismatch",
+      "test_ambiguous_candidates_are_not_forced_to_match",
+      "test_diagnostics_report_similarity_without_identifying_low_match",
+      "test_collecting_profile_is_not_identified",
+      "test_matching_does_not_grant_owner_role"
+    ],
+    "Echo-backend/tests/test_p0_release_safety.py": [
+      "RequestSafetyTests",
+      "ReadinessTests",
+      "LoggingSafetyTests",
+      "URLValue",
+      "test_voice_upload_is_read_within_limit",
+      "test_voice_upload_over_limit_returns_413",
+      "test_async_sticker_message_uses_server_metadata",
+      "test_user_can_clear_only_authenticated_chat_context"
+    ],
+    "Echo-backend/tests/test_persona_feature.py": [
+      "InMemoryPersonaRepository",
+      "PersonaDomainTests",
+      "PersonaManagementTests",
+      "__init__",
+      "get",
+      "save",
+      "build_preferences",
+      "test_defaults_are_safe_and_require_onboarding"
+    ],
+    "Echo-backend/tests/test_persona_infrastructure.py": [
+      "RecordingCursor",
+      "RecordingConnection",
+      "PersonaInfrastructureTests",
+      "__init__",
+      "__enter__",
+      "__exit__",
+      "execute",
+      "fetchone"
+    ],
+    "Echo-backend/tests/test_persona_interface.py": [
+      "PersonaInterfaceTests",
+      "test_request_schema_does_not_accept_user_identity_field",
+      "test_get_uses_authenticated_user",
+      "test_update_uses_authenticated_user_and_whitelisted_fields",
+      "test_reset_only_targets_authenticated_user"
+    ],
+    "Echo-backend/tests/test_postgres_schema.py": [
+      "PostgresSchemaTests",
+      "test_schema_contains_pgvector_memory_embedding",
+      "test_schema_contains_chat_lifecycle_and_voice_files",
+      "test_schema_contains_device_identity_and_speaker_tables",
+      "test_schema_contains_user_persona_settings",
+      "test_schema_contains_relationship_state_and_event_log",
+      "test_phone_auth_upgrade_alters_legacy_users_before_creating_index",
+      "test_schema_contains_direct_app_releases"
+    ],
+    "Echo-backend/tests/test_presence_feature.py": [
+      "FakeRepository",
+      "FakeContext",
+      "FakeMemory",
+      "FakeGenerator",
+      "FakeQuiet",
+      "FakeComposer",
+      "FakeDelivery",
+      "FakeMemoryWriter"
+    ],
+    "Echo-backend/tests/test_presence_interface.py": [
+      "PresenceInterfaceTests",
+      "test_returns_state_thoughts_and_budget_for_authenticated_user"
+    ],
+    "Echo-backend/tests/test_proactive_chat_feature.py": [
+      "FakeScheduleRepository",
+      "ProactiveScheduleToolTests",
+      "_DeletedScheduleRepository",
+      "_DueSpontaneousJobRepository",
+      "_DueExplicitScheduleRepository",
+      "ProactiveWorkerTests",
+      "__init__",
+      "get_preferences"
+    ],
+    "Echo-backend/tests/test_proactive_chat_repository.py": [
+      "_FakeCursor",
+      "_FakeConnection",
+      "_FakeTransaction",
+      "ProactiveRepositoryTests",
+      "__init__",
+      "__enter__",
+      "__exit__",
+      "execute"
+    ],
+    "Echo-backend/tests/test_proactive_planner.py": [
+      "SequenceModel",
+      "ProactivePlannerTests",
+      "tool_response",
+      "__init__",
+      "complete",
+      "test_valid_decision_uses_compact_facts_and_required_tool",
+      "test_invalid_tool_arguments_retry_then_report_technical_failure",
+      "test_prose_or_json_content_without_tool_is_rejected"
+    ],
+    "Echo-backend/tests/test_prompt_renderer.py": [
+      "PromptRendererTests",
+      "setUp",
+      "test_layers_keep_safety_first_and_data_separated",
+      "test_call_mode_is_oral_without_changing_persona_layers",
+      "test_unknown_conversation_mode_is_rejected",
+      "test_natural_dialogue_policy_rejects_stage_directions_and_fake_body",
+      "test_persona_examples_are_labeled_as_fiction_not_user_history",
+      "test_default_chat_persona_does_not_inject_few_shot"
+    ],
+    "Echo-backend/tests/test_providers.py": [
+      "FakeEmbeddingProvider",
+      "FakeTTSProvider",
+      "FakeASRProvider",
+      "FakeTencentASRClient",
+      "FakeCosyVoiceSynthesizer",
+      "ProviderTests",
+      "create_embedding",
+      "text_to_speech"
+    ],
+    "Echo-backend/tests/test_push_feature.py": [
+      "FakePushRepository",
+      "FakePushTargetWriter",
+      "ManagePushTargetsTests",
+      "FakeAsyncClient",
+      "GetuiNotificationSenderTests",
+      "__init__",
+      "claim_due",
+      "list_targets"
+    ],
+    "Echo-backend/tests/test_rate_limit.py": [
+      "RateLimitTests",
+      "test_rolling_window_limit_returns_retry_after",
+      "test_daily_limit_resets_on_next_utc_day",
+      "test_rules_are_recorded_atomically"
+    ],
+    "Echo-backend/tests/test_relationship_api.py": [
+      "make_app",
+      "test_mode_update_uses_authenticated_identity_and_returns_the_saved_choice",
+      "test_invalid_mode_and_unauthenticated_request_are_rejected_before_use_case"
+    ],
+    "Echo-backend/tests/test_relationship_feature.py": [
+      "InMemoryRelationshipRepository",
+      "RelationshipRuleTests",
+      "RelationshipManagementTests",
+      "__init__",
+      "get_or_create",
+      "count_active_memories",
+      "save_progress",
+      "reset"
+    ],
+    "Echo-backend/tests/test_relationship_infrastructure.py": [
+      "RelationshipInfrastructureTests",
+      "test_postgres_row_is_converted_without_exposing_event_content"
+    ],
+    "Echo-backend/tests/test_relationship_interface.py": [
+      "RelationshipInterfaceTests",
+      "test_get_uses_authenticated_user_and_does_not_expose_score",
+      "test_reset_only_targets_authenticated_user"
+    ],
+    "Echo-backend/tests/test_releases_feature.py": [
+      "FakeReleaseRepository",
+      "FakeStorage",
+      "ReleaseFeatureTests",
+      "release_fixture",
+      "__init__",
+      "find_latest",
+      "get_active",
+      "get_active_by_id"
+    ],
+    "Echo-backend/tests/test_speaker_calibration.py": [
+      "SpeakerCalibrationTests",
+      "setUp",
+      "consume",
+      "test_three_samples_and_independent_verification",
+      "test_rejected_audio_and_verification_can_retry",
+      "test_service_or_database_failure_does_not_leave_busy_session",
+      "test_cancel_expiry_and_account_boundary"
+    ],
+    "Echo-backend/tests/test_speaker_dialogue.py": [
+      "SpeakerDialogueTests",
+      "setUp",
+      "say",
+      "request",
+      "test_normal_chat_does_not_enroll",
+      "test_requires_explicit_consent_and_owner_approval",
+      "test_three_samples_and_independent_verification",
+      "test_cancel_expire_and_disconnect_do_not_resume"
+    ],
+    "Echo-backend/tests/test_speaker_lab.py": [
+      "SpeakerLabTests",
+      "setUp",
+      "tearDown",
+      "create",
+      "sample",
+      "test_four_unique_samples_activate_then_delete",
+      "test_duplicate_audio_and_different_speaker_rejected",
+      "test_duplicate_person_fails_independent_verification"
+    ],
+    "Echo-backend/tests/test_speaker_people_use_cases.py": [
+      "SpeakerPeopleUseCaseTests",
+      "setUp",
+      "test_consent_is_required_before_creating_a_profile",
+      "test_calibration_requires_an_active_profile_and_online_device",
+      "test_foreign_owner_cannot_read_pending_calibration",
+      "test_unavailable_extractor_never_saves_a_sample",
+      "test_raw_audio_is_not_passed_to_persistence",
+      "test_oversized_audio_never_reaches_the_extractor"
+    ],
+    "Echo-backend/tests/test_speaker_reply_guidance.py": [
+      "test_tentative_match_can_ask",
+      "test_middle_band_is_cautious",
+      "test_strong_match_uses_name_without_identity_question",
+      "test_unreliable_match_does_not_expose_candidate",
+      "test_ordinary_turns_never_expose_name_or_score",
+      "test_fluctuating_scores_do_not_change_ordinary_turn_guidance"
+    ],
+    "Echo-backend/tests/test_sticker_embeddings.py": [
+      "FakeEmbeddingProvider",
+      "FakeStickerRepository",
+      "StickerEmbeddingTests",
+      "_sticker",
+      "__init__",
+      "create_embedding",
+      "list_active_for_embedding",
+      "list_embedding_metadata"
+    ],
+    "Echo-backend/tests/test_sticker_ranking.py": [
+      "StickerRankingTests",
+      "EchoStickerAssetTests",
+      "_row",
+      "setUp",
+      "_rank",
+      "test_priority_orders_semantically_equivalent_candidates",
+      "test_repeated_search_keeps_the_best_match_available",
+      "test_official_sticker_gets_small_bonus_on_semantic_tie"
+    ],
+    "Echo-backend/tests/test_study_focus_feature.py": [
+      "StudyFocusDomainTests",
+      "CompletionDeliveryTests",
+      "DailyLetterEvidenceTests",
+      "_FakeRouterRepository",
+      "_Cursor",
+      "_Connection",
+      "_Transaction",
+      "_session"
+    ],
+    "Echo-backend/tests/test_voice_feature.py": [
+      "FakeAudioStorage",
+      "FakeRecognizer",
+      "FailingRecognizer",
+      "FakeSynthesizer",
+      "FailingSynthesizer",
+      "FakeStructuredSynthesizer",
+      "FakeStructuredAudioStorage",
+      "FakeStreamingSession"
+    ],
+    "harmony_app/oh_modules/.ohpm/@getui+gtc@3t7bdohae2j99zkx3x8a5+8ol+ak++jclrbc6c+wsp8=/oh_modules/@getui/gtc/src/main/ets/e/f/g/j2/o2/i3.d.ts": [
+      "Utils"
+    ],
+    "harmony_app/oh_modules/.ohpm/@getui+gtc@3t7bdohae2j99zkx3x8a5+8ol+ak++jclrbc6c+wsp8=/oh_modules/@getui/gtc/src/main/ets/e/f/g/j2/o2/j3.d.ts": [
+      "TimeUtil"
+    ],
+    "harmony_app/oh_modules/.ohpm/@getui+gtc@3t7bdohae2j99zkx3x8a5+8ol+ak++jclrbc6c+wsp8=/oh_modules/@getui/gtc/src/main/ets/e/f/g/j2/o2/p2.d.ts": [
+      "ScheduledExecutor"
+    ],
+    "phone_lab/__main__.py": [
+      "PhoneLabError",
+      "Adb",
+      "UiNode",
+      "_find_adb",
+      "_base",
+      "run",
+      "shell",
+      "devices"
+    ],
+    "scripts/adb_screenshot_bridge.py": [
+      "Bridge",
+      "Handler",
+      "resolve_adb",
+      "png_size",
+      "__init__",
+      "_base",
+      "reverse",
+      "screenshot"
+    ],
+    "scripts/check_architecture.py": [
+      "_module_name",
+      "_imported_modules",
+      "_layer_for_path",
+      "_is_blocked",
+      "_blocked_prefixes_for_layer",
+      "check_removed_compat_paths",
+      "check_file",
+      "check_implemented_routes"
+    ],
+    "scripts/check_hardware_lab.py": [
+      "request",
+      "login",
+      "status",
+      "reboot_probe"
+    ],
+    "scripts/cos_storage.py": [
+      "smoke_test",
+      "upload_reference_assets",
+      "main"
+    ],
+    "scripts/create_desktop_pairing_code.py": [
+      "_resolve_user",
+      "main"
+    ],
+    "scripts/device_latency_probe.py": [
+      "_decode_audio_file",
+      "_resample_pcm16",
+      "_synthesize_probe_text",
+      "_trim_silence",
+      "_resize_speech",
+      "_pad_frame",
+      "_resolve_device_identity",
+      "_relative_ms"
+    ],
+    "scripts/evaluate_relationship_stages.py": [
+      "EvaluationRunRepository",
+      "EvaluationToolExecutor",
+      "RecordingModel",
+      "FixtureContextProvider",
+      "__init__",
+      "start",
+      "record_tool_call",
+      "finish"
+    ],
+    "scripts/init_postgres_schema.py": [
+      "_load_dotenv_if_available",
+      "_create_schema",
+      "main"
+    ],
+    "scripts/publish_android_release.py": [
+      "_sha256",
+      "_local_android_sdk",
+      "_find_apkanalyzer",
+      "_analyze",
+      "_android_tool_environment",
+      "_validate_apk",
+      "_validate_declared_metadata",
+      "main"
+    ],
+    "scripts/publish_firmware_release.py": [
+      "_sha256",
+      "main"
+    ],
+    "scripts/run_device_lab.py": [
+      "configure",
+      "restricted_app"
+    ],
+    "scripts/run_presence_tick.py": [
+      "_resolve_user",
+      "_main"
+    ],
+    "scripts/seed_official_stickers.py": [
+      "_seed",
+      "main"
+    ],
+    "scripts/speaker_service.py": [
+      "health",
+      "extract",
+      "embedding"
+    ],
+    "scripts/sync_echo_stickers.py": [
+      "StickerAsset",
+      "scan_assets",
+      "sync_assets",
+      "main"
+    ]
+  },
+  "routes": [
+    "/login/phone",
+    "/login/verify",
+    "/login/refresh",
+    "/login/logout",
+    "/messages",
+    "/events",
+    "/clear",
+    "/nodes/pair",
+    "/nodes",
+    "/nodes/{node_id}",
+    "/provisioning/sessions",
+    "/pairings",
+    "/pairings/claim",
+    "/{device_id}",
+    "/{device_id}/connect",
+    "/{device_id}/probe",
+    "/{device_id}/credentials/rotate",
+    "/heartbeat",
+    "/{device_id}/speaker",
+    "/{device_id}/speaker/enrollment",
+    "/{device_id}/speakers",
+    "/{device_id}/speakers/{person_id}/samples",
+    "/{device_id}/speakers/{person_id}",
+    "/{device_id}/speakers/{person_id}/calibration",
+    "/{device_id}/speaker-calibration",
+    "/{device_id}/speaker-enrollment-request",
+    "/latest",
+    "/preferences",
+    "/{letter_id}",
+    "/{letter_id}/read",
+    "/list",
+    "/{memory_id}",
+    "/pairing-codes",
+    "/pair",
+    "/unpair",
+    "/devices",
+    "/wechat/inbound",
+    "/skills/{skill}/{action}",
+    "/audit",
+    "/devices/{device_id}",
+    "/devices/{device_id}/command",
+    "/me",
+    "/me/reset",
+    "/pause",
+    "/resume",
+    "/schedules",
+    "/schedules/{schedule_id}",
+    "/tokens/me",
+    "/tokens/me/{device_id}",
+    "/proposals/pending",
+    "/proposals/{proposal_id}/accept",
+    "/proposals/{proposal_id}/defer",
+    "/proposals/{proposal_id}/decline",
+    "/bootstrap/android",
+    "/bootstrap/harmonyos",
+    "/{release_id}/artifact",
+    "/{release_id}/download",
+    "/upload",
+    "/{sticker_id}/confirm-save",
+    "/{sticker_id}",
+    "/generations",
+    "/generations/{job_id}",
+    "/sessions",
+    "/sessions/{session_id}",
+    "/",
+    "/health/ready",
+    "/account/reset",
+    "/version",
+    "/asr",
+    "/future",
+    "/current",
+    "/health",
+    "/embedding"
+  ],
+  "readme": "# Echo\n\nEcho 是一个面向个人用户的 AI 陪伴应用，由 Flutter / HarmonyOS 客户端和 FastAPI 服务端组成。它把连续文字聊天、主动联系、定时提醒、语音通话、学习专注、表情包、长期记忆、每日来信和 Presence 持续在场放在同一条可持久化的陪伴链路中。\n\n当前生产版本：**v1.1.10**\n\n| 部件 | 当前值 |\n| --- | --- |\n| Android APK | `1.1.10+26` |\n| Android 包名 | `cn.echoaiforever.echo_app` |\n| HarmonyOS | `1.1.10 (10110)`，开发签名包通过 USB 覆盖安装 |\n| 公网 API | `https://api.echoaiforever.cn` |\n| APK 下载域名 | `https://download.echoaiforever.cn` |\n| 生产分支 | `master`；实际版本以 `/version` 返回为准 |\n| 数据库 | PostgreSQL 16 + pgvector |\n| 推送 | 个推 RestAPI V2 主通道 |\n\n## 界面预览\n\n<p align=\"center\">\n  <img src=\"docs/assets/readme/echo-chat.jpg\" width=\"300\" alt=\"Echo 手机聊天界面与主动消息通知\">\n  <img src=\"docs/assets/readme/echo-desktop.png\" width=\"520\" alt=\"Echo Desktop Windows 电脑节点\">\n</p>\n\n<p align=\"center\"><sub>左：手机端聊天与主动消息；右：Windows 电脑节点状态和本地操作日志。截图来自 v1.1.10，界面会随版本继续调整。</sub></p>\n\n## v1.1.10 更新摘要\n\n- 新增“她的状态”页，能看到 Echo 的状态、今日念头预算和内心念头。\n- 聊天窗口按 5 分钟间隔和跨天显示时间条，Flutter 与 HarmonyOS 均已支持。\n- Presence 主动消息正式接管原有自发主动链路；明确提醒仍由主动聊天任务处理。\n- 主动消息统计回应率，连续两次未回应自动降频。\n- 主动动作支持放歌、记事本和 DSH；DSH 使用独立 `headless` 任务并具备完整电脑权限。\n- 高重要度念头（salience ≥ 0.7）写入长期记忆。\n- 念头和主动消息统一使用用户本地时区，不再把 UTC 当成本地时间。\n- 新增 HarmonyOS 1.1.10 构建和 Android 1.1.10+26 发布。\n\n## 当前能力\n\n- 手机号验证码登录、刷新会话和安全退出",
+  "ok": true,
+  "error": "",
+  "project_name": "Echo AI 助手 —— 多端设备控制 Agent",
+  "slug": "Echo-AI-助手-多端设备控制-Agent",
+  "summary": "项目名：Echo AI 助手 —— 多端设备控制 Agent\n## 技术偏向\n\n一句话：这是个「LLM 工具调用 Agent + 多端设备远程执行」的端云协同系统——FastAPI 后端做统一 Agent 编排和工具路由，通过 WebSocket 把结构化命令下发到 Windows 桌面节点和安卓手机节点实际执行，前端由 Flutter 多端 App 承载。\n\n关键词：**Function Calling 工具编排**、**WebSocket 双向长连接节点控制**、**多端异构执行（Windows / Android / 鸿蒙）**、**人机确认与权限边界**、**无障碍服务（AccessibilityService）UI 自动化**\n\n## 项目结构\n\n**接入层（Flutter 多端 App，`app/`）**——Flutter 做 UI 与音频/推送，Android 用 Kotlin 原生插件补做 Flutter 做不了的事：`BlufiProvisioningBridge` 走乐鑫 BLUFI 协议做 BLE 配网（自带 AES/CRC/DH 安全协商），`DirectUpdatePlugin` 做应用直更，`getuiflut` 接入个推推送。iOS 侧 Swift 只承担基础壳与插件注册。\n\n**业务后端（`Echo-backend/`，Python + FastAPI）**——按 DDD 分层（`features/<域>/{domain,application,infrastructure,interface,public}`）。核心是 `features/agent` 的对话编排 + 工具注册表；`features/desktop`、`features/mobile_agent` 负责两类设备节点的配对、在线注册、命令转发；`features/memory` 用 pgvector（`memory_embeddings`）做长期记忆召回；其余 chat / persona / voice / proactive_chat / letters / stickers 等按功能域平铺。`main.py` 里一次性挂载近 20 个 router，并带后台任务（表情包 embedding 回填等）。\n\n**桌面执行节点（`desktop_node/`，Python asyncio）**——独立的 Windows 侧 Agent：用 `websockets` 客户端连后端，`executor.py` 把动作映射到 `actions/` 下的具体实现（启动应用、媒体键、截屏、摄像头、记事本写入、网易云搜索播放，以及把任务委派给 DSH）。GUI（`gui.py`）与 cli 共享同一 `NodeRuntime`。\n\n**手机执行节点（`phone_agent/`，Android Java）**——纯原生 App，靠 `AccessibilityService` 读 UI 树、点按、执行全局动作，通过前台服务 + ADB reverse 桥截屏，另有 OCR 监控线程。\n\n**支撑设施**——`db/postgres_schema.py` 用裸 SQL 建表（含 pgvector 列与索引），`deploy/`、`scripts/`、`docs/` 为部署与内部文档站生成脚本。\n\n## 核心实现\n\n**1. 后端 Hub 的命令下发-回包模型（`desktop/application/node_hub.py`）**\n`DesktopNodeHub` 在内存里维护两类字典：`_connections`（`user_id:node_id` → 连接与能力）与 `_pending`（`command_id` → `asyncio.Future`）。`execute()` 生成 `command_id` 后先把 Future 挂进 `_pending`，再通过 channel 发 `{\"type\":\"command\",...}`，然后 `asyncio.wait_for(future, timeout)` 阻塞等待；节点回 `type=result` 时 `handle_message` 按 `command_id` 找到 Future 并 `set_result`——把 WebSocket 的单向消息流「逆向包装」成同步 RPC。`finally` 里必定清理 `_pending`，避免超时残留；`unregister` 时遍历该节点的所有待决命令批量 `set_exception(DesktopOfflineError)`，让掉线时上层挂起的调用立刻失败而不是干等超时。多设备选择用「取 `connected_at` 最大者」的最近连接策略。命令 ID 带 node 前缀，是为了掉线清理时能按前缀筛出归属节点的 Future。\n\n**2. Agent 编排循环里的工具路由与多级降级（`agent/application/orchestrate_chat.py` + `domain/call_routing.py`）**\n主循环是「模型出 tool_calls → 按 call_id 回填 role=tool 结果 → 再调模型」的步进状态机，受 `max_steps`、`max_tool_calls` 与一个整体 `deadline` 三重约束。亮点是多重**有限次降级路径**，各自有独立配额：LLM 超时重试、`finish_reason=length` 截断重试、交付格式非法重试、以及「声称发了表情包但没有发送凭证」的 sticker claim 重试。降级时会把 `tools` 置空、注入 `DELIVERY_FORMAT_RETRY_INSTRUCTION` 强制模型只输出自然语言——这是为了防止重试时再次触发副作用工具导致重复执行。最终仍失败则走确定性兜底（`_deterministic_tool_confirmation` / `_deterministic_call_tool_failure`），依据已完成的工具结果人工拼出回复，保证「副作用已发生但模型没说清」时用户至少能收到确认。语音通话模式下还有动态收窄：`search_web` / `create_schedule` 一旦执行就把 `tools` 清空，`list_chat_schedules` 则根据返回是否有数据决定是否把 `cancel_chat_schedule` 放出来。\n\n**3. 规则层前置意图路由 + 能力缺失显式降级（`call_routing.py`）**\n通话场景用正则先判断意图（取消/查询提醒、创建提醒、联网搜索），产出 `CallToolRoute`，只放开该模式允许的 `allowed_tool_names` 并限定 `maximum_tool_calls`（多为 1）。关键是工具不可用时**不是简单忽略**，而是返回一个 `instruction` 注入给模型的系统提示，明确要求「不得声称已经执行/不得用模型内部知识冒充搜索结果」——用提示词约束抑制幻觉，而非依赖模型自觉。\n\n**4. 手机端 UI 树驱动的 ReAct 式自动操作（`mobile_tools.py` 的 `phone_run_task`）**\n后端承担 planner：每步先 `observe` 拿到无障碍导出的 UI 树文本（截断 5000 字符），连同任务、步号、最近 5 步 history 一起喂给 LLM，要求只返回一个 JSON 动作（`tap_text` / `tap` / `back` / `home` / `launch_app` / `done` / `fail`），`temperature=0.1`、`max_tokens=300`、关闭 thinking 以压低延迟和格式漂移；执行后把动作追加进 history 进入下一轮，`max_steps` 到顶则显式报 `task_step_limit`。`observe` 失败、planner 返回非法 JSON、动作不支持都各有独立错误码。手机侧 `AgentCommandHandler` 用「action 字符串 → 分支」的扁平派发，每个动作返回统一的 `{ok, data|error}` 结构，并额外提供 `stop` 紧急停止动作和截图（走 ADB 桥而非 MediaProjection）。\n\n## 适合投什么岗位\n\n**1. AI Agent / LLM 应用工程岗**——最有说服力的是那套工具编排：tool_calls 状态机、按 call_id 回填、最大步数/最大调用数/全局 deadline 三重预算、多重降级与确定性兜底、副作用重试的防范。这是「怎么把 function calling 做成工程可靠系统」的完整样本。\n\n**2. 后端 / 分布式远程控制岗**——WebSocket 节点注册与心跳、Future 化的命令-回包 RPC、超时与掉线清理、token 鉴权与 4401 语义码、配对码 + 限流（`RateLimitRule` 按客户端指纹 8 次/60 秒）、多设备就近选择。讲「长连接网关怎么把异步消息可靠映射成同步调用」很有料。\n\n**3. 移动端 / 跨端全栈岗**——Flutter 多端 + Kotlin 原生插件（BLUFI BLE 配网含 AES/DH 安全协商、应用直更、推送）+ Android AccessibilityService 自动化 + ADB 桥截图 + 鸿蒙目录。适合讲「跨端异构执行器的统一抽象」。\n\n补充一点建议：投简历时把重点放在前两个方向，因为「节点控制协议 + Agent 编排」是代码里实现最扎实、机制最清晰的部分；Flutter UI 层和那批业务功能域（letters、stickers、relationship）质量密度明显更低，不必作为主卖点。",
+  "core_files": [],
+  "llm_summary": null,
+  "react_meta": {
+    "turns": 20,
+    "tool_calls": 35,
+    "files_read": 16,
+    "elapsed": 144.7,
+    "error": ""
+  },
+  "scanned_at": 1793847945.5076318
+}
